@@ -1,0 +1,1068 @@
+{% extends "_base.htm" %}
+{% block title %}
+	The Power of Within-Subjects Designs
+{% endblock%}
+
+
+{% block bodycontent %}
+
+<form id="dataform" method="post" action="/WithinSubject">
+	<input id="numbersims2" name="numbersims2" type="hidden">
+	<input id="Q4Answer" name="Q4Answer" type="hidden">
+	<input id="progressinput" name="progressinput" type="hidden">
+	<input id="directioninput" name="directioninput" type="hidden">
+	<input id="Submit" onclick="MySubmit()" value="Submit" type="hidden">
+</form>
+
+<h2 id="header2" style="display:none"><center>Within-Subjects Designs</center></h2>
+
+<div id="container" style="display:none">
+	<div class="corypg">
+		<center>
+			<span id="span1" style="display:inline-block;visibility:hidden;position:relative;left:-50px"><b>High Correlation</b></span>
+			<span id="span2" style="display:inline-block;position:relative;left:85px;visibility:hidden"><b>Low Correlation</b></span>
+			
+			<div id="firstrow" style="display:none">
+				<div id="within1" style="display:inline-block">
+					<div id="graph1"></div>
+					<div class="sigTrack" style="visibility:hidden;position:relative;top:-55px;left:10px"><font color="green">Significant Results: <span id="sigTrack1"></span></font></div>
+					<div class="pdiv" style="position:relative;top:0px">p = <span id="p1"></span></div>
+					
+					<!-- <div id="ttest1" class="ttest">
+						<span id="tspan1">t=1.00</span><br>
+						<span id="pspan1">p=.50</span><br>
+						<span id="dspan1">power=.8</span><br>
+					</div> -->
+				</div>
+				
+				<div id="within2" style="display:inline-block">
+					<div id="graph2"></div>
+					<div class="sigTrack" style="visibility:hidden;position:relative;top:-55px;left:10px"><font color="green">Significant Results: <span id="sigTrack2"></span></font></div>
+					<div class="pdiv" style="position:relative;top:0px">p = <span id="p2"></span></div>
+				</div>
+			</div>
+			<br>
+
+			<br>
+		</center>	
+		<br>
+
+		<button id="ResampleButton" style="width:100px;display:none" onclick="UpdateData()">Resample</button>
+
+		<div id="Quiz4" style="display:none">
+			<p><b>Here are two graphs showing data collected using within-subjects designs. Which of these graphs do you think shows a significant difference between the veggie and fruit conditions?</b></p>
+			<form id="Q4Answers" style="position:relative;left:20px">
+				<input type="radio" name="q4" value="A" id="q4a"><label for="q4a">The graph on the left (because it shows consistent differences, even though they're small).</label><br>
+				<input type="radio" name="q4" value="B" id="q4b"><label for="q4b">The graph on the right (because some of those lines have a much steeper slope).</label><br>
+			</form><br>
+			
+
+		</div>
+
+		<div id="Text1" style="display:none">
+
+			<p><span id="responseSpan"></span></p>
+
+			<p>Within-subjects designs rely on <i>consistent</i> differences between the conditions, and they can detect these differences even if they're relatively small. Remember from before: if almost every person has slightly lower BP in the Veggie Condition than in the Fruit Condition (see the graph on the left), the difference will probably be statistically significant. However, if some participants have much lower BP in the Veggie Condition, it might not be statistically significant if others have much lower BP in the Fruit Condition (see the graph on the right).</p>	
+
+			<p>In a within-subjects experiment, the average BPs for each condition might be very similar, as they are here, but we could still find a statistically significant difference if the two interventions have consistently different effects for each participant. One way to measure the consistency of the difference between the two conditions is using a Pearson correlation, which is why we're showing the correlation coefficients here as well.</p>
+
+		</div>
+		
+		<div id="Text2" style="display:none">
+			<p>Try simulating a few datasets with the "Resample" button. Notice how when the correlation coefficient is higher, the lines tend to be more parallel, and even small differences between the treatments can be statistically significant because they are consistent.</p>
+
+			
+			
+		</div>
+		<button id="backButton">Back</button><button id="nextButton">Next</button>
+		
+		
+		<!-- <center><button id="SubmitButton" style="display:none" onclick="goForward()">Continue to Quiz</button></center> -->
+	</div>
+	<div class="sidebar">
+		<u><b><ul>Key Ideas:</ul></b></u>
+		<span id="vocabSpan" style="font-size: 14px">
+			<li><i>Between-Subjects Designs</i> assign each person to one condition.</li><br>
+			<li><i>Within-Subjects Designs</i> assign each person to every condition.</li><br>
+			<li>Within-subjects designs eliminate individual differences as a factor that could influence the dependent variable</li><br>
+			<li>Between-subjects designs examine group means</li><br>
+			<li>Within-subjects designs examine difference scores</li><br>
+			<li>Within-subjects designs are insensitive to individual differences</li><br>
+			<li>Within-subjects designs are more powerful than between-subjects designs</li>
+		</span>
+	</div>
+</div>
+
+<div class="pg" style="width:1000px;display:none" id="review">
+	<h1>Ready for the Quiz?</h1>
+	<p> Take a moment to review before the quiz. You can mouse over each bullet point to see a visual aid. Click below when you're ready!</p>
+
+	<u><b>Review:</b></u><ul>
+		<li><span id="list0"><i>Between-Subjects Designs</i> assign each person to one condition.</span></li><br>
+		<li><span id="list1"><i>Within-Subjects Designs</i> assign every person to every condition.</span></li><br>
+		<li><span id="list2">Between-subjects designs examine group means</span></li><br>
+		<li><span id="list3">Within-subjects designs examine difference scores</span></li><br>
+		<li><span id="list4">Within-subjects designs are insensitive to individual differences</span></li><br>
+		<li><span id="list5">Within-subjects designs are more powerful than between-subjects designs</span></li><br>
+		<li><span id="list6">Within-subjects designs can detect very small differences as long as they're consistent</span></li>
+	</ul>
+	
+	<button id="backButton" onclick="goBack()">Back</button><button onclick="MySubmit()">Next</button>
+</div>
+
+<center>
+	<div id="logout" style="display:none" class="logout"><a href="/logout">Logout</a></div>
+</center>
+
+<center>
+	<div class="review" id="listDiv0" style="top:-310px;left:230px; display:none; height:200px; width:350px">
+		<br><b>Between-Subjects</b>
+		<img src="/static/images/BetweenSubjects.png" style="height:150px"></img>
+	</div>
+
+	<div class="review" id="listDiv1" style="top:-310px;left:230px; display:none; height:200px; width:350px">
+		<br><b>Within-Subjects</b>
+		<img src="/static/images/WithinSubjects.png" style="height:150px"></img>
+	</div>
+
+	<div class="review" id="listDiv2" style="top:-310px;left:230px; display:none; height:200px; width:350px">
+		<img src="/static/images/BS2.png" style="height:200px"></img>
+	</div>
+
+	<div class="review" id="listDiv3" style="top:-310px;left:230px; display:none; height:200px; width:350px">
+		<img src="/static/images/WS1.png" style="height:200px"></img>
+	</div>
+
+	<div class="review" id="listDiv4" style="top:-325px;left:230px; display:none; height:200px; width:443px">
+		<img src="/static/images/individualDifferences.png" style="height:200px"></img>
+	</div>
+
+	<div class="review" id="listDiv5" style="top:-335px;left:260px; display:none; height:190px; width:443px">
+		<img src="/static/images/Power.png" style="height:180px"></img>
+	</div>
+
+	<div class="review" id="listDiv6" style="top:-325px;left:230px; display:none; height:220px; width:443px">
+		<img src="/static/images/Correl.png" style="height:220px"></img>
+	</div>
+</center>
+
+
+
+<script>
+
+
+
+var datasets = 1;
+var progress = {{progress}};
+var Sim2Progress = 0;
+var Q4Complete = false;
+var pValues = {{pValues2}};
+var sigTally = {{sigTally2}};
+var correlations = {{correlations}};
+var sig = [0,0,0,0]
+
+// Cache the DOM
+
+var $container = $('#container');
+var $logout = $('#logout');
+var $header = $('#header2');
+
+var $all = [$('#Text1'), $('#Text2'), $('#Quiz4'), $('#ResampleButton')];
+
+var $vocabSpan = $('#vocabSpan');
+
+var $sigTrack = [$('#sigTrack1'), $('#sigTrack2')];
+var $pdiv = [$('#p1'), $('#p2')];
+
+var $review = $('#review');
+
+
+var $backButton = $('#backButton');
+var $nextButton = $('#nextButton');
+
+// var $spans = [$('#span1'), $('#span2')];
+
+// var $hide = [$('#Text1'), $('#nextButton')];
+
+var $graphs = [$('#graph1'), $('#graph2')];
+
+var $progress0 = [$('#Quiz4'), $('#firstrow')];
+var $progress1 = [$('#Text1'), $('#nextButton')];
+var $progress2 = [$('.pdiv'), $('#Text2'), $('#ResampleButton'), $('#SubmitButton')];
+var $invisibleStuff = [$('#p1'), $('#p2'), $('.pdiv'), $('#span1'), $('#span2')];
+
+var $listItems = [$('#list0'), $('#list1'), $('#list2'), $('#list3'), $('#list4'), $('#list5'), $('#list6')];
+
+var $listDivs = [$('#listDiv0'),$('#listDiv1'),$('#listDiv2'),$('#listDiv3'),$('#listDiv4'),$('#listDiv5'),$('#listDiv6')];
+
+function recordQuiz4(){
+	// record the result
+	Q4Outcome = $('input[name=q4]:checked', '#Q4Answers').val();
+	if(Q4Outcome != 'A' & Q4Outcome != 'B'){
+		alert('Please make a selection!');
+		return
+	}else if(Q4Outcome == 'A'){
+		$('#responseSpan').html('Right!');
+	}else{
+		$('#responseSpan').html(
+			'Actually it\'s the one on the left. (Check out those p values!)'
+			);
+	}
+	Q4Complete = true;
+	goForward();
+}
+
+function EventBinder(){
+	$backButton.unbind().on('click', goBack);
+	if(Sim2Progress == 0){
+		if(Q4Complete == false){
+			$nextButton.unbind().on('click', recordQuiz4);
+		}else{
+			$nextButton.unbind().on('click', goForward);
+		}
+	}else{
+		$nextButton.unbind().on('click', goForward);
+	}
+
+}
+
+function Render(){
+	for(var i = 0; i < $all.length; i++){
+		$all[i].hide();
+	}
+	for(var i = 0; i < $invisibleStuff.length; i++){
+		$invisibleStuff[i].css('visibility', 'hidden');
+	}
+	
+	if(Sim2Progress == 0){
+		for(var i = 0; i < $progress0.length; i++){
+			$progress0[i].show();			
+		}
+		EventBinder();
+
+	}else if(Sim2Progress == 1){
+		
+	
+		for(var i = 0; i < $progress1.length; i++){
+			$progress1[i].show();			
+		}
+
+		for(var i = 0; i < $invisibleStuff.length; i++){
+			$invisibleStuff[i].css("visibility", "visible");
+		}
+
+
+	}else if(Sim2Progress == 2){
+
+		console.log('Starting!');
+
+		// show stuff
+		for(var i = 0; i < $progress2.length; i++){
+			$progress2[i].show();
+		}
+		
+		$('.sigTrack').css('visibility', 'visible');
+		$sigTrack[0].css('visibility', 'visible');
+		$sigTrack[1].css('visibility', 'visible');
+
+		for(var i = 0; i < $invisibleStuff.length; i++){
+			$invisibleStuff[i].css("visibility", "visible");
+		}
+
+		$vocabSpan.append(
+			'<br><li>Within-subjects designs can detect very small differences as long as they\'re consistent</li>'
+			);
+		// maybe this should be an empty span in the html and I should populate it with items in an array in JS
+
+		KeepScore();
+	}else if(Sim2Progress < 0){
+		BackPage();			
+	}
+	
+}
+
+
+
+function goForward(){
+	
+	Sim2Progress += 1;
+	console.log('Progress: '+Sim2Progress);
+	EventBinder();
+	Render();
+	if(Sim2Progress > 2){
+		Review();
+	}
+}
+
+function goBack(){
+	Sim2Progress -= 1;
+	Render();
+	
+	if(Sim2Progress <= 2){
+		$('#container').show();
+		$('#review').hide();
+	}
+	
+
+
+}
+
+// bind events for hover
+HoverEvents = function(){
+
+	// not sure what "cancel" does...
+	var cancel = false;
+	$listItems[0].hover(function(){
+		$listDivs[0].show();
+		$listItems[1].css('opacity', '0.4');
+		$listItems[2].css('opacity', '0.4');
+		$listItems[3].css('opacity', '0.4');
+		$listItems[4].css('opacity', '0.4');
+		$listItems[5].css('opacity', '0.4');
+		$listItems[6].css('opacity', '0.4');
+	},function(){
+		if(!cancel)
+			$listDivs[0].hide();
+			$listItems[1].css('opacity', '1.0');
+			$listItems[2].css('opacity', '1.0');
+			$listItems[3].css('opacity', '1.0');
+			$listItems[4].css('opacity', '1.0');
+			$listItems[5].css('opacity', '1.0');
+			$listItems[6].css('opacity', '1.0');
+	});
+
+	$listItems[1].hover(function(){
+		$listDivs[1].show();
+		$listItems[0].css('opacity', '0.4');
+		$listItems[2].css('opacity', '0.4');
+		$listItems[3].css('opacity', '0.4');
+		$listItems[4].css('opacity', '0.4');
+		$listItems[5].css('opacity', '0.4');
+		$listItems[6].css('opacity', '0.4');
+	},function(){
+		if(!cancel)
+			$listDivs[1].hide();
+			$listItems[0].css('opacity', '1.0');
+			$listItems[2].css('opacity', '1.0');
+			$listItems[3].css('opacity', '1.0');
+			$listItems[4].css('opacity', '1.0');
+			$listItems[5].css('opacity', '1.0');
+			$listItems[6].css('opacity', '1.0');
+	});
+
+	$listItems[2].hover(function(){
+		$listDivs[2].show();
+		$listItems[1].css('opacity', '0.4');
+		$listItems[0].css('opacity', '0.4');
+		$listItems[3].css('opacity', '0.4');
+		$listItems[4].css('opacity', '0.4');
+		$listItems[5].css('opacity', '0.4');
+		$listItems[6].css('opacity', '0.4');
+	},function(){
+		if(!cancel)
+			$listDivs[2].hide();
+			$listItems[1].css('opacity', '1.0');
+			$listItems[0].css('opacity', '1.0');
+			$listItems[3].css('opacity', '1.0');
+			$listItems[4].css('opacity', '1.0');
+			$listItems[5].css('opacity', '1.0');
+			$listItems[6].css('opacity', '1.0');
+	});
+
+	$listItems[3].hover(function(){
+		$listDivs[3].show();
+		$listItems[1].css('opacity', '0.4');
+		$listItems[2].css('opacity', '0.4');
+		$listItems[0].css('opacity', '0.4');
+		$listItems[4].css('opacity', '0.4');
+		$listItems[5].css('opacity', '0.4');
+		$listItems[6].css('opacity', '0.4');
+	},function(){
+		if(!cancel)
+			$listDivs[3].hide();
+			$listItems[1].css('opacity', '1.0');
+			$listItems[2].css('opacity', '1.0');
+			$listItems[0].css('opacity', '1.0');
+			$listItems[4].css('opacity', '1.0');
+			$listItems[5].css('opacity', '1.0');
+			$listItems[6].css('opacity', '1.0');
+	});
+
+	$listItems[4].hover(function(){
+		$listDivs[4].show();
+		$listItems[1].css('opacity', '0.4');
+		$listItems[2].css('opacity', '0.4');
+		$listItems[3].css('opacity', '0.4');
+		$listItems[0].css('opacity', '0.4');
+		$listItems[5].css('opacity', '0.4');
+		$listItems[6].css('opacity', '1.0');
+	},function(){
+		if(!cancel)
+			$listDivs[4].hide();
+			$listItems[1].css('opacity', '1.0');
+			$listItems[2].css('opacity', '1.0');
+			$listItems[3].css('opacity', '1.0');
+			$listItems[0].css('opacity', '1.0');
+			$listItems[5].css('opacity', '1.0');
+			$listItems[6].css('opacity', '1.0');
+	});
+
+	$listItems[5].hover(function(){
+		$listDivs[5].show();
+		$listItems[1].css('opacity', '0.4');
+		$listItems[2].css('opacity', '0.4');
+		$listItems[3].css('opacity', '0.4');
+		$listItems[4].css('opacity', '0.4');
+		$listItems[0].css('opacity', '0.4');
+		$listItems[6].css('opacity', '0.4');
+	},function(){
+		if(!cancel)
+			$listDivs[5].hide();
+			$listItems[1].css('opacity', '1.0');
+			$listItems[2].css('opacity', '1.0');
+			$listItems[3].css('opacity', '1.0');
+			$listItems[4].css('opacity', '1.0');
+			$listItems[0].css('opacity', '1.0');
+			$listItems[6].css('opacity', '1.0');
+	});
+
+	$listItems[6].hover(function(){
+		$listDivs[6].show();
+		$listItems[1].css('opacity', '0.4');
+		$listItems[2].css('opacity', '0.4');
+		$listItems[3].css('opacity', '0.4');
+		$listItems[4].css('opacity', '0.4');
+		$listItems[5].css('opacity', '0.4');
+		$listItems[0].css('opacity', '0.4');
+	},function(){
+		if(!cancel)
+			$listDivs[6].hide();
+			$listItems[1].css('opacity', '1.0');
+			$listItems[2].css('opacity', '1.0');
+			$listItems[3].css('opacity', '1.0');
+			$listItems[4].css('opacity', '1.0');
+			$listItems[5].css('opacity', '1.0');
+			$listItems[0].css('opacity', '1.0');
+	});
+
+}
+
+
+function KeepScore(){
+	
+	for(var i = 0; i < pList.length; i++){
+		sig[i] += sigList[i]
+	}
+
+	$sigTrack[0].html(sig[0]+'/'+datasets);
+	$sigTrack[1].html(sig[1]+'/'+datasets);
+}
+
+
+
+
+
+function Review(){
+	$('#container').hide();
+	$('#review').show();
+	HoverEvents();
+}
+
+function BackPage(){
+	console.log('Submitting!');
+	progress -=1;
+	$('#progressinput').val(String(progress));
+	$('#directioninput').val('backward');
+	$('#dataform').submit();
+}
+
+function MySubmit(){
+	console.log('Submitting!');
+	progress +=1;
+	$('#progressinput').val(String(progress));
+	$('#numbersims2').val(datasets);
+	$('#Q4Answer').val(Q4Answer);
+	$('#dataform').submit();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+/// Graph
+// list of files
+var FileList = ['/static/stimuli/WithinSubjects/highcorreldata1.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata2.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata3.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata4.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata5.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata6.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata7.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata8.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata9.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata10.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata11.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata12.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata13.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata14.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata15.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata16.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata17.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata18.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata19.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata20.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata21.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata22.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata23.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata24.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata25.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata26.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata27.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata28.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata29.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata30.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata31.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata32.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata33.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata34.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata35.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata36.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata37.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata38.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata39.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata40.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata41.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata42.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata43.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata44.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata45.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata46.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata47.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata48.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata49.csv',  
+	'/static/stimuli/WithinSubjects/highcorreldata50.csv'];
+
+var FileList2 = ['/static/stimuli/WithinSubjects/lowcorreldata1.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata2.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata3.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata4.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata5.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata6.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata7.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata8.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata9.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata10.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata11.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata12.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata13.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata14.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata15.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata16.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata17.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata18.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata19.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata20.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata21.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata22.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata23.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata24.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata25.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata26.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata27.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata28.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata29.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata30.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata31.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata32.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata33.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata34.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata35.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata36.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata37.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata38.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata39.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata40.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata41.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata42.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata43.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata44.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata45.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata46.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata47.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata48.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata49.csv',  
+	'/static/stimuli/WithinSubjects/lowcorreldata50.csv']
+
+
+// Randomly select a file from the list
+
+// A particularly good example
+random = 1;
+File = FileList[random];
+File2 = FileList2[random];
+pList = pValues[random];
+sigList = sigTally[random];
+corList = correlations[random];
+
+
+$pdiv[0].html(pList[0]+',    r = '+corList[0]);
+$pdiv[1].html(pList[1]+',    r = '+corList[1]);
+
+/// Name variables here
+var	yLabel = "Weight",
+	condLabel = "Exercise routine",
+	xMax = 20,
+	yMax = 200;
+	
+
+/// Variables for calculating stuff
+var parsedData;
+var iv = [];
+var dv = [];
+var dvb = [];
+var meanVeggieBetween = [];
+var meanFruitBetween = [];
+var meanVeggieWithin = [];
+var meanFruitWithin = [];
+var meanWideFruitBetween = [];
+var meanWideVeggieBetween = [];
+var meanWideFruitWithin = [];
+var meanWideVeggieWithin = [];
+
+
+/// Function for noise
+function randomJitter(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 250 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width])
+    .domain([0,xMax+1]);
+
+var y = d3.scale.linear()
+    .range([height, 0])
+    .domain([60,yMax]);
+
+
+var cond = d3.scale.ordinal()
+    .rangePoints([0, width],1)
+    .domain(["Veggie","Fruit"]);
+
+var color = d3.scale.category10()
+    .domain(["Veggie","Fruit"]);
+
+var xAxis = d3.svg.axis()
+    .scale(cond)
+    .orient("bottom")
+    // .ticks(xMax/2);
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+
+
+var chart1 = d3.select("#graph1").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  	.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var chart2 = d3.select("#graph2").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  	.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+// var line = d3.chart1.line()
+// 	.interpolate("basis")
+//     .x(function(d) { return x(d.t); })
+//     .y(function(d) { return y(d.measure); });
+
+// Sets attributes of blockers
+
+// var lineBlockerAttr = new Object();
+// 	lineBlockerAttr.x=width/3;
+// 	lineBlockerAttr.y=0;
+
+// var pointBlockerAttr = new Object();
+// 	pointBlockerAttr.x=width/2;
+// 	pointBlockerAttr.y=0;
+
+// Reads data from .csv file
+
+// for between-subjects
+
+// CHART 1
+d3.csv(File, function(error, data) {
+  	if (error) throw error;
+
+    //////// Saves data for calculation ////////
+    parsedData = JSON.parse(JSON.stringify(data));
+  
+    for (i = 0; i < parsedData.length; i++) {
+      iv.push(Number(parsedData[i].iv));
+      dv.push(Number(parsedData[i].dv));
+      // measure.push(Number(parsedData[i].measure));
+
+      if (parsedData[i].condition=="Veggie") {
+        meanVeggieBetween.push(Number(parsedData[i].dv));
+      }
+      else if (parsedData[i].condition=="Fruit") {
+        meanFruitBetween.push(Number(parsedData[i].dv));
+      }
+    }
+    ////////////////////////////////////////////
+
+  	data.forEach(function(d) {
+    	d.iv = +d.iv + randomJitter(-0.3,0.3);
+    	d.dv = +d.dv;
+    	d.t = +d.t;
+    	d.condition = d.condition;
+  	});
+
+
+    // Appends points
+	var line = chart1.selectAll("line")
+		.data(data)
+		.enter().append("line")
+			.filter(function(d) { return d.condition == 'Veggie' })
+				.attr("x1", cond("Veggie"))
+				.attr("x2", cond("Fruit"))
+				.attr("y1", function(d) { return y(d.dv); })
+				.attr("y2", function(d) { return y(d.dvb); })
+				.attr("stroke", "black");
+
+
+  	chart1.selectAll(".dot")
+      	.data(data)
+	   	.enter().append("circle")
+	      	.attr("class", "dot")
+	      	.attr("r", 3.5)
+	      	.attr("cx", function(d) { return cond(d.condition) + x(randomJitter(-0.5,0.5));})
+	      		// Not great because it's not scaled, but it works for now
+	      	.attr("cy", function(d) { return y(d.dv); })
+	      	.style("fill", function(d) { return color(d.condition); })
+	      	.style("opacity", 1);
+
+
+    // Appends axes
+
+  	chart1.append("g")
+    	.attr("class", "x axis")
+      	.attr("transform", "translate(0," + height + ")")
+      	.call(xAxis)
+
+
+  	chart1.append("g")
+      	.attr("class", "y axis")
+      	.call(yAxis)
+  
+
+
+
+});
+
+// CHART 2
+
+// for within-subjects
+d3.csv(File2, function(error, data) {
+  	if (error) throw error;
+
+    //////// Saves data for calculation ////////
+    parsedData = JSON.parse(JSON.stringify(data));
+	console.log(parsedData.length);
+    for (i = 0; i < 20; i++) {
+      iv.push(Number(parsedData[i].iv));
+      dv.push(Number(parsedData[i].dv));
+      dvb.push(Number(parsedData[i].dvb));
+      // measure.push(Number(parsedData[i].measure));
+
+      if (parsedData[i].condition=="Veggie") {
+        meanVeggieWithin.push(Number(parsedData[i].dv));
+      }
+      else if (parsedData[i].condition=="Fruit") {
+        meanFruitWithin.push(Number(parsedData[i].dv));
+      }
+    }
+    ////////////////////////////////////////////
+
+  	data.forEach(function(d) {
+    	d.iv = +d.iv;
+    	d.dv = +d.dv;
+    	d.dvb = +d.dvb;
+    	d.t = +d.t;
+    	d.condition = d.condition;
+  	});
+
+  	
+    // Appends points
+
+	var line = chart2.selectAll("line")
+		.data(data)
+		.enter().append("line")
+			.filter(function(d) { return d.condition == 'Veggie' })
+				.attr("x1", cond("Veggie"))
+				.attr("x2", cond("Fruit"))
+				.attr("y1", function(d) { return y(d.dv); })
+				.attr("y2", function(d) { return y(d.dvb); })
+				.attr("stroke", "black");
+
+
+  	chart2.selectAll(".dot")
+      	.data(data)
+	   	.enter().append("circle")
+	      	.attr("class", "dot")
+	      	.attr("r", 3.5)
+	      	.attr("cx", function(d) { return cond(d.condition) + x(randomJitter(-0.5,0.5));})
+	      		// Not great because it's not scaled, but it works for now
+	      	.attr("cy", function(d) { return y(d.dv); })
+	      	.style("fill", function(d) { return color(d.condition); })
+	      	.style("opacity", 1);
+
+    
+
+	
+
+    // Appends axes
+
+  	chart2.append("g")
+    	.attr("class", "x axis")
+      	.attr("transform", "translate(0," + height + ")")
+      	.call(xAxis)
+
+
+  	chart2.append("g")
+      	.attr("class", "y axis")
+      	.call(yAxis)
+   	
+
+});
+
+
+function UpdateData(){
+	datasets += 1;
+
+	$graphs[0].html('');
+	meanFruitBetween = [];
+	meanVeggieBetween = [];
+
+	$graphs[1].html('');
+	meanFruitWithin = [];
+	meanVeggieWithin = [];
+
+
+	// randomly select a datafile
+
+	random = Math.floor(Math.random() * FileList.length)
+
+	random = Math.floor(Math.random() * FileList.length);
+	File = FileList[random];
+	File2 = FileList2[random];
+	pList = pValues[random];
+	sigList = sigTally[random];
+	corList = correlations[random];
+
+	KeepScore();
+
+	$pdiv[0].html(pList[0]+',    r = '+corList[0]);
+	$pdiv[1].html(pList[1]+',    r = '+corList[1]);
+
+
+	var chart1 = d3.select("#graph1").append("svg")
+	    .attr("width", width + margin.left + margin.right)
+	    .attr("height", height + margin.top + margin.bottom)
+	  	.append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	var chart2 = d3.select("#graph2").append("svg")
+	    .attr("width", width + margin.left + margin.right)
+	    .attr("height", height + margin.top + margin.bottom)
+	  	.append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+	// CHART 1
+	d3.csv(File, function(error, data) {
+	  	if (error) throw error;
+
+	    //////// Saves data for calculation ////////
+	    parsedData = JSON.parse(JSON.stringify(data));
+	  
+	    for (i = 0; i < parsedData.length; i++) {
+	      iv.push(Number(parsedData[i].iv));
+	      dv.push(Number(parsedData[i].dv));
+	      // measure.push(Number(parsedData[i].measure));
+
+	      if (parsedData[i].condition=="Veggie") {
+	        meanVeggieBetween.push(Number(parsedData[i].dv));
+	      }
+	      else if (parsedData[i].condition=="Fruit") {
+	        meanFruitBetween.push(Number(parsedData[i].dv));
+	      }
+	    }
+	    ////////////////////////////////////////////
+
+	  	data.forEach(function(d) {
+	    	d.iv = +d.iv + randomJitter(-0.3,0.3);
+	    	d.dv = +d.dv;
+	    	d.t = +d.t;
+	    	d.condition = d.condition;
+	  	});
+
+	  	
+
+	    // Appends points
+
+	  	var line = chart1.selectAll("line")
+			.data(data)
+			.enter().append("line")
+				.filter(function(d) { return d.condition == 'Veggie' })
+					.attr("x1", cond("Veggie"))
+					.attr("x2", cond("Fruit"))
+					.attr("y1", function(d) { return y(d.dv); })
+					.attr("y2", function(d) { return y(d.dvb); })
+					.attr("stroke", "black");
+
+
+	  	chart1.selectAll(".dot")
+	      	.data(data)
+		   	.enter().append("circle")
+		      	.attr("class", "dot")
+		      	.attr("r", 3.5)
+		      	.attr("cx", function(d) { return cond(d.condition) + x(randomJitter(-0.5,0.5));})
+		      		// Not great because it's not scaled, but it works for now
+		      	.attr("cy", function(d) { return y(d.dv); })
+		      	.style("fill", function(d) { return color(d.condition); })
+		      	.style("opacity", 1);
+	    // Appends axes
+
+	  	chart1.append("g")
+	    	.attr("class", "x axis")
+	      	.attr("transform", "translate(0," + height + ")")
+	      	.call(xAxis)
+
+
+	  	chart1.append("g")
+	      	.attr("class", "y axis")
+	      	.call(yAxis)
+	   	
+
+
+
+	});
+
+	// CHART 2
+
+	// for within-subjects
+	d3.csv(File2, function(error, data) {
+	  	if (error) throw error;
+
+	    //////// Saves data for calculation ////////
+	    parsedData = JSON.parse(JSON.stringify(data));
+	  
+	    for (i = 0; i < parsedData.length; i++) {
+	      iv.push(Number(parsedData[i].iv));
+	      dv.push(Number(parsedData[i].dv));
+	      dvb.push(Number(parsedData[i].dvb));
+	      // measure.push(Number(parsedData[i].measure));
+
+	      if (parsedData[i].condition=="Veggie") {
+	        meanVeggieWithin.push(Number(parsedData[i].dv));
+	      }
+	      else if (parsedData[i].condition=="Fruit") {
+	        meanFruitWithin.push(Number(parsedData[i].dv));
+	      }
+	    }
+	    ////////////////////////////////////////////
+
+	  	data.forEach(function(d) {
+	    	d.iv = +d.iv;
+	    	d.dv = +d.dv;
+	    	d.dvb = +d.dvb;
+	    	d.t = +d.t;
+	    	d.condition = d.condition;
+	  	});
+
+
+	  	
+
+		var line = chart2.selectAll("line")
+			.data(data)
+			.enter().append("line")
+				.filter(function(d) { return d.condition == 'Veggie' })
+					.attr("x1", cond("Veggie"))
+					.attr("x2", cond("Fruit"))
+					.attr("y1", function(d) { return y(d.dv); })
+					.attr("y2", function(d) { return y(d.dvb); })
+					.attr("stroke", "black");
+
+
+
+	    // Appends points
+	  	var line = chart2.selectAll("line")
+			.data(data)
+			.enter().append("line")
+				.filter(function(d) { return d.condition == 'Veggie' })
+					.attr("x1", cond("Veggie"))
+					.attr("x2", cond("Fruit"))
+					.attr("y1", function(d) { return y(d.dv); })
+					.attr("y2", function(d) { return y(d.dvb); })
+					.attr("stroke", "black");
+
+
+	  	chart2.selectAll(".dot")
+	      	.data(data)
+		   	.enter().append("circle")
+		      	.attr("class", "dot")
+		      	.attr("r", 3.5)
+		      	.attr("cx", function(d) { return cond(d.condition) + x(randomJitter(-0.5,0.5));})
+		      		// Not great because it's not scaled, but it works for now
+		      	.attr("cy", function(d) { return y(d.dv); })
+		      	.style("fill", function(d) { return color(d.condition); })
+		      	.style("opacity", 1);
+	  	
+	 
+
+	    // Appends axes
+
+	  	chart2.append("g")
+	    	.attr("class", "x axis")
+	      	.attr("transform", "translate(0," + height + ")")
+	      	.call(xAxis)
+
+
+	  	chart2.append("g")
+	      	.attr("class", "y axis")
+	      	.call(yAxis)
+	   
+
+	});
+
+}
+
+$(document).ready(function(){
+	$header.show();
+	$logout.show();
+	$container.show();
+	Render();
+	EventBinder();
+});
+
+</script>
+
+{% endblock %}

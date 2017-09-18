@@ -1,0 +1,445 @@
+{% extends "_base.htm" %}
+{% block title %}
+	The Power of Within-Subjects Designs
+{% endblock%}
+
+
+{% block bodycontent %}
+
+<!-- Hidden input for the completed data -->
+<form id="dataform" method="post" action="/WithinSubject">
+	<input id="Q1" name="Q1" type="hidden">
+	<input id="Q2" name="Q2" type="hidden">
+	<input id="guessesinput" name="guessesinput" type="hidden">
+	<input id="progressinput" name="progressinput" type="hidden">
+	<input id="directioninput" name="directioninput" type="hidden">
+	<input id="Submit" onclick="MySubmit()" value="Submit" type="hidden">
+</form>
+
+<h2 id="header2" style="display:none"><center>Within-Subjects Designs</center></h2>
+
+<div id="container" style="display:none">
+	<div class="corypg">
+		<div id="Text1">
+			<p>Imagine you hear about a study being planned at your local university. The researchers are trying to find out which of two interventions is more effective for lowering systolic blood pressure (BP) over a 3-month timespan. We’ll call them the Fruit Condition and the Veggie Condition:</p>
+
+			<ul>
+				<li><b>Fruit Condition:</b> Each week, a new basket of fresh fruit is delivered to the participants.</li>
+				<li><b>Veggie Condition:</b> Each week, a new basket of fresh vegetables is delivered to the participants.</li>
+			</ul>
+
+			<p>If we want to see which of these interventions is more effective, there are a couple of ways we could go about it.</p>
+
+			<p>First, we could use a <b>between-subjects design</b>. With this kind of research design, each person is randomly assigned to one of the two conditions. The Veggie group (Bob, Amy, and Jim) would get only the Veggie Condition, while the Fruit Group (Sarah, Todd, and Kelsey) would get only the Fruit Condition. If the Veggie group has lower BP than the Fruit group at the end of 3 months, we would conclude that the Veggie Condition was more effective for lowering systolic BP.</p>
+
+			<p>Alternatively, we could use a <b>within-subjects design</b>. Using this approach, we would put everyone in both conditions at different points in time. So instead of being randomly assigned to receive one condition, each participant would receive both conditions. Then we would see if participants' BP was consistently lower in one condition than in the other.</p>
+			<div>
+				<center>
+					<div class="minipg" style="padding:5px;width:250px;display:inline-block;margin-right:50px">
+						<IMG src="/static/images/BetweenSubjects.png" style="width:220px"></IMG>
+					</div>
+					<div class="minipg" style="padding:5px;width:250px;display:inline-block">
+						<IMG src="/static/images/WithinSubjects.png" style="width:220px"></IMG>
+					</div>
+					<br>
+					<div style="display:inline-block;margin-right:210px">
+						Between-Subjects
+					</div>
+					<div style="display:inline-block">
+						Within-Subjects
+					</div>
+					<br>
+					<br>
+				</center>
+			</div>
+		</div>
+
+		<div id="Quiz1"style="display:none">
+			<div>
+				<center>
+					<div class="minipg" style="padding:5px;width:250px;display:inline-block;margin-right:50px">
+						<IMG src="/static/images/BetweenSubjects.png" style="width:220px"></IMG>
+					</div>
+					<div class="minipg" style="padding:5px;width:250px;display:inline-block">
+						<IMG src="/static/images/WithinSubjects.png" style="width:220px"></IMG>
+					</div>
+					<br>
+					<div style="display:inline-block;margin-right:210px">
+						Between-Subjects
+					</div>
+					<div style="display:inline-block">
+						Within-Subjects
+					</div>
+				</center>
+			</div>
+
+			<p>Which approach do you think is best for finding the most effective intervention?</p>
+			<form id="Q1Answers">
+				<input type="radio" name="q1" value="A" id="q1a"><label for="q1a">The between-subjects design</label><br>
+				<input type="radio" name="q1" value="B" id="q1b"><label for="q1b">The within-subjects design</label><br>
+			</form><br>
+			<br>
+			<div id="ResponseDiv1A" style="display:none">
+				<p><i>Whoops! Actually it's the within-subjects design!</i></p>
+			</div>
+
+			<div id="ResponseDiv1B" style="display:none">
+				<p><i>Correct!</i></p>
+			</div>
+
+			<div id="Feedback" style="display:none">
+				<p><i>The within-subjects design allows for a direct comparison between the two interventions within the same group of participants. The main advantage of this approach is that <b>it eliminates individual differences between participants as a factor that could influence our dependent variable</b> (in this case: BP). Let’s examine this a bit closer.</i></p>
+				
+			</div>
+
+
+		</div>
+
+
+		<div id="Text2"style="display:none">	
+			
+			<p>The defining feature of within-subjects designs is that they make a comparison within the same group of participants rather than between different groups. Instead of comparing participants in the Fruit and Veggie Conditions separately, we can compare participants with <i>themselves</i>. In other words, instead of having a dedicated control group, <i>each subject is effectively a “control” for him/herself!</i></p>
+			<!-- Will they know what control groups are by this point in the semester? -->
+
+			<div>
+				<center>
+					<div class="minipg" style="padding:5px;width:250px;display:inline-block;margin-right:50px">
+						<IMG src="/static/images/BetweenSubjects.png" style="width:220px"></IMG>
+					</div>
+					<div class="minipg" style="padding:5px;width:250px;display:inline-block">
+						<IMG src="/static/images/WithinSubjects.png" style="width:220px"></IMG>
+					</div>
+					<br>
+					<div style="display:inline-block;margin-right:210px">
+						Between-Subjects
+					</div>
+					<div style="display:inline-block">
+						Within-Subjects
+					</div>		
+				</center>
+			</div>
+			<br>
+
+			<div id="Quiz2">
+				<p><b>Which of the following could pose a problem for a between-subjects design?</b></p>
+				<form id="Q2Answers" style="position:relative;left:20px">
+					<input type="radio" name="q2" value="A" id="q2a"><label for="q2a">There could be individual differences between the participants within each group.</label><br>
+					<input type="radio" name="q2" value="B" id="q2b"><label for="q2b"><span id="optionB">Between-subjects designs are more susceptible to the Hawthorne Effect, because each group knows that they're being observed.</span></label><br>
+					<input type="radio" name="q2" value="C" id="q2c"><label for="q2c"><span id="optionC">It's a correlational comparison because we're not actually manipulating the independent variable, and correlation doesn't imply causation!</span></label><br>
+				</form><br>
+				<div id="ResponseDiv2" style="display:none"></div>
+
+			</div>
+
+			
+		</div>
+
+
+
+		<div id="Text3" style="display:none">
+			
+			<center>
+				<div>
+					<div id="picture1" style="display:inline-block">
+						<img id="BS1" src="/static/images/BS1.png" style="height:225px">
+						<img id="BS2" src="/static/images/BS2.png" style="height:225px;display:none"
+					</div>
+					<div id="picture2" style="display:inline-block">
+						<img id="WS1" src="/static/images/WS1.png" style="height:225px">
+						<img id="WS2" src="/static/images/WS2.png" style="height:225px;display:none"
+					</div>
+				</div>
+				<div style="width:300px;display:inline-block;position:relative;left:15px">
+					<span id="BSsig">Between-Subjects: Larger Effect</span>
+					<span id="BSnonsig" style="display:none">Between-Subjects: Smaller Effect</span>
+				</div>
+				<div style="width:300px;display:inline-block;position:relative;left:35px">
+					<span id="WSsig">Within-Subjects: Larger Effect</span>
+					<span id="WSnonsig" style="display:none">Within-Subjects: Smaller Effect</span>
+				</div>
+				<br>
+				<br>
+				<div>
+					<button style="display:inline-block;position:relative;left:-100px" onclick="switchBS()">Change</button>
+					<button style="display:inline-block;position:relative; left:150px" onclick="switchWS()">Change</button>
+				</div>
+			</center>
+
+			<p>An important point to understand about these two designs is that they take different approaches to finding which intervention is more effective.</p>
+
+			<p><b>In a between-subjects design, we examine whether one group is different from another group after some treatment.</b> To test this, we would compare the mean BP for each group after the treatment (the blue and orange lines in the graph on the left). If the means are far apart relative to the spread of the points in each group, the difference is more likely to be statistically significant.</p>
+
+			<p><b>In a within-subjects design, we examine whether one treatment works better than the other treatment for the same group of people.</b> Mean differences are important, but only to the extent that they reflect consistent differences for individual participants. To illustrate this, the graph above has lines connecting the dots that belong to the same subject. A handy rule of thumb is that if these lines are largely parallel, the difference between the treatments is consistent for each participant. If they're mostly parallel and sloped, it tells us the treatments might have significantly different effects. Here we see that participants consistently have slightly lower BP after the Veggie Condition compared to the Fruit Condition.</p>
+
+			<p>Use the "Change" button under each example graph to switch between examples of significant and nonsignificant differences for each kind of design. Try to pinpoint the key difference between significant and nonsignificant for each design.</p>
+
+
+			
+
+		</div>
+		<button id="backButton">Back</button><button id="nextButton">Next</button>
+	</div>
+
+	<div class="sidebar">
+
+		<u><b><ul>Key Ideas:</ul></b></u>
+		<span id="vocabSpan" style="font-size: 14px"></span>
+
+	</div>
+
+</div>
+<center>
+	<div id="logout" style="display:none" class="logout"><a href="/logout">Logout</a></div>
+</center>
+
+<script>
+
+// Variables
+
+var progress = {{progress}};
+var introProgress = {{introProgress}};
+var Q1Complete = false;
+var Q2Complete = false;
+var Q1Outcome = "unanswered";
+var Q2Outcome = new Array();
+// because we're giving them multiple guesses, this way we can record all of them
+var guesses = 0;
+
+// Cache the DOM (good habit to start)
+
+var $text1 = $('#Text1');
+var $text2 = $('#Text2');
+var $text3 = $('#Text3');
+
+var $quiz1 = $('#Quiz1');
+var $quiz2 = $('#Quiz2');
+
+var $container = $('#container');
+var $logout = $('#logout');
+var $header = $('#header2');
+
+var $responseDiv2 = $('#ResponseDiv2');
+var $nextButton = $('#nextButton');
+var $backButton = $('#backButton');
+
+var $all = [$('#container'), $('#logout'), $('#header2'), $('#Text1'), $('#Text2'), $('#Text3'), $('#Quiz1')];
+
+var $BSDisplay = $('#BSsig, #BSnonsig, #BS1, #BS2');
+var $WSDisplay = $('#WSsig, #WSnonsig, #WS1, #WS2');
+
+var $vocabSpan = $('#vocabSpan');
+
+var vocabArray = ['<li><i>Between-Subjects Designs</i> assign each person to one condition.</li><br><li><i>Within-Subjects Designs</i> assign each person to every condition.</li>', '<br><li>Within-subjects designs eliminate individual differences as a factor that could influence the dependent variable</li>'];
+
+// Event binding
+
+// bind back button separately because 
+
+
+function EventBinder(){
+	$backButton.unbind().on('click', goBack);
+
+	// Changes nextButton to what we need it to do.
+	if(introProgress == 1){
+		if(Q1Complete == false){
+			$nextButton.unbind().on('click', RecordQuiz1);	
+		}else{
+			$nextButton.unbind().on('click', goForward);
+		}
+	}else if(introProgress == 2){
+		if(Q2Complete == false){
+			$nextButton.unbind().on('click', RecordQuiz2);
+		}else{
+			$nextButton.unbind().on('click', goForward);
+		}
+	}else{
+		$nextButton.unbind().on('click', goForward);
+	}
+	
+}
+
+
+
+// Functions
+
+
+// function EndText1(){
+// 	$text1.hide();
+// 	$quiz1.show();
+// 	$vocabSpan.html(vocabArray[0]);
+// }
+
+function RecordQuiz1(){
+	
+	// Record answer as "Q1Outcome"
+	Q1Outcome =	$('input[name=q1]:checked', '#Q1Answers').val();
+
+	if(Q1Complete == false){
+
+		if(Q1Outcome != 'A' & Q1Outcome != 'B'){
+			alert('Please make a selection!');
+			return
+
+		}else if(Q1Outcome == 'A'){
+			$('#ResponseDiv1A').show();
+			
+		}else if(Q1Outcome == 'B'){
+			$('#ResponseDiv1B').show();
+			
+		}
+		$('#Feedback').show();
+	}
+	Q1Complete = true;
+	$nextButton.unbind().on('click', goForward);
+
+}
+
+function RecordQuiz2(){
+	
+	
+
+	// Record answer as "Q2Outcome"
+	
+	Q2Outcome[guesses] = $('input[name=q2]:checked', '#Q2Answers').val();
+	
+	var answers = ['<p><i>That\'s what we\'re looking for!<br>In a between-subjects design, these individual differences are a mysterious nuisance: they increase the statistical noise in each group and thereby reduce our statistical power (the ability of our experiment to detect a difference between the two conditions). In a within-subjects design, because we use the same participants in each condition, random differences between participants in the two conditions are eliminated.</i></p>', '<p><i>Not this one!<br>This is a potentially valid concern for both designs: in either case participants might alter their behavior in ways that could lower their BP simply because they know they\'re being observed. However, it isn not a unique problem for between-subjects designs. Try again!</i></p>', '<p><i>Not quite!<br>Our independent variable (IV) is the dietary intervention: Fruit or Veggie Condition. Since in the between-subjects design we randomly assign subjects to one of these, we are directly manipulating the IV. Both designs are experimental rather than correlational. Try again!</i></p>']
+
+	if(Q2Complete == false){
+
+		if(Q2Outcome[guesses] != 'A' & Q2Outcome[guesses] != 'B' & Q2Outcome[guesses] != 'C'){
+			alert('Please make a selection!');
+			return
+
+		}else if(Q2Outcome[guesses] == 'A'){
+			$responseDiv2.html(answers[0]);
+			// $('#AnswerButton2').hide();
+			$('#q2b, #optionB, #q2c, #optionC').css('opacity', '0.1');
+			$responseDiv2.show();
+			guesses += 1;
+			Q2Complete = true;
+			$nextButton.unbind().on('click', goForward);
+			
+		}else if(Q2Outcome[guesses] == 'B'){
+			$responseDiv2.html(answers[1]);
+			$responseDiv2.show();
+			guesses += 1;
+
+		}else if(Q2Outcome[guesses] == 'C'){
+			$responseDiv2.html(answers[2]);
+			$responseDiv2.show();
+			guesses += 1;
+		}
+	}else{
+		if(Q2Outcome[guesses] == 'A'){
+			$responseDiv2.html(answers[0]);
+			// $('#AnswerButton2').hide();
+			$('#q2b, #optionB, #q2c, #optionC').css('opacity', '0.1');
+			$responseDiv2.show();
+			guesses += 1;
+			Q2Complete = true;
+			$nextButton.on('click', goForward);
+			
+		}else if(Q2Outcome[guesses] == 'B'){
+			$responseDiv2.html(answers[1]);
+			$responseDiv2.show();
+			guesses += 1;
+
+		}else if(Q2Outcome[guesses] == 'C'){
+			$responseDiv2.html(answers[2]);
+			$responseDiv2.show();
+			guesses += 1;
+		}
+	}
+	
+}
+
+
+
+
+function switchBS(){
+	$BSDisplay.toggle();
+}
+
+function switchWS(){
+	$WSDisplay.toggle();
+}
+
+function Render(){
+	// navigate away if you need to
+	if(introProgress == 4){
+		MySubmit();
+	}else if(introProgress < 0){
+		backPage();
+	}else{
+
+		// reset visuals on the page
+		for(var i = 0; i < $all.length; i++){
+			$all[i].hide();
+		}
+		$vocabSpan.html('');
+		
+		$header.show();
+		$logout.show();
+		$container.show();
+		
+		if(introProgress == 0){
+			$text1.show();
+			// $backButton.css('visibility', 'hidden');
+			$backButton.attr('disabled', true);
+
+		}else if(introProgress == 1){
+			$quiz1.show();
+			$vocabSpan.html(vocabArray[0]);
+			$backButton.attr('disabled', false);
+
+		}else if(introProgress == 2){
+			$text2.show();
+			$vocabSpan.html([vocabArray[0], vocabArray[1]]);
+			
+		}else if(introProgress == 3){
+			$vocabSpan.html([vocabArray[0], vocabArray[1]]);
+			$text3.show();
+		}
+	}
+}
+
+function goForward(){
+	console.log('incrementing');
+	introProgress += 1;
+	EventBinder();
+	Render();
+
+}
+
+function goBack(){
+	introProgress -= 1;
+	EventBinder();
+	Render();
+}
+
+function backPage(){
+	progress -= 1;
+	$('#directioninput').val('backward');
+	$('#progressinput').val(String(progress));
+	$('#dataform').submit();
+}
+
+function MySubmit(){
+	console.log('Submit dat!');
+	$('#Q1').val(Q1Outcome);
+	$('#Q2').val(Q2Outcome);
+	progress += 1;
+	$('#progressinput').val(progress);
+	$('#guessesinput').val(guesses)
+	$('#directioninput').val('forward');
+	$('#dataform').submit();
+}
+
+
+$(document).ready(function(){
+	EventBinder();
+	Render();
+});
+
+</script>
+{% endblock %}

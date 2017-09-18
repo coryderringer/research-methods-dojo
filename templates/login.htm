@@ -1,0 +1,47 @@
+{% extends "_base.htm" %}
+{% block title %}
+	Login
+{% endblock%}
+
+
+{% block bodycontent %}
+
+
+<div class="pg">
+<h2><center>Please log in to continue</center></h2>
+<br>
+
+
+<form id="signin" method="post" action="/login">
+	<b><u>7-digit student ID:</u></b> <input type="text" name="username"/><br><br>
+	<!-- Password: <input type="password" name="password"/><br><br> -->
+	<input type="submit" value="Log in as student"/><br><br>
+
+	<input name="guest" id="guest" type="hidden" value="0">
+</form>
+<button onclick="guest()">Log in as guest (no progress is recorded)</button>
+
+<center><a href="/signup">create an account.</a></center>
+
+</div>
+
+<script>
+test = 0;
+function guest(){
+	$('#guest').val(1);
+
+	$('#signin').submit();
+}
+
+
+
+
+</script>
+
+
+
+
+
+
+
+{% endblock %}

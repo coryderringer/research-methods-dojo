@@ -1,0 +1,106 @@
+{% extends "_base.htm" %}
+{% block title %}
+	Quiz
+{% endblock%}
+
+
+{% block bodycontent %}
+
+<form id="dataform" method="post" action="/WithinSubject">
+	<input id="AnswerInput" name="AnswerInput" type="hidden">
+	<input id="progressinput" name="progressinput" type="hidden">
+	<input id="Submit" onclick="MySubmit()" value="Submit" type="hidden">
+</form>
+
+<h2><center>Within-Subjects Quiz</center></h2>
+
+<div class="pg">
+	<p><b>Please answer if the following statements are TRUE or FALSE</b></p>
+
+	<p>You are conducting a study to test a new IQ-boosting drug. To use a within-subjects design, each participant should receive the IQ drug at one time and a placebo at another time.</p>	
+
+	<select id="Q1" style="font-size:14px;" onchange="answered();">
+		<option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
+		<option value="1">TRUE</option>
+		<option value="0">FALSE</option>
+	</select><br>
+	
+	<p id="answer1" style="opacity:0; padding-left:20px"><b>Correct Answer: TRUE.</b> Between-subjects designs assign one level of the IV to each participant, whereas within-subjects designs require every participant to receive every level of the IV. In this case, because each participant received both the drug and the placebo, it is a within-subjects design.</p><br>
+
+	<p>After collecting your data, you notice that the IQ drug mean and the placebo mean are very similar. There might still be a significant effect, because you used a within-subjects design.</p>
+
+	<select id="Q2" style="font-size:14px;" onchange="answered();">
+		<option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
+		<option value="1">TRUE</option>
+		<option value="0">FALSE</option>
+	</select><br>
+	
+	<p id="answer2" style="opacity:0; padding-left:20px"><b>Correct Answer: TRUE.</b> Within-subjects designs examine the magnitude and consistency of difference scores for each individual subject. As we saw earlier, it's possible to have fairly small differences in group means, but still have significant p values, if there is very high consistency in the difference scores.</p><br>
+
+	<p>You also notice that there are pretty large individual differences in the IQ scores of your participants. You should be worried that your result will be affected.</p>
+
+	<select id="Q3" style="font-size:14px;" onchange="answered();">
+		<option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
+		<option value="1">TRUE</option>
+		<option value="0">FALSE</option>
+	</select><br>
+	
+	<p id="answer3" style="opacity:0; padding-left:20px"><b>Correct Answer: FALSE.</b> You should be cool as a cucumber, because within-subjects designs are insensitive to individual differences!</p><br>
+	
+	<button id="nextButton" disabled="true"><span>Check Answers</span></button>
+
+</div>
+<center>
+	<div class="logout"><a href="/logout">Logout</a></div>
+</center>
+
+<script>
+
+var progress = {{progress}};
+var Outcomes = new Array();
+
+
+
+
+function answered() {
+	responses = new Array();
+	responses.push(Number(Q1.value));
+	responses.push(Number(Q2.value));
+	responses.push(Number(Q3.value));
+
+	if (Math.min.apply(Math, responses)>(-1)) {
+		$('#nextButton').attr('disabled', false)
+			.unbind().on('click', showAnswers);
+			
+	}
+}
+
+function showAnswers(){
+	$('#answer1').fadeTo('fast', 1);
+	$('#answer2').fadeTo('fast', 1);
+	$('#answer3').fadeTo('fast', 1);
+
+	$('#Q1').attr('disabled', true);
+	$('#Q2').attr('disabled', true);
+	$('#Q3').attr('disabled', true);
+
+	$('#nextButton').unbind().on('click', MySubmit)
+		.find('span').html('Finish');
+}
+
+function MySubmit(){
+
+	console.log('Submitting!');
+	progress +=1;
+	$('#progressinput').val(String(progress));
+	$('#AnswerInput').val(String(responses));
+	$('#dataform').submit();
+	
+
+}
+
+
+
+</script>
+
+{% endblock %}

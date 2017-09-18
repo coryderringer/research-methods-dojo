@@ -1,0 +1,123 @@
+Cover story ideas: 
+	Calorie counting vs no counting, DV is body weight
+		(have to have random assignment in the between subjects scenario)
+Other notes:
+	Compare pre-post to other pre-post where the means of the groups themselves are the same, but for one it improves for every person (parallelish lines) and the other it doesn't (tangled lines). Also compare the former to post only. (Not sure which one to do first, Ben thinks the post only comparison first because it's easier.)
+		Datasets for these comparisons generated when ppts press a button (should also do a t test for them). Should let them do this as many times as they want. Talk them through the reasons the t tests are different, as well as Cohen's d. 
+	T-tests: can do in Javascript somehow, I'm sure (just use like 5 or 6 datapoints on each side)
+
+
+
+Page 1
+
+Imagine you hear about a study being planned at UPMC. The researchers are trying to find out if counting calories leads to weight loss over a 6 month timeframe, but there is disagreement among them as to the best approach to take for this research question. 
+
+Dr. Plotz wants to randomly divide the participants into a control group (who would be told to eat healthy foods) and an experimental group (who would be told to eat healthy foods and count the number of calories they eat). He thinks the best indicator of the effectiveness of calorie counting would be the difference between the group means: if the experimental group weighs less at the end of the 6 months, counting calories is an effective weight loss strategy.
+
+Dr. Bazelon disagrees. She wants to put everyone on two kinds of diet
+
+
+
+
+
+Let's imagine that you hear evidence from two sources supporting the idea that serving pancakes causes restaurants' popularity to increase.
+
+Source 1: When asked about it, local food and business experts agree that among the fine dining establishments in Pittsburgh, the ones who serve pancakes are overall more popular than the ones who do not.
+
+Source 2: A local foodie website interviewed the owners of some of the pancake-serving establishments. The owners said the increase in popularity since adding pancakes to the menu was larger than expected. The average restaurant improved its popularity by 15% after adding pancakes to the menu.
+
+
+
+Question: Which is more compelling to you: Source 1 or Source 2? (multiple choice) 
+	(If they choose source 1:) Well, they are the experts! Most people are actually more convinced by the second form of evidence. Take a minute to try to figure out why they would feel that way.
+
+
+	(If they choose source 2:) Most people tend to agree that Source 2 is more convincing. Take a second to read them again and try to figure out why you feel this way.
+
+	(button that takes them to the next page)
+
+
+
+Page 2 (But keep each Source text at the top so they can reference it and we can talk about it.)
+
+The reason most people find Source 2 more convincing is that the comparison is between the same restaurants rather than different ones. Instead of looking at restaurants that serve pancakes and restaurants that don't, Source 2 interviewed owners of restaurants that currently serve pancakes in order to compare the difference between their popularity pre- and post-pancake.
+
+At this point you might be wondering how any of this relates to research methods. Don't worry: we didn't make you hungry for nothing! Underlying the preference for source 2 kinds of comparisons over source 1 kinds of comparisons is the same principle that underlies most of experimental design: the preference for experimental designs that isolate experimental variance. Let's break down what that means.
+
+
+
+Page 3 (with Source text)
+
+First let's think about Source 1. At its core, Source 1 is a comparison between two kinds of restaurants: the kind that serve pancakes and the kind that don't. 
+
+Question: Which of the following could pose a problem for this kind of comparison? (multiple choice, let them guess again if they get it wrong)
+	There could be other differences between pancake and non-pancake restaurants.
+		That's what we're looking for!
+	We don't know for sure that the restaurants were selected randomly, so they may not be representative of the population of all restaurants. What if this effect only applies to the restaurants in our sample?
+		That's true, but it's also true for Source 2: we didn't randomly select those restaurants either! 
+	It's a correlational comparison because we're not actually manipulating the independent variable (pancakes), and correlation doesn't equal causation!
+		True, but in both cases (Source 1 and Source 2) we're learning about this data secondhand, either from a group or experts or a series of interviews. Even though this isn't an experiment (we can't manipulate the menus at any of the restaurants), there's still a good reason to favor Source 2 over Source 1.
+
+
+
+Page 4 (with Source text)
+
+The key here is that in Source 2 we tend to assume that the restaurants are largely similar from timepoint A (no pancakes) to timepoint B (serving pancakes). By contrast, in Source 1 we're looking at two groups of restaurants, with the only specified connection being that they are "swanky." 
+
+(Button that brings up next <p> as well as the posttest-only graphic with pancake scenario)
+
+If we were to diagram it out, this is what that comparison would look like. Some restaurants serve pancakes, some don't. We compare the mean popularity from each group using a t-test. Pancakes aside, there could be a lot of other differences between the restaurants on the left and on the right. What if more of the pancake restaurants are vegan? In that case, the increased popularity of the pancake group could be due to a **confounding factor**, in this case a surge in the popularity of vegan fare.
+
+
+
+Page 5 (without Source text but still with the posttest-only graphic)
+
+We might be able to control for these differences if we tested both groups before and after the pancake switch. Instead of only measuring popularity at one time (after half of the restaurants start serving pancakes), we could look at how popular each category was before and after the switch.
+
+(Button to switch graphic to a pre-post version). 
+
+Using this kind of comparison, which is closer to Source 2 from before (maybe we could have the actual text from Sources 1 and 2 come up if you hover over the words "Source 1" or "Source 2"?), we can control for the kind of confound that we saw earlier with the vegan food example. Instead of comparing the mean of the pancake group with the mean of the non-pancake group, we're comparing the mean difference in popularity from timepoint 1 to timepoint 2. If we see a larger increase in the pancake group than in the non-pancake group, we infer that pancakes were the cause of the increase. 
+
+Question: While this feels like an improvement over the group comparisons in Source 1, which of these is one possible problem? (multiple choice)
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

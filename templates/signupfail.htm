@@ -1,0 +1,36 @@
+{% extends "_base.htm" %}
+{% block title %}
+	Login failed!
+{% endblock%}
+
+
+{% block bodycontent %}
+
+
+<div class="pg">
+<h2><center><span id="problemspan">TEST</span></center></h2>
+<br>
+
+<form method="post" action="/signup">
+First name: <input type="text" name="firstname"/><br><br>
+Last name: <input type="text" name="lastname"/><br><br>
+Pitt credential <i>(ex: abc12)</i>: <input type="text" name="username"/><br><br>
+Password: <input type="password" name="password1"/><br><br>
+Re-type Password: <input type="password" name="password2"/><br><br>
+<input type="submit" value="Submit"/>
+</form>
+
+</div>
+
+
+
+<script>
+
+$('#problemspan').html('{{error}}')
+// var problem = 'username taken';
+
+
+
+</script>
+
+{% endblock %}
