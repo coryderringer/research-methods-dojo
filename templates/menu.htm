@@ -6,40 +6,48 @@
 
 {% block bodycontent %}
 
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
 
-<div class="pg">
-<h2><center>Welcome, {{firstname}}!</center></h2>
+	<!-- Navbar -->
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<p class="navbar-text">Research Methods Dojo</p> 
+			</div>
+		</div>
+	</nav>
 
-<p><center><span id="status_span">Span</span></center></p>
+	<section>
+		<div class="container well">
+			<h2>Welcome, {{firstname}}!</h2>
+			<p><span id="status_span">Span</span></p>
 
-<center>
-	<form id="Module2_Form" method="get" action="/WithinSubject">
-		<button id="Module2_Button">Button text</button>
-	</form>
-	<br>
-	<form id="Module1_Form" method="get" action="/CarryoverEffects">
-		<button id="Module1_Button" disabled="true">Button text</button>
-	</form>
-	<br>
-	<form id="Module3_Form" method="get" action="/PracticeFatigueEffects">
-		<button id="Module3_Button" disabled="true">Button text</button>
-	</form>
-	<br>
-</center>
+			<!-- Modules -->
+			<form id="Module2_Form" method="get" action="/WithinSubject">
+				<button class="btn btn-default" id="Module2_Button">Button text</button>
+			</form>
+			<br>
+			<form id="Module1_Form" method="get" action="/CarryoverEffects">
+				<button class="btn btn-default" id="Module1_Button" disabled="true">Button text</button>
+			</form>
+			<br>
+			<form id="Module3_Form" method="get" action="/PracticeFatigueEffects">
+				<button class="btn btn-default" id="Module3_Button" disabled="true">Button text</button>
+			</form>
+			<br>
 
-<div align="center" id="finish" style="display:none">
-	Now that you have finished all the tutorials, please complete the survey <a href="https://pitt.co1.qualtrics.com/SE/?SID=SV_bg51h9hKs5mu4PH" target='_blank'>HERE</a>.<br>You must complete it to get credit for this homework assignment.<br>
-</div>
+			<!-- Survey -->
+			<div align="center" id="finish" style="display:none">
+				Now that you have finished all the tutorials, please complete the survey <a href="https://pitt.co1.qualtrics.com/SE/?SID=SV_bg51h9hKs5mu4PH" target='_blank'>HERE</a>.<br>You must complete it to get credit for this homework assignment.<br>
+			</div>
 
-<p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
+			<!-- Log out -->
+			<p>You are currently logged in. Would you like to <a href="/logout">log out</a>?</p>
 
+		</div>
+	</section>
 
-</div>
-
-
-
-
-
+</body>
 
 <script>
 
@@ -122,7 +130,7 @@ if (firstname=='Guest') {
 	$('#Module1_Button').attr('disabled', false);
 	$('#Module2_Button').attr('disabled', false);
 	$('#Module3_Button').attr('disabled', false);
-	$('#status_span').html('Try out the modules below!');
+	$('#status_span').html('Try out the modules below:');
 }
 
 
