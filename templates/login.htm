@@ -6,41 +6,76 @@
 
 {% block bodycontent %}
 
+<script type="text/javascript">
 
-<div class="pg">
-<h2><center>Please log in to continue</center></h2>
-<br>
+	function loginOption(type) {
+		if (type=="g") {
+			$('#guestLogin').show()
+			$('#studentLogin').hide()
+		}
+		else if (type=="s") {
+			$('#studentLogin').show()
+			$('#guestLogin').hide()
+		}
+	}
 
-
-<form id="signin" method="post" action="/login">
-	<b><u>7-digit student ID:</u></b> <input type="text" name="username"/><br><br>
-	<!-- Password: <input type="password" name="password"/><br><br> -->
-	<input type="submit" value="Log in as student"/><br><br>
-
-	<input name="guest" id="guest" type="hidden" value="0">
-</form>
-<button onclick="guest()">Log in as guest (no progress is recorded)</button>
-
-<center><a href="/signup">create an account.</a></center>
-
-</div>
-
-<script>
-test = 0;
-function guest(){
-	$('#guest').val(1);
-
-	$('#signin').submit();
-}
-
-
-
+	function guest() {
+		$('#guest').val(1);
+		$('#signin').submit();
+	}
 
 </script>
 
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+
+	<!-- Navbar -->
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<p class="navbar-text">Research Methods Dojo</p> 
+			</div>
+		</div>
+	</nav>
 
 
+	<!-- Login -->
+	<section>
+		<div class="container well">
+			<h3>Welcome to the Research Methods Dojo!</h3>
+			<p><a href="/signup">Click here to create an account</a> or choose a log-in option below.</p>
 
+			<!-- Select login type -->
+			<div class="row">
+				<div class="col-md-4">
+					<label>Select a log-in option:</label>
+					<select class="form-control col-md-3" onchange="loginOption($('#login').val());" id="login">
+						<option selected="selected" disabled="true" value="0">Log-in options</option>
+						<option value="g">Log in as guest (no progress is recorded)</option>
+						<option value="s">Log in with existing account</option>
+					</select>
+				</div>
+			</div>
+			<br>
+
+			<!-- Student login -->
+			<form id="signin" method="post" action="/login" novalidate>
+				<div class="row form-group col-md-3" id="studentLogin" style="display:none">
+					<label for="username">7-digit student ID:</label>
+					<input type="text" class="form-control" name="username" required><br>
+					<input name="guest" id="guest" type="hidden" value="0">
+					<input type="submit" class="btn btn-primary" value="Log in">
+				</div>
+			</form>
+
+			<!-- Guest login -->
+			<div id="guestLogin" style="display:none">
+				<button class="btn btn-primary" onclick="guest()">Log in</button>
+			</div>
+
+		</div>
+	</section>
+
+</body>
 
 
 
