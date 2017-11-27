@@ -8,30 +8,52 @@
 
 
 <div class="pg">
-<h2><center>Please log in to continue</center></h2>
+<h2><center>Welcome to the Research Methods Dojo!</center></h2>
 <br>
 
+<button id="loginButton" onclick="showLogin()">Log in</button>
 
-<form id="signin" method="post" action="/login">
-	<b><u>7-digit student ID:</u></b> <input type="text" name="username"/><br><br>
-	<!-- Password: <input type="password" name="password"/><br><br> -->
-	<input type="submit" value="Log in as student"/><br><br>
-
-	<input name="guest" id="guest" type="hidden" value="0">
+<form id="signIn" method="post" action="/login" style = "display:none">
+	<br>
+	Email: <input type="text" name="email"/><br><br>
+	Password: <input type="password" name="password"/><br><br>
+	<input name="userType" id="userType" type = "hidden" value = "none">
+	<button id = "studentLogin" onclick="studentLoginFunction()">Log in as student</button>
+	<button id = "instructorLogin" onclick="instructorLoginFunction()">Log in as instructor</button>
+	<br>
 </form>
-<button onclick="guest()">Log in as guest (no progress is recorded)</button>
+
+<br>
+<br>
+<button onclick="guest()">Continue as guest (no progress is recorded)</button>
 
 <center><a href="/signup">create an account.</a></center>
 
 </div>
 
 <script>
-test = 0;
-function guest(){
-	$('#guest').val(1);
 
-	$('#signin').submit();
+// should check to make sure they actually entered something in each field, alert if they didn't
+
+function showLogin(){
+	$('#loginButton').attr('disabled', 'disabled')
+	$('#signIn').show()
 }
+
+function studentLoginFunction(){
+	$('#userType').val('student')
+	$('#signIn').submit()
+}
+function instructorLoginFunction(){
+	$('#userType').val('instructor')	
+	$('#signIn').submit()
+}
+
+function guest(){
+	$('#userType').val('guest')
+	$('#signIn').submit()
+}
+
 
 
 

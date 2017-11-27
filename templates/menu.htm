@@ -7,35 +7,44 @@
 {% block bodycontent %}
 
 
-<div class="pg">
-<h2><center>Welcome, {{firstname}}!</center></h2>
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+    <!-- Navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-text">Medication Task</p> 
+            </div>
+        </div>
+    </nav>
+    
+    <div id="containerDiv" style="width:800px; display: none" class="container well">
+		<h2><center>Welcome, {{firstName}}!</center></h2>
 
-<p><center><span id="status_span">Span</span></center></p>
+		<p><center><span id="status_span">Span</span></center></p>
 
-<center>
-	<form id="Module2_Form" method="get" action="/WithinSubject">
-		<button id="Module2_Button">Button text</button>
-	</form>
-	<br>
-	<form id="Module1_Form" method="get" action="/CarryoverEffects">
-		<button id="Module1_Button" disabled="true">Button text</button>
-	</form>
-	<br>
-	<form id="Module3_Form" method="get" action="/PracticeFatigueEffects">
-		<button id="Module3_Button" disabled="true">Button text</button>
-	</form>
-	<br>
-</center>
+		<center>
+			<form id="Module2_Form" method="get" action="/WithinSubject">
+				<button id="Module2_Button">Button text</button>
+			</form>
+			<br>
+			<form id="Module1_Form" method="get" action="/CarryoverEffects">
+				<button id="Module1_Button" disabled="true">Button text</button>
+			</form>
+			<br>
+			<form id="Module3_Form" method="get" action="/PracticeFatigueEffects">
+				<button id="Module3_Button" disabled="true">Button text</button>
+			</form>
+			<br>
+		</center>
 
-<div align="center" id="finish" style="display:none">
-	Now that you have finished all the tutorials, please complete the survey <a href="https://pitt.co1.qualtrics.com/SE/?SID=SV_bg51h9hKs5mu4PH" target='_blank'>HERE</a>.<br>You must complete it to get credit for this homework assignment.<br>
-</div>
+		<div align="center" id="finish" style="display:none">
+			Now that you have finished all the tutorials, please complete the survey <a href="https://pitt.co1.qualtrics.com/SE/?SID=SV_bg51h9hKs5mu4PH" target='_blank'>HERE</a>.<br>You must complete it to get credit for this homework assignment.<br>
+		</div>
 
-<p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
+		<p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
 
-
-</div>
-
+    </div>
+</body>
 
 
 

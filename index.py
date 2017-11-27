@@ -14,12 +14,36 @@ from google.appengine.api import urlfetch
 ###############################################################################
 ###############################################################################
 
-class User(db.Model):
-	username = 			db.StringProperty()
-	firstname = 		db.StringProperty()
-	lastname = 			db.StringProperty()
+class Instructor(db.Model):
+	firstName = 		db.StringProperty()
+	lastName = 			db.StringProperty()
+	email = 			db.StringProperty()
+	password = 			db.StringProperty()
 	usernum = 			db.IntegerProperty()
-	# password =			db.StringProperty()
+
+class Student(db.Model):
+	firstName = 		db.StringProperty()
+	lastName = 			db.StringProperty()
+	email = 			db.StringProperty()
+	password =			db.StringProperty()
+	usernum = 			db.IntegerProperty()
+	courses = 			db.ListProperty(int) # to allow for multiple courses
+
+class Course(db.Model):
+	term = 				db.StringProperty()
+	year = 				db.StringProperty()
+	courseNumber = 		db.IntegerProperty()
+	instructor = 		db.StringProperty()
+	roster = 			db.ListProperty(str) 
+
+class StudentCourse(db.Model): # student/course combination, when a student adds a course this object is created.
+	# student linked
+	usernum = 			db.IntegerProperty()
+
+	# course linked
+	courseNumber = 		db.IntegerProperty()
+
+	# module properties...
 	Module1 =			db.StringProperty()
 	Module2 = 			db.StringProperty()
 	Module3 = 			db.StringProperty()
@@ -31,13 +55,12 @@ class User(db.Model):
 	COEAnswer3 =		db.IntegerProperty()
 	COEAnswer4 =		db.IntegerProperty()
 	COEAnswer5 =		db.IntegerProperty()
-	term = 				db.StringProperty()
-	instructor = 		db.StringProperty()
 	PFEAnswer1 =		db.StringProperty()
 	PFEAnswer2 =		db.StringProperty()
 	PFEAnswer3 =		db.IntegerProperty()
 	PFEAnswer4 =		db.IntegerProperty()
 	# PFEAnswer5 =		db.IntegerProperty()
+	
 	numberOfGuesses = 	db.IntegerProperty()
 	numberOfSimulations = db.IntegerProperty()
 	numberOfSimulations2 = db.IntegerProperty()
@@ -133,78 +156,136 @@ class SignupHandler(webapp.RequestHandler):
 	def post(self):
 		self.session = get_current_session()
 			
-		username = self.request.get('username')
-		firstname = self.request.get('firstname')
-		instructor = self.request.get('instructor')
+		firstName = self.request.get('firstName')
+		lastName = self.request.get('lastName')
+		email = self.request.get('email')
+		role = self.request.get('roleSelect')
+		password = self.request.get('password1')
 
-		logging.info('INSTRUCTOR: '+instructor)
+		# courseNumber = self.request.get('courseNumber')
 		
-		# password1 = self.request.get('password1')
-		# password2 = self.request.get('password2')
-		exists = 2
 
-		# if username == '' or firstname == '':# or password1 == '' or password2 == '':
-		# 	doRender(self,
-		# 		'signupfail.htm',
-		# 		{'error': 'Please fill in all fields.'})
-		# # this keeps it from continuing with the rest of the handler if the "if" condition is met
-		# 	return
-
-		# Check whether user already exists
-		que = db.Query(User)
-		que = que.filter('username =', username)
-		results = que.fetch(limit=1)
-
-		# If the user already exists in the datastore
-		# if len(results) > 0:
-		# 	doRender(self,
-		# 		'signupfail.htm',
-		# 		{'error': 'This username already exists. Please contact your professor if you need to reset your password.'})
-		# 	return
-
-		# If the two passwords they entered do not match
-		# if password1 != password2:
-		# 	doRender(self,
-		# 		'signupfail.htm',
-		# 		{'error': 'Passwords do not match.'})
-		# 	return
-
-		# Create User object in the datastore
-		usernum = create_or_increment_NumOfUsers()
-		newuser = User(usernum=usernum, 
-			username=username,
-			firstname=firstname,
-			lastname=self.request.get('lastname'),
-			# note: this is the manual input for term. Doesn't make sense at this point to have them do this themselves since it's all for Spring 2016
-			term='Spring 2016',
+		logging.info('ROLE '+role)
+		if role == 'Student':
+	
 			
-			instructor=instructor,
-			# password=password1,
-			Module1="Incomplete",
-			Module2="Incomplete",
-			Module3="Incomplete");
+			# keep signupfail.htm for now...need something to do if they enter the wrong course number.
+			# # Check for course number in datastore:
+			# NOTE: WE'LL DO THIS IN ANOTHER HANDLER. 
+			# HERE WE'RE JUST CREATING AN ACCOUNT; WE'LL ADD A CLASS LATER.
+			
+			# que = db.Query(Instructor)
+			# que = que.filter('courseNumber =', courseNumber)
+			# results = que.fetch(limit=1)
 
-		newuser.put();
+			# if len(results) == 0: # if the course number is not in the database
+			# 	doRender(self,
+			# 		'signupfail.htm',
+			# 		{'error': 'The course number entered is invalid.'})
+			# 	return
 
-		# store these variables in the session, log user in
-		self.session = get_current_session() 
-		self.session['usernum']    	= usernum
-		self.session['username']   	= username
-		self.session['firstname']	= firstname
-		# self.session['password']    = password1
-		self.session['Module1']   	= 'Incomplete'
-		self.session['Module2']  	= 'Incomplete'
-		self.session['Module3']  	= 'Incomplete'
-		self.session['Logged_In']	= True
-		self.session['M1_Progress'] = 0
-		self.session['M2_Progress'] = 0
-		self.session['M3_Progress'] = 0
+			# else:
+			# 	# get term from courseNumber
+			# 	pass
 
-		doRender(self, 'menu.htm',
-			{'firstname':self.session['firstname'],
-			'Module1':self.session['Module1'],
-			'Module2':self.session['Module2'],
-			'Module3':self.session['Module3']})
+			# Check whether user already exists
+			que = db.Query(Student)
+			que = que.filter('email =', email)
+			results = que.fetch(limit=1)
+
+			# If the user already exists in the datastore
+			if (len(results) > 0) & (str(firstName) != 'test'):
+				doRender(self,
+					'signupfail.htm',
+					{'error': 'This account already exists. Please contact your instructor if you need to reset your password.'})
+				return
+
+
+			# firstName = 		db.StringProperty()
+			# lastName = 			db.StringProperty()
+			# email = 			db.StringProperty()
+			# password =			db.StringProperty()
+			# usernum = 			db.IntegerProperty()
+			# courses = 			db.ListProperty(int) # to allow for multiple courses
+
+			# Create User object in the datastore
+			usernum = create_or_increment_NumOfUsers()
+			newuser = Student(usernum=usernum, 
+				firstName=firstName,
+				lastName=lastName,
+				email = email,
+				password=password,
+				# modules are at the course level? So here we should have an empty array of course numbers.
+				# Module1="Incomplete", 
+				# Module2="Incomplete",
+				# Module3="Incomplete"
+				courses = []);
+
+			newuser.put();
+
+			# store these variables in the session, log user in
+			self.session = get_current_session() 
+			self.session['usernum']    	= usernum
+			self.session['firstName']	= firstName
+			self.session['courses'] 	= []
+			# self.session['Module1']   = 'Incomplete'
+			# self.session['Module2']  	= 'Incomplete'
+			# self.session['Module3']  	= 'Incomplete'
+			self.session['Logged_In']	= True
+			# self.session['M1_Progress'] = 0
+			# self.session['M2_Progress'] = 0
+			# self.session['M3_Progress'] = 0
+
+			doRender(self, 'menu.htm',
+				{'firstName':self.session['firstName'],
+				'courses': self.session['courses']})
+		else:
+			# create new instructor
+			# Check whether user already exists
+			que = db.Query(Instructor)
+			que = que.filter('email =', email)
+			results = que.fetch(limit=1)
+
+			# If the user already exists in the datastore
+			if len(results) > 0:
+				doRender(self,
+					'signupfail.htm',
+					{'error': 'This account already exists. Please contact administrator if you need to reset your password.'})
+				return
+
+			
+			# Create User object in the datastore
+			usernum = create_or_increment_NumOfUsers()
+			newuser = Instructor(usernum=usernum, 
+				firstName=firstName,
+				lastName=lastName,
+				email = email,
+				# note: term and instructor will come from the query above, haven't implemented yet
+				# term='Spring 2016',
+				# instructor=instructor,
+				password=password);
+
+			newuser.put();
+
+			# store these variables in the session, log user in
+			self.session = get_current_session() 
+			self.session['usernum']    	= usernum
+			self.session['firstName']	= firstName
+			self.session['Module1']   	= 'Incomplete'
+			self.session['Module2']  	= 'Incomplete'
+			self.session['Module3']  	= 'Incomplete'
+			self.session['Logged_In']	= True
+			self.session['M1_Progress'] = 0
+			self.session['M2_Progress'] = 0
+			self.session['M3_Progress'] = 0
+
+			doRender(self, 'menu.htm',
+				{'firstName':self.session['firstName'],
+				'Module1':self.session['Module1'],
+				'Module2':self.session['Module2'],
+				'Module3':self.session['Module3']})
+		
+		
 
 
 
@@ -496,7 +577,7 @@ class WithinSubjectHandler(webapp.RequestHandler):
 		elif M2_Progress < 0:
 			M2_Progress += 1
 			doRender(self, 'menu.htm',
-				{'firstname':self.session['firstname'],
+				{'firstName':self.session['firstName'],
 				'Module1':self.session['Module1'],
 				'Module2':self.session['Module2']})
 
@@ -561,7 +642,7 @@ class LoginHandler(webapp.RequestHandler):
 		if 'Logged_In' in self.session:
 			if self.session['Logged_In'] == True:
 				doRender(self, 'menu.htm',
-					{'firstname':self.session['firstname'],
+					{'firstName':self.session['firstName'],
 					'Module1':self.session['Module1'],
 					'Module2':self.session['Module2'],
 					'Module3':self.session['Module3']})
@@ -576,20 +657,21 @@ class LoginHandler(webapp.RequestHandler):
 	def post(self):
 		self.session = get_current_session()
 		
-		if int(self.request.get('guest')) == 1:
+		# if guest
+		if self.request.get('userType') == 'guest':
 			usernum = create_or_increment_NumOfUsers()
 			username = str('Guest'+str(usernum))
 
 			logging.info('USERNAME: '+username)
 
-			firstname = 'Guest'
-			lastname = 'Guest'
+			firstName = 'Guest'
+			lastName = 'Guest'
 			instructor = 'Guest'
 
 			self.session = get_current_session() 
 			self.session['usernum']    	= usernum
 			self.session['username']   	= username
-			self.session['firstname']	= firstname
+			self.session['firstName']	= firstName
 			# self.session['password']    = password1
 			self.session['Module1']   	= 'Incomplete'
 			self.session['Module2']  	= 'Incomplete'
@@ -601,8 +683,8 @@ class LoginHandler(webapp.RequestHandler):
 
 			newuser = User(usernum=usernum, 
 				username=username,
-				firstname=firstname,
-				lastname=self.request.get('lastname'),
+				firstName=firstName,
+				lastName=self.request.get('lastName'),
 				# note: this is the manual input for term. Doesn't make sense at this point to have them do this themselves since it's all for Spring 2016
 				term='Spring 2016',
 				
@@ -615,7 +697,7 @@ class LoginHandler(webapp.RequestHandler):
 			newuser.put();
 
 			doRender(self, 'menu.htm',
-				{'firstname':self.session['firstname'],
+				{'firstName':self.session['firstName'],
 				'Module1':self.session['Module1'],
 				'Module2':self.session['Module2'],
 				'Module3':self.session['Module3']})
@@ -624,12 +706,12 @@ class LoginHandler(webapp.RequestHandler):
 
 			return
 
-		username = self.request.get('username')
+		email = self.request.get('email')
 		# password = self.request.get('password')
 		
 		# Check whether user already exists
 		que = db.Query(User)
-		que = que.filter('username =', username)
+		que = que.filter('email =', email)
 		results = que.fetch(limit=1)
 
 		# If user does not exist
@@ -655,7 +737,7 @@ class LoginHandler(webapp.RequestHandler):
 		for i in results:
 			self.session['username'] = i.username
 			# self.session['password'] = i.password
-			self.session['firstname'] = i.firstname
+			self.session['firstName'] = i.firstName
 			self.session['usernum'] = i.usernum
 			self.session['Module1'] = i.Module1
 			self.session['Module2'] = i.Module2
@@ -669,7 +751,7 @@ class LoginHandler(webapp.RequestHandler):
 
 		
 		doRender(self,'menu.htm',
-			{'firstname':self.session['firstname'],
+			{'firstName':self.session['firstName'],
 			'Module1':self.session['Module1'],
 			'Module2':self.session['Module2'],
 			'Module3':self.session['Module3']})

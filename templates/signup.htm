@@ -11,38 +11,99 @@
 <h2><center>Create an account:</center></h2>
 <br>
 
-<form method="post" action="/signup">
-	First name: <input type="text" name="firstname" required/><br><br>
-	Last name: <input type="text" name="lastname" required/><br><br>
-	Course instructor: 
-	<select id="instr" onchange="instruct()" required>
+<form id="signUp" method="post" action="/signup">
+	<p>First name: <input type="text" id = "firstName" name="firstName" /></p>
+	<p>Last name: <input type="text" id = "lastName" name="lastName" /></p>
+	<p>Email: <input type="text" id = "email" name="email" /></p>
+	
+	<p>Role: <select id="roleSelect" name = "roleSelect" >
+		<option value="" selected="true" disabled="true">Please select one</option>
+		<option value = "Student">Student</option>
+		<option value = "Instructor">Instructor</option>
+	</select></p>
+
+	<!-- <p id="courseNumberDiv" style = "display: none">Course number provided by instructor: <input type="text" id = "courseNumber" name = "courseNumber"/></p> -->
+
+	<br>
+	<p>Please create a unique password for the Research Methods Dojo</p>
+	<p>Password: <input type="password" id = "password1" name="password1"/></p>
+	<p>Confirm Password: <input type="password" id = "password2" name="password2"/></p>
+
+	
+<!-- 	<select id="instr" onchange="instruct()" required>
 		<option value="" selected="true" disabled="true">Please select one</option>
 		<option value="Ben Rottman">Ben Rottman</option>
 		<option value="Barbara Kucinski">Barbara Kucinski</option>
-	</select><br><br>
-	<input name="instructor" id="instructor" type="hidden" value="">
-	<b><u>7-digit student ID:</u></b> <input type="text" name="username" required/><br><br>
+	</select><br><br> -->
 
-	<p>Please make sure your 7-digit student ID is accurate. You will use it to login to this tutorial in the future, and it is how credit will be assigned to you for the course. If your 7-digit student ID is inaccurately entered, the course instructor will not be able to tell if you have completed the tutorials!</p>
+	<!-- <input name="instructor" id="instructor" type="hidden" value="">
+	<b><u>7-digit student ID:</u></b> <input type="text" name="username" required/><br><br> -->
+
+	<!-- <p>Please make sure your 7-digit student ID is accurate. You will use it to login to this tutorial in the future, and it is how credit will be assigned to you for the course. If your 7-digit student ID is inaccurately entered, the course instructor will not be able to tell if you have completed the tutorials!</p> -->
 
 	<!-- <input type="checkbox" name="checked" value="" onchange="$('continue').prop('disabled', false );"> My 7-digit ID is accurate<br><br> -->
 <!-- 	Password: <input type="password" name="password1"/><br><br>
 	Re-type Password: <input type="password" name="password2"/><br><br> -->
-	<input type="submit" name="continue" id="continue" value="Submit"/>
+	<!-- <input type="submit" name="continue" id="continue" value="Submit"/> -->
 </form>
+
+<button id="formSubmit">Submit</button>
 
 <script type="text/javascript">
 
-function instruct() {
-	document.getElementById('instructor').value = document.getElementById('instr').value;
-}
 
-function check() {
-	if ((document.getElementsByName('firstname').value!="")&&(document.getElementsByName('lastname').value!="")&&(document.getElementsByName('instructor').value!="")&&(document.getElementsByName('username').value!="")) {
-		console.log("AGASGASG")
-		document.getElementsByName("continue").disabled = false;
+// cacheDom
+$firstName = $('#firstName')
+$lastName = $('#lastName')
+$email = $('#email')
+$roleSelect = $('#roleSelect')
+$courseNumber = $('#courseNumber')
+$password1 = $('#password1')
+$password2 = $('#password2')
+
+$('#formSubmit').on('click', function(){
+	// check required forms:
+	
+
+	if($firstName.val() == ''){ // if first name blank
+		alert('Please enter your first name to continue.')
+	}else if($lastName.val() == ''){ // if last name blank
+		alert('Please enter your last name to continue.')
+	}else if($email.val() == ''){ // if email blank
+		alert('Please enter your email to continue.')
+	}else if($roleSelect.val() == null){ // if role blank
+		alert('Please select a role to continue.')
+	}else if($roleSelect.val() == 'Student' & $courseNumber.val() == ''){ // if role student and course number blank
+		alert('Please enter a course number to continue.')
+	}else if($password1.val() == ''){ // if passwords don't match blank
+		alert('Please enter a password to continue.')
+	}else if($password1.val() != $password2.val()){ // if passwords don't match blank
+		alert('Your passwords don\'t match!')
+	}else{
+		$('#signUp').submit()	
 	}
-}
+})
+
+// roleCheck = function(){
+// 	a = $('#roleSelect').val()
+// 	if(a == 'Student'){
+// 		$('#courseNumberDiv').show()
+// 	}else{
+// 		$('#courseNumberDiv').hide()
+// 	}
+// }
+
+
+// function instruct() {
+// 	document.getElementById('instructor').value = document.getElementById('instr').value;
+// }
+
+// function check() {
+// 	if ((document.getElementsByName('firstName').value!="")&&(document.getElementsByName('lastName').value!="")&&(document.getElementsByName('instructor').value!="")&&(document.getElementsByName('username').value!="")) {
+// 		console.log("AGASGASG")
+// 		document.getElementsByName("continue").disabled = false;
+// 	}
+// }
 
 </script>
 

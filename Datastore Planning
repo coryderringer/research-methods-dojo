@@ -1,25 +1,19 @@
-
-
-Datastore classes:
+Datastore classes: let students and instructors have multiple rows (one per course)
 
 Instructor:
-	Course1
-	Course2
-
-
-Course:
-	Instructor
-	Code
-	Year
-	Term
-	Students (initialized empty, when a student joins with a code it adds them)
-	Tutorials (can be a list (initialized empty) or a series of 1s and 0s for each tutorial. list probably more future-proof, since an array would need to be modified when we add more tutorials)
+	First name
+	Last name
+	Email
+	Password
+	CourseNumber
+	CourseName
 
 Student:
 	First name
 	Last name
 	Email
-	ID Number? (might make it easier to keep track of students over time)
+	Password
+	ID Number
 	
 	Course1
 		Tutorial1
@@ -30,3 +24,7 @@ Student:
 	Course3
 		Tutorial3
 		Tutorial4
+
+
+
+When an instructor sees the view, they will see part of the Student dataframe, subsetted to their class
