@@ -1,0 +1,188 @@
+{% extends "_base.htm" %}
+{% block title %}
+	Course menu
+{% endblock%}
+
+
+{% block bodycontent %}
+
+
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+    <!-- Navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-text">Instructor Menu - Select a Course</p> 
+            </div>
+        </div>
+    </nav>
+    
+    <div id="menuDiv" style="width:800px; display: none" class="container well">
+		<h2><center>Welcome, {{firstName}}!</center></h2>
+
+		<center>
+			<p><span id="status_span">Please select a course.</span></p>
+			<div class="row">
+				<div class="col-xs-4"></div>
+				<div class="col-xs-2">
+					<form id="courseSelectForm" method = "get" action = "/MainMenu">
+						<select id="courseSelect" name = "courseSelect">
+							<option selected value="base">Please Select</option>
+						</select>
+					</form>
+				</div>
+				<div class="col-xs-2">
+					<button id = "submitButton1">Okay</button>
+				</div>
+				<div class="col-xs-4"></div>
+			</div>
+		</center>
+
+		
+
+		<p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
+
+    </div>
+
+    <div id="addCourseDiv" style="width:800px; display:none" class="container well">
+    	<p>It looks like you don't have any courses added yet. Let's add a course.</p>
+
+    	<form id="courseCreateForm" method = "post" action = "/CreateCourse">
+    		<p>What would you like to call the course?
+    		<input id="courseName" name="courseName"></p>
+
+    		<p>When will the course take place?
+    			<select id="termInput" name="termInput">
+    				<option value="Spring 2018">Spring 2018</option>
+    				<option value="Summer 2018">Summer 2018</option>
+    				<option value="Fall 2018">Fall 2018</option>
+
+    				<option value="Spring 2019">Spring 2019</option>
+    				<option value="Summer 2019">Summer 2019</option>
+    				<option value="Fall 2019">Fall 2019</option>
+
+    				<option value="Spring 2020">Spring 2020</option>
+    				<option value="Summer 2020">Summer 2020</option>
+    				<option value="Fall 2020">Fall 2020</option>
+
+    				<option value="Spring 2021">Spring 2021</option>
+    				<option value="Summer 2021">Summer 2021</option>
+    				<option value="Fall 2021">Fall 2021</option>
+    			</select></p>
+
+
+    		<p>Which modules would you like to make available in the course? Check all that apply.</p>
+    		<ul style="list-style: none"> 
+	    		<li><input id="WithinSubject_Check" name="WithinSubject_Check" type="checkbox">
+	    		<label for="WithinSubject_Check">The Power of Within Subjects Designs</label></li>
+
+	    		<li><input id="CarryoverEffects_Check" name="CarryoverEffects_Check" type="checkbox">
+	    		<label for="CarryoverEffects_Check">Carryover Effects</label></li>
+
+	    		<li><input id="PracticeFatigueEffects_Check" name="PracticeFatigueEffects_Check" type="checkbox">
+	    		<label for="PracticeFatigueEffects_Check">Practice and Fatigue Effects</label></li>
+	    	</ul>
+    		<br>
+    		<input id="WSC" name="WSC" type="hidden">
+    		<input id="CEC" name="CEC" type="hidden">
+    		<input id="PFEC" name="PFEC" type="hidden">
+    	</form>
+    	<button id="createCourseButton">Create Course</button>
+    	<p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
+    </div>
+
+</body>
+
+
+
+
+
+<script>
+
+// base htm is 28 lines
+
+var main = {
+
+	init: function(){
+		main.courses = "{{courses}}"
+		main.firstName = "{{firstName}}"
+		main.courseNames = "{{courseName}}"
+		
+		main.parsedCourseNumbers = main.parseStringArray(main.courses)
+		main.bindEvents()
+		main.fillCourses()
+		main.render()
+	},
+	
+	parseStringArray: function(arr){
+		return arr.split('&#39;').join('').split('[').join('').split(']').join('').split(',')
+	},
+
+	bindEvents: function(){
+		console.log('events bound')
+		$('#createCourseButton').unbind().on('click', main.submit)
+
+	},
+
+	render: function(){
+		if(main.parsedCourseNumbers == ""){
+			$('#addCourseDiv').show()
+		}else{
+			$('#menuDiv').show()
+		}	
+	},
+	fillCourses: function(){
+
+
+		// var $dropdown = $('#courseSelect');
+
+		// $dropdown.empty()
+		// $dropdown.append('<option>Please Select</option')	
+		// $.each(main.courses, function(index, value) {
+		// 	$dropdown.append("<option>" + String(value) + "</option>")
+		// });
+	},
+
+	submit: function(){
+		console.log('test')
+		if(!$('#WithinSubject_Check').prop('checked') &
+			!$('#CarryoverEffects_Check').prop('checked') &
+			!$('#PracticeFatigueEffects_Check').prop('checked')) {
+			
+			alert('Please select at least one module for this course.')
+			return
+		}
+
+		if($('#WithinSubject_Check').prop('checked')){
+			$('#WSC').val(1)
+		}else{
+			$('#WSC').val(0)
+		}
+		if($('#CarryoverEffects_Check').prop('checked')){
+			$('#CEC').val(1)
+		}else{
+			$('#CEC').val(0)
+		}
+		if($('#PracticeFatigueEffects_Check').prop('checked')){
+			$('#PFEC').val(1)
+		}else{
+			$('#PFEC').val(0)
+		}
+		
+
+		$('#courseCreateForm').submit()
+		
+	}
+	
+}
+
+main.init()
+
+
+
+
+</script>
+
+
+{% endblock %}
+				

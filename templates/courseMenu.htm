@@ -1,0 +1,225 @@
+{% extends "_base.htm" %}
+{% block title %}
+	Course menu
+{% endblock%}
+
+
+{% block bodycontent %}
+
+
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+    <!-- Navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-text">Student Menu - Select a Course</p> 
+            </div>
+        </div>
+    </nav>
+    
+    <div id="menuDiv" style="width:800px; display: none" class="container well">
+		<h2><center>Welcome, {{firstName}}!</center></h2>
+
+		<center>
+			<p><span id="status_span">Please select a course.</span></p>
+			<div class="row">
+				<div class="col-xs-4"></div>
+				<div class="col-xs-2">
+					<form id="courseSelectForm" method = "get" action = "/MainMenu">
+						<select id="courseSelect" name = "courseSelect">
+							<option selected value="base">Please Select</option>
+						</select>
+						<input id="courseNumberInput" name="courseNumberInput" type="hidden">
+					</form>
+				</div>
+				<div class="col-xs-2">
+					<button id = "submitButton">Okay</button>
+				</div>
+				<div class="col-xs-4"></div>
+			</div>
+		</center>
+
+		
+
+		<p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
+
+    </div>
+
+    <div id="addCourseDiv" style="width:800px; display:none" class="container well">
+    	<p>It looks like you don't have any courses added yet. You should have a course number given to you by your instructor. Please enter the number below.</p>
+
+    	<form id="courseAddForm" method = "post" action = "/EnrollCourse">
+    		<input id="courseInput" name="courseInput"/>
+    		<button id="submitButton">Add Course</button>
+    	</form>
+    	<p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
+    </div>
+
+
+
+</body>
+
+
+
+
+
+<script>
+
+var main = {
+
+	init: function(){
+
+		main.courses = "{{courses}}"
+
+		main.firstName = "{{firstName}}"
+		main.courseNames = "{{courseNames}}"
+		
+		main.parsedCourseNames = main.parseStringArray(main.courseNames)
+		main.bindEvents()
+		main.fillCourses()
+		main.render()
+	},
+
+	parseStringArray: function(arr){
+		return arr.split('&quot;').join('').split('[').join('').split(']').join('').split(',')
+	},
+
+	bindEvents: function(){
+		$('#submitButton').unbind().on('click', function(){
+			var value = $('#courseSelect').val()
+			if(value == 'Please Select'){
+				alert('Please select a course!')
+				return
+			}
+			
+			$('#courseNumberInput').val(main.getCourseNumber(value))
+
+			$('#courseSelectForm').submit()
+			// console.log($('#courseNumberInput').val())
+		})
+
+	},
+
+	render: function(){
+		if(main.courses == "[]"){
+			$('#addCourseDiv').show()
+		}else{
+			$('#menuDiv').show()
+		}	
+	},
+	fillCourses: function(){
+
+
+		var $dropdown = $('#courseSelect');
+
+		$dropdown.empty()
+		$dropdown.append('<option>Please Select</option')	
+		$.each(main.parsedCourseNames, function(index, value) {
+			$dropdown.append("<option>" + String(value) + "</option>")
+		});
+	},
+
+	getCourseNumber: function(value){
+		index = main.courseNames.indexOf(value)
+		return main.courses[index]
+	}
+	
+}
+
+main.init()
+// Variables
+// var Module1 = '{{Module1}}';
+// var Module2 = '{{Module2}}';
+// var Module3 = '{{Module3}}';
+
+// // Progress markers so we can use one handler per module with conditional statements. This might slow the program a tiny bit, revisit if it becomes a problem?
+// var M1_Progress = 0;
+// var M2_Progress = 0;
+// var M3_Progress = 0;
+
+// function ButtonDisplay(){
+// 	if (Module1 == 'Complete') { 
+// 		$('#Module1_Button').html('Redo "Carryover Effects"'); 
+// 		$('#Module3_Button').attr('disabled', false);
+// 	}
+// 	if (Module2 == 'Complete') { 
+// 		$('#Module2_Button').html('Redo "The Power of Within-Subjects Designs"'); 
+// 		$('#Module1_Button').attr('disabled', false);
+// 	}
+// 	if (Module3 == 'Complete') { $('#Module3_Button').html('Redo "Practice and Fatigue Effects"'); }
+// }
+
+// function MainDisplay(){
+// 	if (Module1 == 'Incomplete' && Module2 == 'Incomplete' && Module3 == 'Incomplete'){
+// 		$('#status_span').html('You have not completed any of the modules yet. Please complete the first tutorial.<br>You will need to complete all tutorials to complete this homework assignment.');
+// 	}
+// 	else if (Module1 == 'Complete' && Module2 == 'Complete' && Module3 == 'Complete'){
+// 		$('#status_span').html('You have completed all modules. What would you like to do?');
+// 		$('#finish').show();
+// 	}
+// 	else {
+// 		$('#status_span').html('Please proceed to the next tutorial or redo one you have completed for a refresher!<br>You will need to complete all tutorials to complete this homework assignment.');
+// 	}
+// }
+
+// // function MainDisplay(){
+// // 	if (Module1 == 'Incomplete' && Module2 == 'Incomplete'){
+// // 		$('#status_span').html('You have not completed either module yet. What would you like to do?');
+// // 		$('#Module1_Button').html('Begin "Carryover Effects"');
+// // 		$('#Module2_Button').html('Begin "The Power of Within-Subjects Designs"');
+// // 		$('#Module3_Button').html('Begin "Practice and Fatigue Effects"');
+// // 	}
+// // 	else if (Module1 == 'Complete' && Module2 == 'Incomplete'){
+
+// // 		$('#status_span').html('You have completed Single Subject Module, but not Within-Subjects Module. What would you like to do?');
+// // 		$('#Module1_Button').html('Redo "Carryover Effects"');
+// // 		$('#Module2_Button').html('Begin "The Power of Within-Subjects Designs"');
+// // 		$('#Module3_Button').html('Begin "Practice and Fatigue Effects"');
+// // 	}
+// // 	else if (Module1 == 'Incomplete' && Module2 == 'Complete'){
+// // 		$('#status_span').html('You have completed the Within-Subjects Module, but not the Single Subject Module. What would you like to do?');
+// // 		$('#Module1_Button').html('Begin "Carryover Effects"');
+// // 		$('#Module2_Button').html('Redo "The Power of Within-Subjects Designs"');
+// // 		$('#Module3_Button').html('Begin "Practice and Fatigue Effects"');
+// // 	}
+// // 	else if (Module1 == 'Complete' && Module2 == 'Complete'){
+// // 		$('#status_span').html('You have completed both modules! What would you like to do?');
+// // 		$('#Module1_Button').html('Redo "Carryover Effects"');
+// // 		$('#Module2_Button').html('Redo "The Power of Within-Subjects Designs"');
+// // 		$('#Module3_Button').html('Begin "Practice and Fatigue Effects"');
+// // 	}
+// // }
+
+// $('#Module1_Button').html('Begin "Carryover Effects"');
+// $('#Module2_Button').html('Begin "The Power of Within-Subjects Designs"');
+// $('#Module3_Button').html('Begin "Practice and Fatigue Effects"');
+
+// ButtonDisplay();
+// MainDisplay();
+
+// // Guest exception
+// var firstname = '{{firstname}}'
+// if (firstname=='Guest') {
+// 	$('#Module1_Button').html('Begin "Carryover Effects"');
+// 	$('#Module2_Button').html('Begin "The Power of Within-Subjects Designs"');
+// 	$('#Module3_Button').html('Begin "Practice and Fatigue Effects"');
+// 	$('#Module1_Button').attr('disabled', false);
+// 	$('#Module2_Button').attr('disabled', false);
+// 	$('#Module3_Button').attr('disabled', false);
+// 	$('#status_span').html('Try out the modules below!');
+// }
+
+
+// code for dynamic dropdown that I'll load with course options:
+// from https://css-tricks.com/dynamic-dropdowns/
+
+
+	
+
+
+
+
+</script>
+
+
+{% endblock %}

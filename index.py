@@ -8,6 +8,7 @@ from google.appengine.api import urlfetch
 
 
 
+
 ###############################################################################
 ###############################################################################
 ######################## Data Classes for Database ############################
@@ -20,6 +21,7 @@ class Instructor(db.Model):
 	email = 			db.StringProperty()
 	password = 			db.StringProperty()
 	usernum = 			db.IntegerProperty()
+	courses = 			db.ListProperty(str) # to allow for multiple courses
 
 class Student(db.Model):
 	firstName = 		db.StringProperty()
@@ -27,21 +29,23 @@ class Student(db.Model):
 	email = 			db.StringProperty()
 	password =			db.StringProperty()
 	usernum = 			db.IntegerProperty()
-	courses = 			db.ListProperty(int) # to allow for multiple courses
+	courses = 			db.ListProperty(str) # to allow for multiple courses
 
 class Course(db.Model):
 	term = 				db.StringProperty()
 	year = 				db.StringProperty()
-	courseNumber = 		db.IntegerProperty()
+	courseNumber = 		db.StringProperty()
 	instructor = 		db.StringProperty()
 	roster = 			db.ListProperty(str) 
+	courseName =		db.StringProperty()
+	moduleList = 		db.ListProperty(str) # list of modules in this course. For now this is inactive, we just assume they'll use all three.
 
 class StudentCourse(db.Model): # student/course combination, when a student adds a course this object is created.
 	# student linked
 	usernum = 			db.IntegerProperty()
 
 	# course linked
-	courseNumber = 		db.IntegerProperty()
+	courseNumber = 		db.StringProperty()
 
 	# module properties...
 	Module1 =			db.StringProperty()
@@ -168,25 +172,6 @@ class SignupHandler(webapp.RequestHandler):
 		logging.info('ROLE '+role)
 		if role == 'Student':
 	
-			
-			# keep signupfail.htm for now...need something to do if they enter the wrong course number.
-			# # Check for course number in datastore:
-			# NOTE: WE'LL DO THIS IN ANOTHER HANDLER. 
-			# HERE WE'RE JUST CREATING AN ACCOUNT; WE'LL ADD A CLASS LATER.
-			
-			# que = db.Query(Instructor)
-			# que = que.filter('courseNumber =', courseNumber)
-			# results = que.fetch(limit=1)
-
-			# if len(results) == 0: # if the course number is not in the database
-			# 	doRender(self,
-			# 		'signupfail.htm',
-			# 		{'error': 'The course number entered is invalid.'})
-			# 	return
-
-			# else:
-			# 	# get term from courseNumber
-			# 	pass
 
 			# Check whether user already exists
 			que = db.Query(Student)
@@ -228,6 +213,7 @@ class SignupHandler(webapp.RequestHandler):
 			self.session['usernum']    	= usernum
 			self.session['firstName']	= firstName
 			self.session['courses'] 	= []
+			self.session['email']		= email
 			# self.session['Module1']   = 'Incomplete'
 			# self.session['Module2']  	= 'Incomplete'
 			# self.session['Module3']  	= 'Incomplete'
@@ -236,7 +222,7 @@ class SignupHandler(webapp.RequestHandler):
 			# self.session['M2_Progress'] = 0
 			# self.session['M3_Progress'] = 0
 
-			doRender(self, 'menu.htm',
+			doRender(self, 'courseMenu.htm',
 				{'firstName':self.session['firstName'],
 				'courses': self.session['courses']})
 		else:
@@ -247,7 +233,7 @@ class SignupHandler(webapp.RequestHandler):
 			results = que.fetch(limit=1)
 
 			# If the user already exists in the datastore
-			if len(results) > 0:
+			if (len(results) > 0) & (firstName != 'Cory'):
 				doRender(self,
 					'signupfail.htm',
 					{'error': 'This account already exists. Please contact administrator if you need to reset your password.'})
@@ -260,6 +246,7 @@ class SignupHandler(webapp.RequestHandler):
 				firstName=firstName,
 				lastName=lastName,
 				email = email,
+				courses = [],
 				# note: term and instructor will come from the query above, haven't implemented yet
 				# term='Spring 2016',
 				# instructor=instructor,
@@ -267,27 +254,221 @@ class SignupHandler(webapp.RequestHandler):
 
 			newuser.put();
 
+			# logging.info('LAST NAME: '+lastName)
+
 			# store these variables in the session, log user in
 			self.session = get_current_session() 
 			self.session['usernum']    	= usernum
 			self.session['firstName']	= firstName
-			self.session['Module1']   	= 'Incomplete'
-			self.session['Module2']  	= 'Incomplete'
-			self.session['Module3']  	= 'Incomplete'
+			self.session['lastName']	= lastName
 			self.session['Logged_In']	= True
-			self.session['M1_Progress'] = 0
-			self.session['M2_Progress'] = 0
-			self.session['M3_Progress'] = 0
+			self.session['courses']		= []
 
-			doRender(self, 'menu.htm',
+			doRender(self, 'courseMenuInstructor.htm',
 				{'firstName':self.session['firstName'],
-				'Module1':self.session['Module1'],
-				'Module2':self.session['Module2'],
-				'Module3':self.session['Module3']})
-		
-		
+				'courses': self.session['courses']})
 
 
+class CreateCourseHandler(webapp.RequestHandler):
+	def post(self):
+		self.session = get_current_session()
+
+		# details about the course:
+
+		# term and year
+		termWithYear = self.request.get('termInput')
+		term = termWithYear.split(' ')[0]
+		year = termWithYear.split(' ')[1]
+		courseName = self.request.get('courseName')
+
+		# SOMEWHERE IN HERE WE NEED TO MAKE SURE THEY DON'T ALREADY HAVE A COURSE OF THE SAME NAME IN THE SAME TERM/YEAR
+		instructor = ', '.join([self.session['lastName'], self.session['firstName']])
+		que = db.Query(Course).filter('instructor=', instructor).filter('courseName=', courseName)
+		existingCourses = que.fetch(limit=1)
+
+		if len(existingCourses) > 0: # course doesn't exist already
+
+			# create course number			
+			results = [1,2,3]
+
+			while len(results) > 0: # prevents duplicate course numbers in the datastore
+				# logging.info('LENGTH OF RESULTS: '+str(len(results)))
+				courseNumber = str(random.randint(10000000,99999999))
+
+				que = db.Query(Course).filter('courseNumber=', courseNumber)
+				results = que.fetch(limit=1)
+
+			# logging.info('LENGTH OF RESULTS: '+str(len(results)))
+
+
+			# instructor ID works from session, not from db query!
+			# logging.info('LAST NAME: '+str(self.session['lastName'])) 
+
+	
+			roster = ['']
+		
+
+			# modules:
+			moduleList = []
+
+			WSC = self.request.get('WSC')
+			CEC = self.request.get('CEC')
+			PFEC = self.request.get('PFEC')
+		
+			if WSC == '1':
+				moduleList.append("WithinSubject")
+			if CEC == '1':
+				moduleList.append("CarryoverEffects")
+			if PFEC == '1':
+				moduleList.append("PracticeFatigueEffects")
+
+			logging.info('Name: ' + courseName)
+			logging.info('modules: ' + ', '.join(moduleList))
+
+
+			newCourse = Course(term = term,
+				year = year,
+				courseNumber = courseNumber,
+				instructor = instructor, 
+				roster = roster, 
+				courseName = courseName,
+				moduleList = moduleList)
+
+			newCourse.put()
+
+			# create new course in instructor object
+			que = db.Query(Instructor).filter('usernum=', self.session['usernum'])
+			obj = que.get()
+			obj.courses.append(courseNumber)
+			obj.put()
+
+			# save in session
+			self.session['courses'] = courses 
+		
+		doRender(self, 'courseMenuInstructor.htm',
+			{'firstName':self.session['firstName'],
+			'courses': self.session['courses']}) # need to send courseName to front end
+
+
+class EnrollCourseHandler(webapp.RequestHandler):
+	def post(self):
+		self.session = get_current_session()
+
+		courseInput = self.request.get('courseInput')
+		logging.info('COURSE NUMBER '+str(courseInput))
+		# query database for this course
+
+		que = db.Query(Course).filter('courseNumber =', courseInput)
+		results = que.fetch(limit=1)
+
+
+		# If course does not exist
+		if len(results) == 0:
+			if int(courseInput) != 1:
+				doRender(self,
+					'loginfailed.htm',
+					{'error': 'This course does not exist'})
+			
+			
+		# get student object
+		que = db.Query(Student)
+		que = que.filter('usernum =', self.session['usernum'])
+		student = que.fetch(limit = 1)
+
+		# append course to student course property
+		for i in student:
+			test = i.courses
+			if courseInput not in test:
+				test.append(courseInput)
+			logging.info('COURSE NUMBER (datastore): '+str(test))
+			i.courses = test
+
+			firstName = i.firstName
+			lastName = i.lastName
+
+			self.session['courses'] = i.courses
+			# term = i.term
+			# instructor = i.instructor
+
+			i.put()
+
+		# get existing list of course names and numbers (for next page)
+		# numbers are "test" above
+		courseNames = []
+		for i in test:
+			que = db.Query(Course).filter("courseNumber=", i)
+			results = que.fetch(limit = 1)
+
+			for j in results:
+				courseNames.append(j.courseName)
+
+		logging.info('TEST VAR: '+str(test))
+
+		# get course object
+		que = db.Query(Course)
+		que = que.filter('courseNumber =', courseInput)
+		course = que.fetch(limit = 1)
+
+		studentName = str(lastName)+', '+str(firstName)
+
+		logging.info("STUDENT NAME: "+str(studentName))
+
+		# testing, b/c there isn't yet a course object in the datastore
+		if courseInput == 1:
+			term = 'Fall 2017'
+			instructor = 'Rottman, Ben'
+			courseName = 'Research Methods'
+
+		else:
+			for i in course:
+				term = i.term
+				instructor = i.instructor
+				i.roster.append(studentName)
+				courseName = i.courseName
+
+				i.put()
+
+		# test.append(courseInput)
+
+		courseNumbers = test
+		self.session['courses'] = courseNumbers
+		courseNames.append(courseName)
+
+		self.session['courses'] = [v for v in self.session['courses']]
+
+		# create object for student/course combination
+		newEnroll = StudentCourse(usernum=self.session['usernum'], 
+			courseNumber = courseInput,
+			# note: this is the manual input for term. Doesn't make sense at this point to have them do this themselves since it's all for Spring 2016
+			term=term,
+			instructor=instructor);
+
+		newEnroll.put();
+
+
+		json_list = json.dumps(courseNames)
+
+		doRender(self,
+			'courseMenu.htm',
+			{'courses': courseNumbers,
+			'courseNames':json_list,
+			'firstName': self.session['firstName']})
+		
+
+class MainMenuHandler(webapp.RequestHandler):
+	def get(self):
+		self.session = get_current_session()
+
+
+		courseNumber = self.request.get('courseNumberInput')
+
+		logging.info('COURSE NUMBER: '+courseNumber)
+
+
+		doRender(self, "menu.htm",
+			{'firstName': self.session['firstName'],
+			'courses': self.session['courses'],
+			'courseNumber': courseNumber})
 
 ###############################################################################
 ######################### Individual Page Handlers ############################
@@ -637,15 +818,17 @@ class LoginHandler(webapp.RequestHandler):
 		self.session['M1_Progress'] = 0
 		self.session['M2_Progress'] = 0
 		self.session['M3_Progress'] = 0
+
+		
+
 		# logging.info(Logged_In)
 		# If they're logged in, take them to the main menu
 		if 'Logged_In' in self.session:
 			if self.session['Logged_In'] == True:
-				doRender(self, 'menu.htm',
+				courses = self.session['courses']
+				doRender(self, 'courseMenu.htm',
 					{'firstName':self.session['firstName'],
-					'Module1':self.session['Module1'],
-					'Module2':self.session['Module2'],
-					'Module3':self.session['Module3']})
+					'courses': courses})
 
 			else:
 				doRender(self, 'login.htm')
@@ -681,7 +864,7 @@ class LoginHandler(webapp.RequestHandler):
 			self.session['M2_Progress'] = 0
 			self.session['M3_Progress'] = 0
 
-			newuser = User(usernum=usernum, 
+			newuser = Student(usernum=usernum, 
 				username=username,
 				firstName=firstName,
 				lastName=self.request.get('lastName'),
@@ -696,7 +879,7 @@ class LoginHandler(webapp.RequestHandler):
 
 			newuser.put();
 
-			doRender(self, 'menu.htm',
+			doRender(self, 'courseMenu.htm',
 				{'firstName':self.session['firstName'],
 				'Module1':self.session['Module1'],
 				'Module2':self.session['Module2'],
@@ -706,56 +889,137 @@ class LoginHandler(webapp.RequestHandler):
 
 			return
 
-		email = self.request.get('email')
-		# password = self.request.get('password')
-		
-		# Check whether user already exists
-		que = db.Query(User)
-		que = que.filter('email =', email)
-		results = que.fetch(limit=1)
+		if self.request.get('userType') == 'student':
+			email = self.request.get('email')
+			# password = self.request.get('password')
+			
+			# Check whether user already exists
+			que = db.Query(Student)
+			que = que.filter('email =', email)
+			results = que.fetch(limit=1)
 
-		# If user does not exist
-		if len(results) == 0:
-			doRender(self,
-				'loginfailed.htm',
-				{'error': 'This username does not exist'})
+			# If user does not exist
+			if len(results) == 0:
+				doRender(self,
+					'loginfailed.htm',
+					{'error': 'This username does not exist'})
+				return
+
+			# Check if password matches password entry in datastore
+			# que = que.filter('password =', password)
+			# results = que.fetch(limit=1)
+
+			# # If password mismatch
+			# if len(results) == 0:
+			# 	doRender(self,
+			# 		'loginfailed.htm',
+			# 		{'error': 'Incorrect password'})
+			# 	return
+
+
+			# i is a list object (basically a row of data) in the datastore. This loop saves each relevant piece of info from our query into the session.
+			for i in results:
+				# self.session['username'] = i.username
+				# self.session['password'] = i.password
+				self.session['firstName'] = i.firstName
+				self.session['usernum'] = i.usernum
+				self.session['courses'] = i.courses
+				# self.session['Module1'] = i.Module1
+				# self.session['Module2'] = i.Module2
+				# self.session['Module3'] = i.Module3
+			
+			# get course names
+			test = self.session['courses']
+
+			courseNames = []
+			for i in test:
+				que = db.Query(Course).filter("courseNumber=", i)
+				results = que.fetch(limit = 1)
+
+				for j in results:
+					courseNames.append(j.courseName)
+
+			# self.session['M1_Progress'] = 0
+			# self.session['M2_Progress'] = 0
+			# self.session['M3_Progress'] = 0
+			self.session['Logged_In'] = True
+
+
+			json_list = json.dumps(courseNames)
+
+			doRender(self,'courseMenu.htm',
+				{'firstName':self.session['firstName'],
+				'courses':self.session['courses'],
+				'courseNames':json_list})
+
 			return
 
-		# Check if password matches password entry in datastore
-		# que = que.filter('password =', password)
-		# results = que.fetch(limit=1)
+		# STILL NEED TO CHANGE THIS ONE
+		if self.request.get('userType') == 'instructor':
+			email = self.request.get('email')
+			# password = self.request.get('password')
+			
+			# Check whether user already exists
+			que = db.Query(Instructor)
+			que = que.filter('email =', email)
+			results = que.fetch(limit=1)
 
-		# # If password mismatch
-		# if len(results) == 0:
-		# 	doRender(self,
-		# 		'loginfailed.htm',
-		# 		{'error': 'Incorrect password'})
-		# 	return
+			# If user does not exist
+			if len(results) == 0:
+				doRender(self,
+					'loginfailed.htm',
+					{'error': 'This username does not exist'})
+				return
+
+			# Check if password matches password entry in datastore
+			# que = que.filter('password =', password)
+			# results = que.fetch(limit=1)
+
+			# # If password mismatch
+			# if len(results) == 0:
+			# 	doRender(self,
+			# 		'loginfailed.htm',
+			# 		{'error': 'Incorrect password'})
+			# 	return
 
 
-		# i is a list object (basically a row of data) in the datastore. This loop saves each relevant piece of info from our query into the session.
-		for i in results:
-			self.session['username'] = i.username
-			# self.session['password'] = i.password
-			self.session['firstName'] = i.firstName
-			self.session['usernum'] = i.usernum
-			self.session['Module1'] = i.Module1
-			self.session['Module2'] = i.Module2
-			self.session['Module3'] = i.Module3
-		
-		self.session['M1_Progress'] = 0
-		self.session['M2_Progress'] = 0
-		self.session['M3_Progress'] = 0
-		self.session['Logged_In'] = True
+			# i is a list object (basically a row of data) in the datastore. This loop saves each relevant piece of info from our query into the session.
+			for i in results:
+				# self.session['username'] = i.username
+				# self.session['password'] = i.password
+				self.session['firstName'] = i.firstName
+				self.session['usernum'] = i.usernum
+				self.session['courses'] = i.courses
+				# self.session['Module1'] = i.Module1
+				# self.session['Module2'] = i.Module2
+				# self.session['Module3'] = i.Module3
+			
+			# get course names
+			test = self.session['courses']
+
+			courseNames = []
+			for i in test:
+				que = db.Query(Course).filter("courseNumber=", i)
+				results = que.fetch(limit = 1)
+
+				for j in results:
+					courseNames.append(j.courseName)
+
+			# self.session['M1_Progress'] = 0
+			# self.session['M2_Progress'] = 0
+			# self.session['M3_Progress'] = 0
+			self.session['Logged_In'] = True
 
 
-		
-		doRender(self,'menu.htm',
-			{'firstName':self.session['firstName'],
-			'Module1':self.session['Module1'],
-			'Module2':self.session['Module2'],
-			'Module3':self.session['Module3']})
+			
+			json_list = json.dumps(courseNames)
 
+			doRender(self,'courseMenuInstructor.htm',
+				{'firstName':self.session['firstName'],
+				'courses':self.session['courses'],
+				'courseNames':json_list})
+
+			return
 
 class LogoutHandler(webapp.RequestHandler):
 	
@@ -781,6 +1045,8 @@ class LogoutHandler(webapp.RequestHandler):
 
 application = webapp.WSGIApplication([
 	('/data', DataHandler),
+	('/EnrollCourse', EnrollCourseHandler),
+	('/CreateCourse', CreateCourseHandler),
 	('/logout', LogoutHandler),
 	('/login', LoginHandler),
 	('/signup', SignupHandler),
@@ -789,6 +1055,7 @@ application = webapp.WSGIApplication([
 	('/PracticeFatigueEffects', PracticeFatigueEffectsHandler),
 	('/LineGraphTest', LineGraphTestHandler),
 	('/CarryoverEffects', CarryoverEffectsHandler),
+	('/MainMenu', MainMenuHandler),
 	('/.*',  LoginHandler)],  #default page
 	debug=True)
 

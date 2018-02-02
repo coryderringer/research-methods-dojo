@@ -409,3 +409,120 @@ th,td
 {
 border:1px solid black;
 }
+
+/* Unique style templates */
+
+body { 
+    padding-top: 70px;
+    padding-bottom: 20px; 
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+section {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.image {
+    width: 100%;
+}
+
+div.instructions {
+    padding-left: 20px;
+    padding-right: 20px;
+    /*padding-top: 20px;
+    padding-bottom: 20px;*/
+}
+
+div.response {
+    padding-left: 50px;
+}
+
+div.stimuli {
+    /*padding-left: 20px;
+    padding-right: 20px;
+    /*padding-top: 20px;
+    /*padding-bottom: 20px;*/
+    /*height: 150px;*/
+}
+
+div.pg {
+    border:2px solid gray;
+    padding:20px;
+    -moz-border-radius: 20px;
+    border-radius: 15px;
+}
+
+form.white {
+    background-color: white;
+}
+
+div.white {
+    background-color: white;
+}
+
+div.stim-bar {
+    background-color: white
+}
+
+div.outcome {
+    font-size: 20px;
+}
+
+div.option {
+    border:1.5px solid gainsboro;
+    border-radius: 5px;
+}
+
+button.btn-stim {
+}
+
+button.btn-dv {
+}
+
+.btn {
+    white-space:normal !important;
+    /*word-wrap: break-word;*/
+    word-break: normal;
+}
+
+input:disabled {
+    opacity: 0.1;
+}
+
+
+div.vertical-align {
+    display: flex;
+    align-items: center;
+}
+
+div.instruction-text {
+    min-height:200px;
+}
+
+span.bar-label {
+    position: absolute;
+    font-size: 15px;
+    left: 47.5%;
+    color: #404040;
+}
+
+span.left-label {
+    font-size: 15px;
+    position: absolute; 
+    text-align: left;
+    margin-left: 5px;
+    color: #404040;
+}
+
+div.progress-stim {
+    height:23px;
+    background-color: white;
+    border:1px solid gainsboro;
+};
+
+.progress-bar {
+    -webkit-transition: width 0.1s ease-in-out;
+    transition: width 0.1s ease-in-out;
+}
