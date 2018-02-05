@@ -1,0 +1,167 @@
+{% extends "_base.htm" %}
+{% block title %}
+	Login
+{% endblock%}
+
+
+{% block bodycontent %}
+
+
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+
+	<!-- Navbar -->
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<p class="navbar-text">Research Methods Dojo</p> 
+			</div>
+		</div>
+	</nav>
+
+
+	<!-- Login -->
+	<section>
+		<div class="container well">
+			<h2>Welcome, instructor!</h2>
+			<p id="errorP" style="display:none"></p>
+			<p>Please log in, or create an account</p>
+
+			<!-- Select login type -->
+			<div id="loginDiv">
+				<p>Log in:</p>
+				<form id="loginForm" method="post" action="InstructorLogin">
+					Email: <input id="loginEmail" name="loginEmail"><br>
+					Password: <input type="password" id="loginPassword" name = "loginPassword">
+				</form>
+				<button id="loginButton">Login</button>
+			</div>
+			<br>
+
+			<div id="createAccountDiv">
+				<p id="errorP2" style="display: none"></p>
+				<p>Create an account:</p>
+				<form id="createAccountForm" method = "post" action = "/InstructorSignup">
+					First Name: <input id="firstName" name = "firstName"><br>
+					Last Name: <input id="lastName" name = "lastName"><br>
+					Email: <input id="createEmail" name = "createEmail"><br>
+					Password: <input type="password" id="password1" name = "password1"><br>
+					Repeat Password: <input type="password" id="password2" name = "password2"><br>
+				</form>
+				<button id="createButton">Submit</button>
+			</div>
+			<!-- Student login -->
+			<!-- <form id="signin" method="post" action="/login" novalidate>
+				<div class="row form-group col-md-3" id="studentLogin" style="display:none">
+					<label for="username">7-digit student ID:</label>
+					<input type="text" class="form-control" name="username" required><br>
+					<input name="guest" id="guest" type="hidden" value="0">
+					<input type="submit" class="btn btn-primary" value="Log in">
+				</div>
+			</form>
+ -->
+			<!-- Guest login -->
+			<!-- <div id="guestLogin" style="display:none">
+				<button class="btn btn-primary" onclick="guest()">Log in</button>
+			</div> -->
+
+		</div>
+	</section>
+
+</body>
+
+<script type="text/javascript">
+
+
+var login = {
+	init: function(){
+		this.cacheDOM()
+		this.bindEvents()
+
+		if({{errorNumber}} == 1){
+			login.$errorP.text('Your email was not found!')
+			login.$errorP.show()
+		}else if({{errorNumber}} == 2){
+			login.$errorP.text('Incorrect email/password combination!')
+			login.$errorP.show()
+		}
+	},
+
+	cacheDOM: function(){
+		login.$div = $('#loginDiv')
+		login.$loginForm = login.$div.find('#loginForm')
+		login.$loginEmail = login.$div.find('#loginEmail')
+		login.$loginPassword = login.$div.find('#loginPassword')
+		login.$loginButton = login.$div.find('#loginButton')
+
+		// not really another place to put this
+		login.$errorP = $('#errorP')
+	},
+
+	bindEvents: function(){
+		login.$loginButton.unbind().on('click', login.loginSubmit)
+	},
+
+	loginSubmit: function(){
+		if(login.$loginEmail.val() == ''){ // if first name blank
+			alert('Please enter your email address.')
+		}else if(login.$loginPassword.val() == ''){ // if last name blank
+			alert('Please enter your password.')
+		}else{
+			// submit form
+			// alert('submitting form')
+			login.$loginForm.submit()
+		}
+	},
+
+}
+
+var create = {
+	init: function(){
+		create.cacheDOM()
+		create.bindEvents()
+
+		if({{errorNumber}} == 3){
+			create.$errorP2.text('Email already exists! Please contact administrator if this is an error.')
+			create.$errorP2.show()
+		}
+	},
+	cacheDOM: function(){
+		create.$formDiv = $('#createAccountDiv')
+		create.$firstName = create.$formDiv.find('#firstName')
+		create.$lastName = create.$formDiv.find('#lastName')
+		create.$email = create.$formDiv.find('#email')
+		create.$password1 = create.$formDiv.find('#password1')
+		create.$password2 = create.$formDiv.find('#password2')
+		create.$createButton = create.$formDiv.find('#createButton')
+
+		create.$errorP2 = $('#errorP2')
+	},
+
+	bindEvents: function(){
+		create.$createButton.unbind().on('click', create.checkPassword)
+	},
+
+	checkPassword: function(){
+		if(create.$firstName.val() == ''){ // if first name blank
+			alert('Please enter your first name to continue.')
+		}else if(create.$lastName.val() == ''){ // if last name blank
+			alert('Please enter your last name to continue.')
+		}else if(create.$email.val() == ''){ // if email blank
+			alert('Please enter your email to continue.')
+		}else if(create.$password1.val() == ''){ // if passwords don't match blank
+			alert('Please enter a password to continue.')
+		}else if(create.$password1.val() != create.$password2.val()){ // if passwords don't match blank
+			alert('Your passwords don\'t match!')
+		}else{
+			$('#createAccountForm').submit()	
+		}
+	}
+}
+
+login.init()
+create.init()
+
+</script>
+
+
+{% endblock %}

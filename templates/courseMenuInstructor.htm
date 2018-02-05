@@ -17,9 +17,10 @@
         </div>
     </nav>
     
+    <h2><center>Welcome, {{firstName}}!</center></h2><br>
+    
     <div id="menuDiv" style="width:800px; display: none" class="container well">
-		<h2><center>Welcome, {{firstName}}!</center></h2>
-
+		
 		<center>
 			<p><span id="status_span">Please select a course.</span></p>
 			<div class="row">
@@ -134,13 +135,13 @@ var main = {
 	fillCourses: function(){
 
 
-		// var $dropdown = $('#courseSelect');
+		var $dropdown = $('#courseSelect');
 
-		// $dropdown.empty()
-		// $dropdown.append('<option>Please Select</option')	
-		// $.each(main.courses, function(index, value) {
-		// 	$dropdown.append("<option>" + String(value) + "</option>")
-		// });
+		$dropdown.empty()
+		$dropdown.append('<option>Please Select</option')	
+		$.each(main.courses, function(index, value) {
+			$dropdown.append("<option>" + String(value) + "</option>")
+		});
 	},
 
 	submit: function(){

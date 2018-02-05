@@ -6,103 +6,7 @@
 
 {% block bodycontent %}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-<div class="pg">
-<h2><center>Welcome to the Research Methods Dojo!</center></h2>
-<br>
-
-<button id="loginButton" onclick="showLogin()">Log in</button>
-
-<form id="signIn" method="post" action="/login" style = "display:none">
-	<br>
-	Email: <input type="text" name="email"/><br><br>
-	Password: <input type="password" name="password"/><br><br>
-	<input name="userType" id="userType" type = "hidden" value = "none">
-	<button id = "studentLogin" onclick="studentLoginFunction()">Log in as student</button>
-	<button id = "instructorLogin" onclick="instructorLoginFunction()">Log in as instructor</button>
-	<br>
-</form>
-
-<br>
-<br>
-<button onclick="guest()">Continue as guest (no progress is recorded)</button>
-
-<center><a href="/signup">create an account.</a></center>
-
-</div>
-
-<script>
-
-// should check to make sure they actually entered something in each field, alert if they didn't
-
-function showLogin(){
-	$('#loginButton').attr('disabled', 'disabled')
-	$('#signIn').show()
-}
-
-function studentLoginFunction(){
-	$('#userType').val('student')
-	$('#signIn').submit()
-}
-function instructorLoginFunction(){
-	$('#userType').val('instructor')	
-	$('#signIn').submit()
-}
-
-function guest(){
-	$('#userType').val('guest')
-	$('#signIn').submit()
-}
-
-
-=======
-<script type="text/javascript">
-
-	function loginOption(type) {
-		if (type=="g") {
-			$('#guestLogin').show()
-			$('#studentLogin').hide()
-		}
-		else if (type=="s") {
-			$('#studentLogin').show()
-			$('#guestLogin').hide()
-		}
-	}
-
-	function guest() {
-		$('#guest').val(1);
-		$('#signin').submit();
-	}
->>>>>>> origin/master
-
-
-<<<<<<< HEAD
-=======
-<script type="text/javascript">
-
-	function loginOption(type) {
-		if (type=="g") {
-			$('#guestLogin').show()
-			$('#studentLogin').hide()
-		}
-		else if (type=="s") {
-			$('#studentLogin').show()
-			$('#guestLogin').hide()
-		}
-	}
-
-	function guest() {
-		$('#guest').val(1);
-		$('#signin').submit();
-	}
->>>>>>> origin/master
-
-</script>
-
-=======
->>>>>>> origin/master
 <body data-spy="scroll" data-target=".navbar" data-offset="120">
 
 	<!-- Navbar -->
@@ -119,10 +23,15 @@ function guest(){
 	<section>
 		<div class="container well">
 			<h3>Welcome to the Research Methods Dojo!</h3>
-			<p><a href="/signup">Click here to create an account</a> or choose a log-in option below.</p>
-
+			<p>Please select a role:</p>
+			<form method = "get" action = "/InstructorLogin">
+				<button type="submit">Instructor</button>
+			</form>
+			<a href="/signup">Student</a></p>
+			<p><a href="/InstructorLogin">Instructor</a></p>
+			
 			<!-- Select login type -->
-			<div class="row">
+			<!-- <div class="row">
 				<div class="col-md-4">
 					<label>Select a log-in option:</label>
 					<select class="form-control col-md-3" onchange="loginOption($('#login').val());" id="login">
@@ -132,10 +41,10 @@ function guest(){
 					</select>
 				</div>
 			</div>
-			<br>
+			<br> -->
 
 			<!-- Student login -->
-			<form id="signin" method="post" action="/login" novalidate>
+			<!-- <form id="signin" method="post" action="/login" novalidate>
 				<div class="row form-group col-md-3" id="studentLogin" style="display:none">
 					<label for="username">7-digit student ID:</label>
 					<input type="text" class="form-control" name="username" required><br>
@@ -143,17 +52,37 @@ function guest(){
 					<input type="submit" class="btn btn-primary" value="Log in">
 				</div>
 			</form>
-
+ -->
 			<!-- Guest login -->
-			<div id="guestLogin" style="display:none">
+			<!-- <div id="guestLogin" style="display:none">
 				<button class="btn btn-primary" onclick="guest()">Log in</button>
-			</div>
+			</div> -->
 
 		</div>
 	</section>
 
 </body>
 
+<script type="text/javascript">
+
+	function loginOption(type) {
+		if (type=="g") {
+			$('#guestLogin').show()
+			$('#studentLogin').hide()
+		}
+		else if (type=="s") {
+			$('#studentLogin').show()
+			$('#guestLogin').hide()
+		}
+	}
+
+	function guest() {
+		$('#guest').val(1);
+		$('#signin').submit();
+	}
+
+
+</script>
 
 
 {% endblock %}
