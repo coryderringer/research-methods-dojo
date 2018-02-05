@@ -105,18 +105,18 @@
 var main = {
 
 	init: function(){
-		main.courses = "{{courses}}"
+		main.courses = {{courses}};
 		main.firstName = "{{firstName}}"
-		main.courseNames = "{{courseName}}"
+		main.courseNames = "{{courseNames}}"
 		
-		main.parsedCourseNumbers = main.parseStringArray(main.courses)
+		// main.parsedCourseNumbers = main.parseStringArray(main.courses)
 		main.bindEvents()
 		main.fillCourses()
 		main.render()
 	},
 	
 	parseStringArray: function(arr){
-		return arr.split('&#39;').join('').split('[').join('').split(']').join('').split(',')
+		var a = arr.split(',')
 	},
 
 	bindEvents: function(){
@@ -126,7 +126,7 @@ var main = {
 	},
 
 	render: function(){
-		if(main.parsedCourseNumbers == ""){
+		if(main.courses.length == 0){
 			$('#addCourseDiv').show()
 		}else{
 			$('#menuDiv').show()
@@ -135,13 +135,13 @@ var main = {
 	fillCourses: function(){
 
 
-		var $dropdown = $('#courseSelect');
+		// var $dropdown = $('#courseSelect');
 
-		$dropdown.empty()
-		$dropdown.append('<option>Please Select</option')	
-		$.each(main.courses, function(index, value) {
-			$dropdown.append("<option>" + String(value) + "</option>")
-		});
+		// $dropdown.empty()
+		// $dropdown.append('<option>Please Select</option')	
+		// $.each(main.courses, function(index, value) {
+		// 	$dropdown.append("<option>" + String(value) + "</option>")
+		// });
 	},
 
 	submit: function(){
