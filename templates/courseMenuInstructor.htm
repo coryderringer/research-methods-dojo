@@ -19,10 +19,10 @@
     
     <h2><center>Welcome, {{firstName}}!</center></h2><br>
     
-    <div id="menuDiv" style="width:800px; display: none" class="container well">
+    <div id="selectCourseDiv" style="width:800px; display: none" class="container well">
 		
 		<center>
-			<p><span id="status_span">Please select a course.</span></p>
+			<p><span id="status_span">Please select an existing course.</span></p>
 			<div class="row">
 				<div class="col-xs-4"></div>
 				<div class="col-xs-2">
@@ -37,16 +37,18 @@
 				</div>
 				<div class="col-xs-4"></div>
 			</div>
+			<br>
+			<p>Or <button id="addCourseButton">add a new course</button></p>
 		</center>
 
 		
 
-		<p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
+		
 
     </div>
 
     <div id="addCourseDiv" style="width:800px; display:none" class="container well">
-    	<p>It looks like you don't have any courses added yet. Let's add a course.</p>
+    	<p id="noCourses" style="display: none">It looks like you don't have any courses added yet. Let's add a course.</p>
 
     	<form id="courseCreateForm" method = "post" action = "/CreateCourse">
     		<p>What would you like to call the course?
@@ -89,9 +91,9 @@
     		<input id="PFEC" name="PFEC" type="hidden">
     	</form>
     	<button id="createCourseButton">Create Course</button>
-    	<p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
+    	
     </div>
-
+    <p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
 </body>
 
 
@@ -105,22 +107,39 @@
 var main = {
 
 	init: function(){
-		main.courses = {{courses}};
+		main.courses = main.parseStringArray("{{courses}}").map(Number)
 		main.firstName = "{{firstName}}"
-		main.courseNames = "{{courseNames}}"
+		main.courseNames = main.parseStringArray("{{courseNames}}")
 		
 		// main.parsedCourseNumbers = main.parseStringArray(main.courses)
+		main.cacheDOM()
 		main.bindEvents()
 		main.fillCourses()
 		main.render()
 	},
 	
+	cacheDOM: function(){
+		main.$selectCourseDiv = $('#selectCourseDiv')
+		main.$addCourseButton = main.$selectCourseDiv.find('#addCourseButton')
+		main.$addCourseDiv = $('#addCourseDiv')
+
+		main.$noCourses = $('#noCourses')
+	},
+
 	parseStringArray: function(arr){
 		var a = arr.split(',')
+		var b = new Array()
+		for(var i = 0; i < a.length-1; i++){
+			b.push(a[i])
+		}
+
+		return b
 	},
 
 	bindEvents: function(){
-		console.log('events bound')
+		main.$addCourseButton.unbind().on('click', function(){
+			main.$addCourseDiv.toggle()
+		})
 		$('#createCourseButton').unbind().on('click', main.submit)
 
 	},
@@ -128,20 +147,22 @@ var main = {
 	render: function(){
 		if(main.courses.length == 0){
 			$('#addCourseDiv').show()
+			main.$noCourses.show()
 		}else{
-			$('#menuDiv').show()
+			
+			$('#selectCourseDiv').show()
 		}	
 	},
 	fillCourses: function(){
 
 
-		// var $dropdown = $('#courseSelect');
+		var $dropdown = $('#courseSelect');
 
-		// $dropdown.empty()
-		// $dropdown.append('<option>Please Select</option')	
-		// $.each(main.courses, function(index, value) {
-		// 	$dropdown.append("<option>" + String(value) + "</option>")
-		// });
+		$dropdown.empty()
+		$dropdown.append('<option>Please Select</option')	
+		$.each(main.courseNames, function(index, value) {
+			$dropdown.append("<option>" + String(value) + "</option>")
+		});
 	},
 
 	submit: function(){

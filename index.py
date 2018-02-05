@@ -1094,11 +1094,20 @@ class InstructorLoginHandler(webapp.RequestHandler):
 
 			self.session['courseNames'] = names 
 
-			logging.info('line 1097ish')
+			# this is the ugliest solution, but it works
+			a = ''
+			for i in names:
+				a+=i+','
+
+			b = ''
+			for i in self.session['courses']:
+				b+=str(i)+','
+
+			logging.info('line 1100ish')
 			doRender(self, 'courseMenuInstructor.htm',
 				{'firstName':self.session['firstName'],
-				'courses': self.session['courses'],
-				'courseNames': self.session['courseNames']})
+				'courses': b,
+				'courseNames': a})
 
 		
 		# # Create User object in the datastore
@@ -1215,10 +1224,14 @@ class CreateCourseHandler(webapp.RequestHandler):
 			for i in names:
 				a+=i+','
 
-			logging.info('line 1213ish')
+			b = ''
+			for i in self.session['courses']:
+				b+=str(i)+','
+
+			logging.info('line 1227ish')
 			doRender(self, 'courseMenuInstructor.htm',
 				{'firstName':self.session['firstName'],
-				'courses': self.session['courses'],
+				'courses': b,
 				'courseNames': a})
 			
 			return
@@ -1285,7 +1298,7 @@ class CreateCourseHandler(webapp.RequestHandler):
 			
 			logging.info('courses after appending courseNumber: '+str(obj.courses))
 			
-			self.session['courses'].append(obj.courses)
+			self.session['courses'] = (obj.courses)
 			obj.put()
 			
 
@@ -1304,11 +1317,20 @@ class CreateCourseHandler(webapp.RequestHandler):
 
 			self.session['courseNames'] = names 
 
+			# this is the ugliest solution, but it works
+			a = ''
+			for i in names:
+				a+=i+','
+
+			b = ''
+			for i in self.session['courses']:
+				b+=str(i)+','
+
 			logging.info('line 1300ish')
 			doRender(self, 'courseMenuInstructor.htm',
 				{'firstName':self.session['firstName'],
-				'courses': self.session['courses'],
-				'courseNames': self.session['courseNames']})
+				'courses': b,
+				'courseNames': a})
 	
 		
 
