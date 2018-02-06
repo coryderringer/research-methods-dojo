@@ -19,7 +19,7 @@
     
     <h2><center>Welcome, {{firstName}}!</center></h2><br>
     
-    <div id="selectCourseDiv" style="width:800px; display: none" class="container well">
+    <div id="selectCourseDiv" style="width:800px" class="container well">
 		
 		<center>
 			<p><span id="status_span">Please select an existing course.</span></p>
@@ -38,7 +38,7 @@
 				<div class="col-xs-4"></div>
 			</div>
 			<br>
-			<p>Or <button id="addCourseButton">add a new course</button></p>
+			<p>Or <a href="/CreateCourse">add a new course</a></p>
 		</center>
 
 		
@@ -47,52 +47,6 @@
 
     </div>
 
-    <div id="addCourseDiv" style="width:800px; display:none" class="container well">
-    	<p id="noCourses" style="display: none">It looks like you don't have any courses added yet. Let's add a course.</p>
-
-    	<form id="courseCreateForm" method = "post" action = "/CreateCourse">
-    		<p>What would you like to call the course?
-    		<input id="courseName" name="courseName"></p>
-
-    		<p>When will the course take place?
-    			<select id="termInput" name="termInput">
-    				<option value="Spring 2018">Spring 2018</option>
-    				<option value="Summer 2018">Summer 2018</option>
-    				<option value="Fall 2018">Fall 2018</option>
-
-    				<option value="Spring 2019">Spring 2019</option>
-    				<option value="Summer 2019">Summer 2019</option>
-    				<option value="Fall 2019">Fall 2019</option>
-
-    				<option value="Spring 2020">Spring 2020</option>
-    				<option value="Summer 2020">Summer 2020</option>
-    				<option value="Fall 2020">Fall 2020</option>
-
-    				<option value="Spring 2021">Spring 2021</option>
-    				<option value="Summer 2021">Summer 2021</option>
-    				<option value="Fall 2021">Fall 2021</option>
-    			</select></p>
-
-
-    		<p>Which modules would you like to make available in the course? Check all that apply.</p>
-    		<ul style="list-style: none"> 
-	    		<li><input id="WithinSubject_Check" name="WithinSubject_Check" type="checkbox">
-	    		<label for="WithinSubject_Check">The Power of Within Subjects Designs</label></li>
-
-	    		<li><input id="CarryoverEffects_Check" name="CarryoverEffects_Check" type="checkbox">
-	    		<label for="CarryoverEffects_Check">Carryover Effects</label></li>
-
-	    		<li><input id="PracticeFatigueEffects_Check" name="PracticeFatigueEffects_Check" type="checkbox">
-	    		<label for="PracticeFatigueEffects_Check">Practice and Fatigue Effects</label></li>
-	    	</ul>
-    		<br>
-    		<input id="WSC" name="WSC" type="hidden">
-    		<input id="CEC" name="CEC" type="hidden">
-    		<input id="PFEC" name="PFEC" type="hidden">
-    	</form>
-    	<button id="createCourseButton">Create Course</button>
-    	
-    </div>
     <p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
 </body>
 
@@ -120,8 +74,8 @@ var main = {
 	
 	cacheDOM: function(){
 		main.$selectCourseDiv = $('#selectCourseDiv')
-		main.$addCourseButton = main.$selectCourseDiv.find('#addCourseButton')
-		main.$addCourseDiv = $('#addCourseDiv')
+		// main.$addCourseButton = main.$selectCourseDiv.find('#addCourseButton')
+		// main.$addCourseDiv = $('#addCourseDiv')
 
 		main.$noCourses = $('#noCourses')
 	},
@@ -137,20 +91,20 @@ var main = {
 	},
 
 	bindEvents: function(){
-		main.$addCourseButton.unbind().on('click', function(){
-			main.$addCourseDiv.toggle()
-		})
-		$('#createCourseButton').unbind().on('click', main.submit)
+		// main.$addCourseButton.unbind().on('click', function(){
+			// main.$addCourseDiv.toggle()
+		// })
+		// $('#createCourseButton').unbind().on('click', main.submit)
 
 	},
 
 	render: function(){
 		if(main.courses.length == 0){
-			$('#addCourseDiv').show()
-			main.$noCourses.show()
+			// $('#addCourseDiv').show()
+			// main.$noCourses.show()
 		}else{
 			
-			$('#selectCourseDiv').show()
+			// $('#selectCourseDiv').show()
 		}	
 	},
 	fillCourses: function(){

@@ -261,35 +261,6 @@ class SignupHandler(webapp.RequestHandler):
 					{'error': 'This account already exists. Please contact administrator if you need to reset your password.'})
 				return
 
-			
-			# Create User object in the datastore
-			usernum = create_or_increment_NumOfUsers()
-			newuser = Instructor(usernum=usernum, 
-				firstName=firstName,
-				lastName=lastName,
-				email = email,
-				courses = [],
-				# note: term and instructor will come from the query above, haven't implemented yet
-				# term='Spring 2016',
-				# instructor=instructor,
-				password=password);
-			userkey = newuser.put()
-			newuser.put();
-
-			# logging.info('LAST NAME: '+lastName)
-
-			# store these variables in the session, log user in
-			self.session = get_current_session() 
-			self.session['usernum']    	= usernum
-			self.session['firstName']	= firstName
-			self.session['lastName']	= lastName
-			self.session['Logged_In']	= True
-			self.session['courses']		= []
-
-			doRender(self, 'courseMenuInstructor.htm',
-				{'firstName':self.session['firstName'],
-				'courses': self.session['courses']})
-
 
 class LoginHandler(webapp.RequestHandler):
 	def get(self):
@@ -625,7 +596,7 @@ class MainMenuHandler(webapp.RequestHandler):
 			'courseNumber': courseNumber})
 
 ###############################################################################
-######################### Individual Page Handlers ############################
+########################### Module Page Handlers ##############################
 ###############################################################################
 
 class CarryoverEffectsHandler(webapp.RequestHandler):
@@ -1166,78 +1137,117 @@ class InstructorLoginHandler(webapp.RequestHandler):
 		# 			{'errorNumber': 1})
 
 class CreateCourseHandler(webapp.RequestHandler):
+	def get(self):
+		self.session = get_current_session()
+
+		# get current courses to make sure they don't create one they already have
+		q = db.Query(Course).filter('instructorEmail =', self.session['email'])
+		results = q.fetch(limit=100)
+
+		logging.info('There are '+ str(len(results)) + ' classes for ' + self.session['email'])
+
+		names = []
+		terms = []
+		years = []
+
+
+		for i in results: # This should keep them in order
+			logging.info('Course Name: '+str(i.courseName) + ', '+str(i.term) + ' ' + str(i.year))
+			names.append(i.courseName)
+			terms.append(i.term)
+			years.append(i.year)
+
+			
+		names = map(str, names) # this is how you get around "u" in front of strings
+		terms = map(str, terms)
+		years = map(str, years)
+
+		
+		
+		a = ''
+		for i in names:
+			a+=i+','
+		nameString = a
+
+		a = ''
+		for i in terms:
+			a+=i+','
+		termString = a
+		
+		a = ''
+		for i in years:
+			a+=i+','
+		yearString = a
+
+		doRender(self, 'createCourse.htm',
+			{'firstName':self.session['firstName'],
+			'courseNames':nameString,
+			'terms': termString,
+			'years': yearString})
+
 	def post(self):
 		self.session = get_current_session()
 
 		# details about the course:
-
-		# term and year
 		termWithYear = self.request.get('termInput')
 		term = termWithYear.split(' ')[0]
 		year = termWithYear.split(' ')[1]
-		courseName = self.request.get('courseName')
+		courseName = self.request.get('courseNameInput')
 
-		instructor = ', '.join([self.session['lastName'], self.session['firstName']])
+		# prevent adding duplicate on refresh:
+		que = db.Query(Course).filter('instructorEmail =', self.session['email'])
+		que.filter('term =', term).filter('year =', year).filter('courseName =', courseName)
+		r = que.fetch(limit=1)
 
-		logging.info('instructor: '+instructor)
+		if len(r) > 0: # if it's already in the datastore
+			logging.info('Course name: '+courseName)
+			logging.info('The course is already in the datastore')
 
-		email = self.session['email']
+			# query the datastore to get the course names and numbers:
+			que = db.Query(Course).filter('instructorEmail =', self.session['email'])
+			results = que.fetch(limit=100)
 
-		# query to find courses from that instructor
-		que = db.Query(Course)
-		que.filter('instructorEmail =', email).filter('courseName =', str(courseName))
-		existingCourses = que.fetch(limit=1000)
+			names = []
+			numbers = []
 
-		logging.info('Number of Courses: '+str(len(existingCourses)))
-		
-		# if the course already exists, render the menu page where they can select a course. 
-		# Put through an error message that the course already exists.
-		if len(existingCourses) > 0:
-			logging.info('THIS COURSE EXISTS')
-			# get courses for this particular instructor
-			que = db.Query(Instructor)
-			que = que.filter('email =', self.session['email'])
-			results = que.get()
+			for i in results: # This should keep them in order
+				names.append(i.courseName)
+				numbers.append(i.courseNumber)
 
-			courses = results.courses
+			self.session['courseNames'] = names
+			self.session['courseNumbers'] = numbers
 
-			self.session['courses'] = map(int, courses) # ha!
-			logging.info('Existing courses: '+str(self.session['courses']))
+			# this is the ugliest solution, but it works
+			# course names
+			a = ''
+			for i in names:
+				a+=i+','
 
-			# need course names from course numbers:
+			logging.info(a)
+
+			# course numbers
+			b = ''
+			for i in numbers:
+				b+=str(i)+','
+
+			doRender(self, 'courseMenuInstructor.htm',
+				{'firstName':self.session['firstName'],
+				'courses': b,
+				'courseNames': a})
+
+		else:
+			# get this instructor's course names for the menu on the next page
+			# doing this BEFORE adding the course to the datastore, 
+			# so we don't have to que the database right after writing to it.
+			# (I think this makes the process inconsistent.)
 			que = db.Query(Course)
 			que.filter('courseNumber IN', self.session['courses'])
-			results = que.fetch(limit=100)
+			results = que.fetch(limit=100) # arbitrary limit that I'm sure we'll never reach; is there a downside to it being higher?
 
 			names = []
 
 			for i in results: # This should keep them in order
 				names.append(i.courseName)
-
-			# names = map(str, names) # this is how you get around "u" in front of strings
-			logging.info('Course names are: '+str(names))
-
-			self.session['courseNames'] = names 
-
-			# this is the ugliest solution, but it works
-			a = ''
-			for i in names:
-				a+=i+','
-
-			b = ''
-			for i in self.session['courses']:
-				b+=str(i)+','
-
-			logging.info('line 1227ish')
-			doRender(self, 'courseMenuInstructor.htm',
-				{'firstName':self.session['firstName'],
-				'courses': b,
-				'courseNames': a})
-			
-			return
-
-		else:
-			logging.info('THIS IS A NEW COURSE')
 
 
 			# create course number			
@@ -1250,7 +1260,44 @@ class CreateCourseHandler(webapp.RequestHandler):
 				que = db.Query(Course).filter('courseNumber =', courseNumber)
 				results = que.fetch(limit=1)
 
-				
+			# append the newest course
+			self.session['courseNames'].append(courseName)
+			self.session['courses'].append(courseNumber)
+
+			# this and the ugly solution below are how I'm getting around "u" in front of strings. Fooled you, unicode!
+			names = map(str, names) 
+			logging.info('Course names are: '+str(names))
+
+
+			# this is the ugliest solution, but it works
+			# course names
+			a = ''
+			for i in self.session['courseNames']:
+				a+=i+','
+
+			# course numbers
+			b = ''
+			for i in self.session['courses']:
+				b+=str(i)+','
+
+			# add course to instructor object
+			que = db.Query(Instructor)
+			que = que.filter('email =', self.session['email'])
+			obj = que.get()
+			
+			obj.courses.append(courseNumber)
+			
+			obj.put()
+
+
+			# add course to the datastore
+			instructor = ', '.join([self.session['lastName'], self.session['firstName']])
+
+			logging.info('instructor: '+instructor)
+
+			email = self.session['email']
+
+			
 			roster = ['']
 		
 
@@ -1272,7 +1319,8 @@ class CreateCourseHandler(webapp.RequestHandler):
 			logging.info('modules: ' + ', '.join(moduleList))
 
 
-			newCourse = Course(term = term,
+			newCourse = Course(
+				term = term,
 				year = year,
 				courseNumber = courseNumber,
 				instructor = instructor, 
@@ -1283,54 +1331,20 @@ class CreateCourseHandler(webapp.RequestHandler):
 
 			newCourse.put()
 
-			# create new course in instructor object
-			# Check whether user already exists
-			que = db.Query(Instructor)
-			que = que.filter('email =', self.session['email'])
-			results = que.fetch(limit=1)
-
-			obj = que.get()
-			logging.info('this is the email: '+ str(obj.email))
-
-			logging.info('courses before appending courseNumber: '+str(obj.courses))
 			
-			obj.courses.append(courseNumber)
 			
-			logging.info('courses after appending courseNumber: '+str(obj.courses))
-			
-			self.session['courses'] = (obj.courses)
-			obj.put()
 			
 
-			# need course names from course numbers:
-			que = db.Query(Course)
-			que.filter('courseNumber IN', self.session['courses'])
-			results = que.fetch(limit=100)
 
-			names = []
-
-			for i in results: # This should keep them in order
-				names.append(i.courseName)
-
-			names = map(str, names) # this is how you get around "u" in front of strings
-			logging.info('Course names are: '+str(names))
-
-			self.session['courseNames'] = names 
-
-			# this is the ugliest solution, but it works
-			a = ''
-			for i in names:
-				a+=i+','
-
-			b = ''
-			for i in self.session['courses']:
-				b+=str(i)+','
 
 			logging.info('line 1300ish')
 			doRender(self, 'courseMenuInstructor.htm',
 				{'firstName':self.session['firstName'],
 				'courses': b,
 				'courseNames': a})
+
+
+			
 	
 		
 
