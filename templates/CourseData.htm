@@ -1,0 +1,177 @@
+{% extends "_base.htm" %}
+
+{% block title %}
+	Course Data for {{courseName}}
+{% endblock %}
+
+{% block bodycontent %}
+<head>
+</head>
+<body>
+
+<h2>Course Data for {{courseName}}</h2>
+
+<!-- ########## User Data ########## -->
+User:
+<table>
+<!-- Header Row -->
+<tr>
+<th>Instructor</th>
+<th>Term</th>
+<th>usernum</th>
+<th>First Name</th>
+<th>Last Name</th>
+<th>username</th>
+<!-- <th>password</th> -->
+<th>Within Subjects</th>
+<th>Carryover Effects</th>
+<th>Practice/Fatigue Effects</th>
+</tr>
+
+
+<!-- Subsequent Rows -->
+{% for i in users %}
+<tr>
+<th>{{ i.instructor }}</th>
+<th>{{ i.term }}</th>
+<th>{{ i.usernum }}</th>
+<th>{{ i.firstname }}</th>
+<th>{{ i.lastname }}</th>
+<th>{{ i.username }}</th>
+<!-- <th>{{ i.password }}</th> -->
+<th>{{ i.Module2 }}</th>
+<th>{{ i.Module1 }}</th>
+<th>{{ i.Module3 }}</th>
+
+</tr>
+{% endfor %}
+</table>
+<br>
+<!-- Module 1 Progress -->
+
+
+
+
+
+<!-- Module 2 Progress -->
+Within Subjects Tutorial
+<table>
+<!-- Header Row -->
+<tr>
+<th>usernum</th>
+<th>First Name</th>
+<th>Last Name</th>
+<th>username</th>
+<th>WSAnswer1</th>
+<th>WSAnswer2</th>
+<th>WSAnswer3</th>
+<th>numberOfGuesses</th>
+<th>numberOfSimulations</th>
+<th>numberOfSimulations2</th>
+<th colspan=3>QuizResults</th>
+</tr>
+
+
+
+<!-- Subsequent Rows -->
+{% for i in users %}
+<tr>
+<th>{{ i.usernum }}</th>
+<th>{{ i.firstname }}</th>
+<th>{{ i.lastname }}</th>
+<th>{{ i.username }}</th>
+<th>{{ i.WSAnswer1 }}</th>
+<th>{{ i.WSAnswer2 }}</th>
+<th>{{ i.WSAnswer3 }}</th>
+<th>{{ i.numberOfGuesses }}</th>
+<th>{{ i.numberOfSimulations }}</th>
+<th>{{ i.numberOfSimulations2 }}</th>
+
+{% for j in i.QuizResults %}
+<th>{{ j }}</th>
+{% endfor %}
+
+</tr>
+{% endfor %}
+
+</table>
+<br>
+
+
+
+<!-- Module 1 Progress -->
+Carryover Effects Tutorial
+<table>
+<!-- Header Row -->
+<tr>
+<th>usernum</th>
+<th>First Name</th>
+<th>Last Name</th>
+<th>username</th>
+<th>COEAnswer1</th>
+<th>COEAnswer2</th>
+<th>COEAnswer3</th>
+<th>COEAnswer4</th>
+<th>COEAnswer5</th>
+</tr>
+
+<!-- Subsequent Rows -->
+{% for i in users %}
+<tr>
+<th>{{ i.usernum }}</th>
+<th>{{ i.firstname }}</th>
+<th>{{ i.lastname }}</th>
+<th>{{ i.username }}</th>
+<th>{{ i.COEAnswer1 }}</th>
+<th>{{ i.COEAnswer2 }}</th>
+<th>{{ i.COEAnswer3 }}</th>
+<th>{{ i.COEAnswer4 }}</th>
+<th>{{ i.COEAnswer5 }}</th>
+
+</tr>
+{% endfor %}
+
+</table>
+<br>
+
+
+<!-- Module 3 Progress -->
+Practice and Fatigue Effects Tutorial
+<table>
+<!-- Header Row -->
+<tr>
+<th>usernum</th>
+<th>First Name</th>
+<th>Last Name</th>
+<th>username</th>
+<th>PFEAnswer1</th>
+<th>PFEAnswer2</th>
+<th>PFEAnswer3</th>
+<th>PFEAnswer4</th>
+</tr>
+
+<!-- Subsequent Rows -->
+{% for i in users %}
+<tr>
+<th>{{ i.usernum }}</th>
+<th>{{ i.firstname }}</th>
+<th>{{ i.lastname }}</th>
+<th>{{ i.username }}</th>
+<th>{{ i.PFEAnswer1 }}</th>
+<th>{{ i.PFEAnswer2 }}</th>
+<th>{{ i.PFEAnswer3 }}</th>
+<th>{{ i.PFEAnswer4 }}</th>
+
+</tr>
+{% endfor %}
+
+</table>
+
+
+</body>
+{% endblock %}
+
+
+
+
+

@@ -49,7 +49,7 @@ class StudentCourse(db.Model): # student/course combination, when a student adds
 	usernum = 			db.IntegerProperty()
 
 	# course linked
-	courseNumbers = 		db.IntegerProperty()
+	courseNumber = 		db.IntegerProperty()
 
 	# module properties...
 	Module1 =			db.StringProperty()
@@ -1274,17 +1274,28 @@ class CourseDataHandler(webapp.RequestHandler):
 		
 		# This handler should query the datastore to get data from the selected class
 		# for now set term to Spring 2018
-		year = '2018'
 		term = 'Spring'
+		year = '2018'
 
+		# querying STUDENT data, limiting it to the course we care about
 		courseName = self.request.get('courseSelect')
-
 		logging.info('Course Name: '+courseName)
 
 		q = db.Query(Course).filter('instructorEmail =', self.session['email'])
 		q.filter('courseName =', courseName).filter('year =', year).filter('term =', term)
 		results = q.fetch(limit=1)
-		
+
+		for i in results:
+			courseNumber = i.courseNumber
+
+		# Each time a student registers for a class, create a StudentCourse instance
+		# modify it when they complete the course
+		q = db.Query(StudentCourse).filter('courseNumber =', courseNumber)
+		data = q.fetch(limit=1000) # arbitrarily high, probably never get
+
+		doRender(self, 'CourseData.htm',
+			{'users':data,
+			'courseName': courseName})
 
 
 class LogoutHandler(webapp.RequestHandler):
