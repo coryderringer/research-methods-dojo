@@ -1268,7 +1268,23 @@ class CreateCourseHandler(webapp.RequestHandler):
 				'courseNames': a})
 
 
+class CourseDataHandler(webapp.RequestHandler):
+	def get(self):
+		self.session = get_current_session()
+		
+		# This handler should query the datastore to get data from the selected class
+		# for now set term to Spring 2018
+		year = '2018'
+		term = 'Spring'
 
+		courseName = self.request.get('courseSelect')
+
+		logging.info('Course Name: '+courseName)
+
+		q = db.Query(Course).filter('instructorEmail =', self.session['email'])
+		q.filter('courseName =', courseName).filter('year =', year).filter('term =', term)
+		results = q.fetch(limit=1)
+		
 
 
 class LogoutHandler(webapp.RequestHandler):

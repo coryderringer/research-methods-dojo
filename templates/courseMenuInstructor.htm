@@ -74,9 +74,8 @@ var main = {
 	
 	cacheDOM: function(){
 		main.$selectCourseDiv = $('#selectCourseDiv')
-		// main.$addCourseButton = main.$selectCourseDiv.find('#addCourseButton')
-		// main.$addCourseDiv = $('#addCourseDiv')
-
+		main.$courseSelectForm = $('#courseSelectForm')
+		main.$submitButton1 = $('#submitButton1')
 		main.$noCourses = $('#noCourses')
 	},
 
@@ -95,7 +94,7 @@ var main = {
 			// main.$addCourseDiv.toggle()
 		// })
 		// $('#createCourseButton').unbind().on('click', main.submit)
-
+		main.$submitButton1.unbind().on('click', main.submitFunction)
 	},
 
 	render: function(){
@@ -119,34 +118,10 @@ var main = {
 		});
 	},
 
-	submit: function(){
+	submitFunction: function(){
 		console.log('test')
-		if(!$('#WithinSubject_Check').prop('checked') &
-			!$('#CarryoverEffects_Check').prop('checked') &
-			!$('#PracticeFatigueEffects_Check').prop('checked')) {
-			
-			alert('Please select at least one module for this course.')
-			return
-		}
-
-		if($('#WithinSubject_Check').prop('checked')){
-			$('#WSC').val(1)
-		}else{
-			$('#WSC').val(0)
-		}
-		if($('#CarryoverEffects_Check').prop('checked')){
-			$('#CEC').val(1)
-		}else{
-			$('#CEC').val(0)
-		}
-		if($('#PracticeFatigueEffects_Check').prop('checked')){
-			$('#PFEC').val(1)
-		}else{
-			$('#PFEC').val(0)
-		}
+		main.$courseSelectForm.submit()
 		
-
-		$('#courseCreateForm').submit()
 		
 	}
 	
