@@ -32,7 +32,8 @@ class Student(db.Model):
 	email = 			db.StringProperty()
 	password =			db.StringProperty()
 	usernum = 			db.IntegerProperty()
-	courseNumbers = 			db.ListProperty(int) # to allow for multiple courses
+	courseNumbers = 	db.ListProperty(int) # to allow for multiple courses
+	courseNames = 		db.ListProperty(str)
 
 class Course(db.Model):
 	term = 				db.StringProperty()
@@ -51,6 +52,7 @@ class StudentCourse(db.Model): # student/course combination, when a student adds
 
 	# course linked
 	courseNumber = 		db.IntegerProperty()
+	courseName = 		db.StringProperty()
 
 	# module properties...
 	Module1 =			db.StringProperty()
@@ -155,6 +157,7 @@ def readData(module,stimuli):
 ################################################################################
 ################################################################################
 
+# called in several places, so I made a standalone function
 def killSession(self):
 	# kill all the session stuff that would identify them (username, password, etc)
 	sessionlist = ['Logged_In', 'email', 'firstName', 'usernum', 'username', 'Module1', 'Module2', 'Module3', 'Logged_In', 'M1_Progress', 'M2_Progress', 'M3_Progress']
@@ -164,7 +167,6 @@ def killSession(self):
 			self.session.__delitem__(i)
 
 
-
 ###############################################################################
 ###############################################################################
 ################################## Handlers! ##################################
@@ -172,414 +174,500 @@ def killSession(self):
 ###############################################################################
 
 ###############################################################################
-########################### Student Page Handlers #############################
+######################## Student/Instructor Handlers ##########################
 ###############################################################################
 
-class SignupHandler(webapp.RequestHandler):
-	def get(self):
-		doRender(self, 'signup.htm')
-
-	def post(self):
-		self.session = get_current_session()
-			
-		firstName = self.request.get('firstName')
-		lastName = self.request.get('lastName')
-		email = self.request.get('email')
-		role = self.request.get('roleSelect')
-		password = self.request.get('password1')
-
-		# courseNumbers = self.request.get('courseNumbers')
-		
-
-		logging.info('ROLE '+role)
-		if role == 'Student':
-	
-
-			# Check whether user already exists
-			que = db.Query(Student)
-			que = que.filter('email =', email)
-			results = que.fetch(limit=1)
-
-			# If the user already exists in the datastore
-			if (len(results) > 0) & (str(firstName) != 'test'):
-				doRender(self,
-					'signupfail.htm',
-					{'error': 'This account already exists. Please contact your instructor if you need to reset your password.'})
-				return
-
-
-			# firstName = 		db.StringProperty()
-			# lastName = 			db.StringProperty()
-			# email = 			db.StringProperty()
-			# password =			db.StringProperty()
-			# usernum = 			db.IntegerProperty()
-			# courses = 			db.ListProperty(int) # to allow for multiple courses
-
-			# Create User object in the datastore
-			usernum = create_or_increment_NumOfUsers()
-			newuser = Student(usernum=usernum, 
-				firstName=firstName,
-				lastName=lastName,
-				email = email,
-				password=password,
-				# modules are at the course level? So here we should have an empty array of course numbers.
-				# Module1="Incomplete", 
-				# Module2="Incomplete",
-				# Module3="Incomplete"
-				courses = []);
-			
-			userkey = newuser.put()
-			
-			newuser.put();
-
-			# store these variables in the session, log user in
-			self.session = get_current_session() 
-			self.session['usernum']    	= usernum
-			self.session['firstName']	= firstName
-			self.session['courseNumbers'] 	= []
-			self.session['email']		= email
-			# self.session['Module1']   = 'Incomplete'
-			# self.session['Module2']  	= 'Incomplete'
-			# self.session['Module3']  	= 'Incomplete'
-			self.session['Logged_In']	= True
-			# self.session['M1_Progress'] = 0
-			# self.session['M2_Progress'] = 0
-			# self.session['M3_Progress'] = 0
-
-			doRender(self, 'courseMenu.htm',
-				{'firstName':self.session['firstName'],
-				'courseNumbers': self.session['courseNumbers']})
-		else:
-			# create new instructor
-			# Check whether user already exists
-			que = db.Query(Instructor)
-			que = que.filter('email =', email)
-			results = que.fetch(limit=1)
-
-			# If the user already exists in the datastore
-			if (len(results) > 0) & (firstName != 'Cory'):
-				doRender(self,
-					'signupfail.htm',
-					{'error': 'This account already exists. Please contact administrator if you need to reset your password.'})
-				return
-
-
+# this should probably be renamed "splash handler," since it's just the splash page
 class LoginHandler(webapp.RequestHandler):
 	def get(self):
 		self.session = get_current_session()
+
+		doRender(self, 'login.htm')
+
+
+class LogoutHandler(webapp.RequestHandler):
+	
+	def get(self):	
+		self.session = get_current_session()
+		self.session['Logged_In'] = False	
 		
-		self.session['M1_Progress'] = 0
-		self.session['M2_Progress'] = 0
-		self.session['M3_Progress'] = 0
+		# kill all the session stuff that would identify them (username, password, etc)
+		killSession(self)
 
-		
+		# Send them back to the login page
+		doRender(self, 'login.htm')
 
-		# logging.info(Logged_In)
-		# If they're logged in, take them to the main menu
-		if 'Logged_In' in self.session:
-			if self.session['Logged_In'] == True:
-				courses = self.session['courseNumbers']
-				doRender(self, 'courseMenu.htm',
-					{'firstName':self.session['firstName'],
-					'courseNumbers': courses})
+###############################################################################
+########################### Student Page Handlers #############################
+###############################################################################
 
-			else:
-				doRender(self, 'login.htm')
-		# If they aren't, take them to the login page
-		else:
-			self.session['Logged_In'] = False
-			doRender(self, 'login.htm')
+class StudentLoginHandler(webapp.RequestHandler):
+	def get(self):
+		logging.info('render student login page')
+		doRender(self, 'StudentLogin.htm',
+			{'errorNumber':0})
 
 	def post(self):
-		return
-		# self.session = get_current_session()
+		self.session = get_current_session()
 		
-		# # if guest
-		# if self.request.get('userType') == 'guest':
-		# 	usernum = create_or_increment_NumOfUsers()
-		# 	username = str('Guest'+str(usernum))
+		email = str(self.request.get('loginEmail'))
+		password = str(self.request.get('loginPassword'))
 
-		# 	logging.info('USERNAME: '+username)
+		logging.info('EMAIL: '+email)
+		
 
-		# 	firstName = 'Guest'
-		# 	lastName = 'Guest'
-		# 	instructor = 'Guest'
+		# Check whether user already exists
+		que = db.Query(Student)
+		que = que.filter('email =', email)
+		results = que.fetch(limit=1)
 
-		# 	self.session = get_current_session() 
-		# 	self.session['usernum']    	= usernum
-		# 	self.session['username']   	= username
-		# 	self.session['firstName']	= firstName
-		# 	# self.session['password']    = password1
-		# 	self.session['Module1']   	= 'Incomplete'
-		# 	self.session['Module2']  	= 'Incomplete'
-		# 	self.session['Module3']  	= 'Incomplete'
-		# 	self.session['Logged_In']	= True
-		# 	self.session['M1_Progress'] = 0
-		# 	self.session['M2_Progress'] = 0
-		# 	self.session['M3_Progress'] = 0
-
-		# 	newuser = Student(usernum=usernum, 
-		# 		username=username,
-		# 		firstName=firstName,
-		# 		lastName=self.request.get('lastName'),
-		# 		# note: this is the manual input for term. Doesn't make sense at this point to have them do this themselves since it's all for Spring 2016
-		# 		term='Spring 2016',
-				
-		# 		instructor=instructor,
-		# 		# password=password1,
-		# 		Module1="Incomplete",
-		# 		Module2="Incomplete",
-		# 		Module3="Incomplete");
-
-		# 	userkey = newuser.put()
+		# If the user does not already exist in the datastore
+		if len(results) == 0:
+			killSession(self)
+			doRender(self, 'StudentLogin.htm',
+				{'errorNumber':1})
+			return
+		
+		# user exists if we made it this far
 			
-		# 	newuser.put();
+		# check password
+		for i in results:
+			p = i.password
 
-		# 	doRender(self, 'courseMenu.htm',
-		# 		{'firstName':self.session['firstName'],
-		# 		'Module1':self.session['Module1'],
-		# 		'Module2':self.session['Module2'],
-		# 		'Module3':self.session['Module3']})
+		if password != p:
+			killSession(self)
+			doRender(self, 'StudentLogin.htm',
+				{'errorNumber':2})
+			return
 
+		# email/password combo is correct if we made it this far
+		# store these variables in the session, log user in
+		for j in results: # even though there's only 1
+			self.session['usernum']    		= j.usernum
+			self.session['firstName']		= j.firstName
+			self.session['lastName']		= j.lastName
+			self.session['email']			= j.email
+			self.session['courseNumbers']	= j.courseNumbers
+			self.session['courseNames']		= j.courseNames
+			self.session['Logged_In']		= True
+		
 
+		# for each course number, run a query, get the term
 
-		# 	return
+		terms = []
+		years = []
+		for i in self.session['courseNumbers']:
+			q = db.Query(Course).filter('courseNumber =', i)
+			r = q.get()
 
-		# if self.request.get('userType') == 'student':
-		# 	email = self.request.get('email')
-		# 	# password = self.request.get('password')
-			
-		# 	# Check whether user already exists
-		# 	que = db.Query(Student)
-		# 	que = que.filter('email =', email)
-		# 	results = que.fetch(limit=1)
+			terms.append(r.term)
+			years.append(r.year)
 
-		# 	# If user does not exist
-		# 	if len(results) == 0:
-		# 		doRender(self,
-		# 			'loginfailed.htm',
-		# 			{'error': 'This username does not exist'})
-		# 		return
+		# this is the ugliest solution, but it works
+		a = ''
+		for i in self.session['courseNames']:
+			a+=i+','
 
-		# 	# Check if password matches password entry in datastore
-		# 	# que = que.filter('password =', password)
-		# 	# results = que.fetch(limit=1)
+		t = ''
+		for i in terms:
+			t+=i+','
 
-		# 	# # If password mismatch
-		# 	# if len(results) == 0:
-		# 	# 	doRender(self,
-		# 	# 		'loginfailed.htm',
-		# 	# 		{'error': 'Incorrect password'})
-		# 	# 	return
+		y = ''
+		for i in years:
+			y+=i+','
 
-
-		# 	# i is a list object (basically a row of data) in the datastore. This loop saves each relevant piece of info from our query into the session.
-		# 	for i in results:
-		# 		# self.session['username'] = i.username
-		# 		# self.session['password'] = i.password
-		# 		self.session['firstName'] = i.firstName
-		# 		self.session['usernum'] = i.usernum
-		# 		self.session['courseNumbers'] = i.courses
-		# 		# self.session['Module1'] = i.Module1
-		# 		# self.session['Module2'] = i.Module2
-		# 		# self.session['Module3'] = i.Module3
-			
-		# 	# get course names
-		# 	test = self.session['courseNumbers']
-
-		# 	courseNames = []
-		# 	for i in test:
-		# 		que = db.Query(Course).filter("courseNumbers=", i)
-		# 		results = que.fetch(limit = 1)
-
-		# 		for j in results:
-		# 			courseNames.append(j.courseName)
-
-		# 	# self.session['M1_Progress'] = 0
-		# 	# self.session['M2_Progress'] = 0
-		# 	# self.session['M3_Progress'] = 0
-		# 	self.session['Logged_In'] = True
+		doRender(self, 'courseMenuStudent.htm',
+			{'firstName':self.session['firstName'],
+			'courseNames': a,
+			'terms':t,
+			'years':y})
 
 
-		# 	json_list = json.dumps(courseNames)
-
-		# 	doRender(self,'courseMenu.htm',
-		# 		{'firstName':self.session['firstName'],
-		# 		'courseNumbers':str(self.session['courseNumbers']),
-		# 		'courseNames':json_list})
-
-		# 	return
-
-		# # STILL NEED TO CHANGE THIS ONE
-		# if self.request.get('userType') == 'instructor':
-		# 	email = self.request.get('email')
-		# 	# password = self.request.get('password')
-			
-		# 	# Check whether user already exists
-		# 	que = db.Query(Instructor)
-		# 	que = que.filter('email =', email)
-		# 	results = que.fetch(limit=1)
-
-		# 	# If user does not exist
-		# 	if len(results) == 0:
-		# 		doRender(self,
-		# 			'loginfailed.htm',
-		# 			{'error': 'This username does not exist'})
-		# 		return
-
-		# 	# Check if password matches password entry in datastore
-		# 	# que = que.filter('password =', password)
-		# 	# results = que.fetch(limit=1)
-
-		# 	# # If password mismatch
-		# 	# if len(results) == 0:
-		# 	# 	doRender(self,
-		# 	# 		'loginfailed.htm',
-		# 	# 		{'error': 'Incorrect password'})
-		# 	# 	return
-
-
-		# 	# i is a list object (basically a row of data) in the datastore. This loop saves each relevant piece of info from our query into the session.
-		# 	for i in results:
-		# 		# self.session['username'] = i.username
-		# 		# self.session['password'] = i.password
-		# 		self.session['firstName'] = i.firstName
-		# 		self.session['usernum'] = i.usernum
-		# 		self.session['courseNumbers'] = i.courses
-		# 		# self.session['Module1'] = i.Module1
-		# 		# self.session['Module2'] = i.Module2
-		# 		# self.session['Module3'] = i.Module3
-			
-		# 	# get course names
-		# 	test = self.session['courseNumbers']
-
-		# 	courseNames = []
-		# 	for i in test:
-		# 		que = db.Query(Course).filter("courseNumbers=", i)
-		# 		results = que.fetch(limit = 1)
-
-		# 		for j in results:
-		# 			courseNames.append(str(j.courseName))
-
-		# 	# self.session['M1_Progress'] = 0
-		# 	# self.session['M2_Progress'] = 0
-		# 	# self.session['M3_Progress'] = 0
-		# 	self.session['Logged_In'] = True
-
-
-			
-		# 	json_list = json.dumps(courseNames)
-
-		# 	doRender(self,'courseMenuInstructor.htm',
-		# 		{'firstName':self.session['firstName'],
-		# 		'courseNumbers':str(self.session['courseNumbers']),
-		# 		'courseNames':str(json_list)})
-
-		# 	return
-
-class EnrollCourseHandler(webapp.RequestHandler):
+class StudentSignupHandler(webapp.RequestHandler):
 	def post(self):
 		self.session = get_current_session()
 
-		courseInput = self.request.get('courseInput')
-		logging.info('COURSE NUMBER '+str(courseInput))
-		# query database for this course
+		firstName = self.request.get('firstName')
+		lastName = self.request.get('lastName')
+		email = self.request.get('createEmail')
+		password = self.request.get('password1')
+		courseNumbers = []
+		courseNames = []
 
-		que = db.Query(Course).filter('courseNumbers =', courseInput)
+
+		# create new student
+		# Check whether user already exists
+		que = db.Query(Student)
+		que = que.filter('email =', email)
 		results = que.fetch(limit=1)
 
+		# If the user already exists in the datastore
+		if len(results) > 0:
+			doRender(self,
+				'signupfail.htm',
+				{'error': 'This account already exists. Please contact administrator if you need to reset your password.'})
+			return
 
-		# If course does not exist
-		if len(results) == 0:
-			if int(courseInput) != 1:
-				doRender(self,
-					'loginfailed.htm',
-					{'error': 'This course does not exist'})
-			
-			
-		# get student object
-		que = db.Query(Student)
-		que = que.filter('usernum =', self.session['usernum'])
-		student = que.fetch(limit = 1)
+		
+		# Create User object in the datastore
+		usernum = create_or_increment_NumOfUsers()
+		newuser = Student(usernum=usernum, 
+			firstName=firstName,
+			lastName=lastName,
+			email = email,
+			courseNumbers = courseNumbers,
+			courseNames = courseNames,
+			password=password);
 
-		# append course to student course property
-		for i in student:
-			test = i.courses
-			if courseInput not in test:
-				test.append(courseInput)
-			logging.info('COURSE NUMBER (datastore): '+str(test))
-			i.courses = test
+		userkey = newuser.put()
+		
+		newuser.put()
 
-			firstName = i.firstName
-			lastName = i.lastName
 
-			self.session['courseNumbers'] = i.courses
-			# term = i.term
-			# instructor = i.instructor
-
-			i.put()
-
-		# get existing list of course names and numbers (for next page)
-		# numbers are "test" above
-		courseNames = []
-		for i in test:
-			que = db.Query(Course).filter("courseNumbers=", i)
-			results = que.fetch(limit = 1)
-
-			for j in results:
-				courseNames.append(j.courseName)
-
-		logging.info('TEST VAR: '+str(test))
-
-		# get course object
-		que = db.Query(Course)
-		que = que.filter('courseNumbers =', courseInput)
-		course = que.fetch(limit = 1)
-
-		studentName = str(lastName)+', '+str(firstName)
-
-		logging.info("STUDENT NAME: "+str(studentName))
-
-		# testing, b/c there isn't yet a course object in the datastore
-		if courseInput == 1:
-			term = 'Fall 2017'
-			instructor = 'Rottman, Ben'
-			courseName = 'Research Methods'
-
-		else:
-			for i in course:
-				term = i.term
-				instructor = i.instructor
-				i.roster.append(studentName)
-				courseName = i.courseName
-
-				i.put()
-
-		# test.append(courseInput)
-
-		courseNumbers = test
+		# store these variables in the session, log user in
+		self.session = get_current_session() 
+		self.session['usernum']    	= usernum
+		self.session['firstName']	= firstName
+		self.session['lastName']	= lastName
+		self.session['email']		= email
+		self.session['Logged_In']	= True
 		self.session['courseNumbers'] = courseNumbers
-		courseNames.append(courseName)
+		self.session['courseNames'] = courseNames
 
-		self.session['courseNumbers'] = [v for v in self.session['courseNumbers']]
-
-		# create object for student/course combination
-		newEnroll = StudentCourse(usernum=self.session['usernum'], 
-			courseNumbers = courseInput,
-			# note: this is the manual input for term. Doesn't make sense at this point to have them do this themselves since it's all for Spring 2016
-			term=term,
-			instructor=instructor);
-
-		newEnroll.put();
+		doRender(self, 'courseMenuStudent.htm',
+			{'firstName':self.session['firstName'],
+			'courseNames': self.session['courseNames']})
 
 
-		json_list = json.dumps(courseNames)
+class StudentCourseMenuHandler(webapp.RequestHandler):
+	def get(self):
+		return
 
-		doRender(self,
-			'courseMenu.htm',
-			{'courseNumbers': courseNumbers,
-			'courseNames':json_list,
-			'firstName': self.session['firstName']})
+# class SignupHandler(webapp.RequestHandler):
+# 	def get(self):
+# 		doRender(self, 'signup.htm')
+
+# 	def post(self):
+# 		self.session = get_current_session()
+			
+# 		firstName = self.request.get('firstName')
+# 		lastName = self.request.get('lastName')
+# 		email = self.request.get('email')
+# 		role = self.request.get('roleSelect')
+# 		password = self.request.get('password1')
+
+# 		# courseNumbers = self.request.get('courseNumbers')
+		
+
+# 		logging.info('ROLE '+role)
+# 		if role == 'Student':
+	
+
+# 			# Check whether user already exists
+# 			que = db.Query(Student)
+# 			que = que.filter('email =', email)
+# 			results = que.fetch(limit=1)
+
+# 			# If the user already exists in the datastore
+# 			if (len(results) > 0) & (str(firstName) != 'test'):
+# 				doRender(self,
+# 					'signupfail.htm',
+# 					{'error': 'This account already exists. Please contact your instructor if you need to reset your password.'})
+# 				return
+
+
+# 			# firstName = 		db.StringProperty()
+# 			# lastName = 			db.StringProperty()
+# 			# email = 			db.StringProperty()
+# 			# password =			db.StringProperty()
+# 			# usernum = 			db.IntegerProperty()
+# 			# courses = 			db.ListProperty(int) # to allow for multiple courses
+
+# 			# Create User object in the datastore
+# 			usernum = create_or_increment_NumOfUsers()
+# 			newuser = Student(usernum=usernum, 
+# 				firstName=firstName,
+# 				lastName=lastName,
+# 				email = email,
+# 				password=password,
+# 				# modules are at the course level? So here we should have an empty array of course numbers.
+# 				# Module1="Incomplete", 
+# 				# Module2="Incomplete",
+# 				# Module3="Incomplete"
+# 				courses = []);
+			
+# 			userkey = newuser.put()
+			
+# 			newuser.put();
+
+# 			# store these variables in the session, log user in
+# 			self.session = get_current_session() 
+# 			self.session['usernum']    	= usernum
+# 			self.session['firstName']	= firstName
+# 			self.session['courseNumbers'] 	= []
+# 			self.session['email']		= email
+# 			# self.session['Module1']   = 'Incomplete'
+# 			# self.session['Module2']  	= 'Incomplete'
+# 			# self.session['Module3']  	= 'Incomplete'
+# 			self.session['Logged_In']	= True
+# 			# self.session['M1_Progress'] = 0
+# 			# self.session['M2_Progress'] = 0
+# 			# self.session['M3_Progress'] = 0
+
+# 			doRender(self, 'courseMenu.htm',
+# 				{'firstName':self.session['firstName'],
+# 				'courseNumbers': self.session['courseNumbers']})
+# 		else:
+# 			# create new instructor
+# 			# Check whether user already exists
+# 			que = db.Query(Instructor)
+# 			que = que.filter('email =', email)
+# 			results = que.fetch(limit=1)
+
+# 			# If the user already exists in the datastore
+# 			if (len(results) > 0) & (firstName != 'Cory'):
+# 				doRender(self,
+# 					'signupfail.htm',
+# 					{'error': 'This account already exists. Please contact administrator if you need to reset your password.'})
+# 				return
+
+
+
+
+class EnrollCourseHandler(webapp.RequestHandler):
+	def get(self):
+		self.session = get_current_session()
+
+		# much simpler for students than instructors:
+		# students get a code from their instructors (in the future maybe a customized link?), which is the course number
+		# they enter that number, that's it.
+
+		doRender(self, "courseEnroll.htm",
+			{'firstName':self.session['firstName'],
+			'errorNumber':0})
+
+
+
+	def post(self):
+		self.session = get_current_session()
+
+		# things this function needs to do:
+
+		# 1. Confirm that the new course exists
+		thisCourseNumber = int(self.request.get('courseNumberInput'))
+		
+		# query database
+		q = db.Query(Course).filter('courseNumber =', thisCourseNumber)
+		c = q.fetch(limit=1)
+
+		if(len(c) == 0): # if course does not exist
+			doRender(self, 'courseEnroll.htm',
+				{'firstName':self.session['firstName'],
+				'errorNumber': 1})
+			return
+
+		thisCourse = q.get()
+		thisCourseName = thisCourse.courseName # for step 3
+
+		# if you're here the course exists
+		logging.info('COURSE EXISTS')
+
+
+
+
+		# 2. Get list of the courses the student currently has
+		q = db.Query(Student).filter('email =', self.session['email'])
+		student = q.get()
+
+		newCourseNameArray = student.courseNames
+		newCourseNumberArray = student.courseNumbers
+
+		newCourseNameArray = map(str, newCourseNameArray)
+		logging.info('OLD courses: '+str(newCourseNameArray))
+
+
+
+		# 3. Create local array of course names and numbers, including the old courses and the new one
+		newCourseNameArray.append(thisCourseName)
+		newCourseNumberArray.append(thisCourseNumber)
+
+
+
+		# 4. Save the local array into the datastore and session
+
+		newCourseNameArray = map(str, newCourseNameArray)
+		logging.info('NEW courses: '+str(newCourseNameArray))
+		student.courseNames = newCourseNameArray
+		student.courseNumbers = newCourseNumberArray
+		student.put()
+
+		self.session['courseNames'] = newCourseNameArray
+		self.session['courseNumbers'] = newCourseNumberArray
+
+
+		# 5. Create a StudentCourse instance for this student/course combination
+		newSC = StudentCourse(
+			usernum = self.session['usernum'],
+			courseNumber = thisCourseNumber,
+			courseName = thisCourseName);
+		
+		newSC.put()
+
+
+		# 6. Feed the local course array into the page with instructor name
+		instructors = []
+		for i in newCourseNumberArray:
+			instructors.append(db.Query(Course).filter('courseNumber =', i).get().instructor)
+
+		# 
+		instructors = map(str, instructors)
+		logging.info('Instructors: '+str(instructors))
+		# details about the course:
+		
+		instructorLastNames = []
+		for i in instructors:
+			instructorLastNames.append(i.split(',')[0])
+
+		instructorLastNames = map(str, instructorLastNames)
+
+		logging.info('Instructor last names: '+str(instructorLastNames))
+
+		
+		# this is the ugliest solution, but it works
+		a = ''
+		for i in newCourseNameArray:
+			a+=i+','
+
+		t = ''
+		for i in instructorLastNames:
+			t+=i+','
+
+		
+		doRender(self, 'courseMenuStudent.htm',
+			{'firstName':self.session['firstName'],
+			'courseNames': a,
+			'instructorNames':t})
+
+		# from this page, when they go into a course, the handler should create a session 
+		# variable called "ACTIVE COURSE" or something similar, populated with the course number.
+
+
+
+
+
+		# create data object for student and course
+
+
+
+		# doRender(self, 'courseMenuStudent.htm',
+		# 	{'firstName':self.session['firstName'],
+		# 	'courseNames': a,
+		# 	'terms':t,
+		# 	'years':y})
+
+
+	# def post(self):
+	# 	self.session = get_current_session()
+
+	# 	courseInput = self.request.get('courseInput')
+	# 	logging.info('COURSE NUMBER '+str(courseInput))
+	# 	# query database for this course
+
+	# 	que = db.Query(Course).filter('courseNumbers =', courseInput)
+	# 	results = que.fetch(limit=1)
+
+
+	# 	# If course does not exist
+	# 	if len(results) == 0:
+	# 		if int(courseInput) != 1:
+	# 			doRender(self,
+	# 				'loginfailed.htm',
+	# 				{'error': 'This course does not exist'})
+			
+			
+	# 	# get student object
+	# 	que = db.Query(Student)
+	# 	que = que.filter('usernum =', self.session['usernum'])
+	# 	student = que.fetch(limit = 1)
+
+	# 	# append course to student course property
+	# 	for i in student:
+	# 		test = i.courses
+	# 		if courseInput not in test:
+	# 			test.append(courseInput)
+	# 		logging.info('COURSE NUMBER (datastore): '+str(test))
+	# 		i.courses = test
+
+	# 		firstName = i.firstName
+	# 		lastName = i.lastName
+
+	# 		self.session['courseNumbers'] = i.courses
+	# 		# term = i.term
+	# 		# instructor = i.instructor
+
+	# 		i.put()
+
+	# 	# get existing list of course names and numbers (for next page)
+	# 	# numbers are "test" above
+	# 	courseNames = []
+	# 	for i in test:
+	# 		que = db.Query(Course).filter("courseNumbers=", i)
+	# 		results = que.fetch(limit = 1)
+
+	# 		for j in results:
+	# 			courseNames.append(j.courseName)
+
+	# 	logging.info('TEST VAR: '+str(test))
+
+	# 	# get course object
+	# 	que = db.Query(Course)
+	# 	que = que.filter('courseNumbers =', courseInput)
+	# 	course = que.fetch(limit = 1)
+
+	# 	studentName = str(lastName)+', '+str(firstName)
+
+	# 	logging.info("STUDENT NAME: "+str(studentName))
+
+	# 	# testing, b/c there isn't yet a course object in the datastore
+	# 	if courseInput == 1:
+	# 		term = 'Fall 2017'
+	# 		instructor = 'Rottman, Ben'
+	# 		courseName = 'Research Methods'
+
+	# 	else:
+	# 		for i in course:
+	# 			term = i.term
+	# 			instructor = i.instructor
+	# 			i.roster.append(studentName)
+	# 			courseName = i.courseName
+
+	# 			i.put()
+
+	# 	# test.append(courseInput)
+
+	# 	courseNumbers = test
+	# 	self.session['courseNumbers'] = courseNumbers
+	# 	courseNames.append(courseName)
+
+	# 	self.session['courseNumbers'] = [v for v in self.session['courseNumbers']]
+
+	# 	# create object for student/course combination
+	# 	newEnroll = StudentCourse(usernum=self.session['usernum'], 
+	# 		courseNumbers = courseInput,
+	# 		# note: this is the manual input for term. Doesn't make sense at this point to have them do this themselves since it's all for Spring 2016
+	# 		term=term,
+	# 		instructor=instructor);
+
+	# 	newEnroll.put();
+
+
+	# 	json_list = json.dumps(courseNames)
+
+	# 	doRender(self,
+	# 		'courseMenu.htm',
+	# 		{'courseNumbers': courseNumbers,
+	# 		'courseNames':json_list,
+	# 		'firstName': self.session['firstName']})
 		
 
 class MainMenuHandler(webapp.RequestHandler):
@@ -910,6 +998,7 @@ class LineGraphTestHandler(webapp.RequestHandler):
 ######################### Data Display Page Handler ###########################
 ###############################################################################
 
+# this is going to go away since I have the one with CourseData.htm
 class DataHandler(webapp.RequestHandler):
 	def get(self):
 
@@ -942,6 +1031,8 @@ class DataHandler(webapp.RequestHandler):
 class InstructorSignupHandler(webapp.RequestHandler):
 	
 	def post(self):
+		# modify this so you can't create an account if your email is already listed!
+
 		self.session = get_current_session()
 
 		firstName = self.request.get('firstName')
@@ -959,7 +1050,7 @@ class InstructorSignupHandler(webapp.RequestHandler):
 		results = que.fetch(limit=1)
 
 		# If the user already exists in the datastore
-		if (len(results) > 0) & (firstName != 'Cory'):
+		if len(results) > 0:
 			doRender(self,
 				'signupfail.htm',
 				{'error': 'This account already exists. Please contact administrator if you need to reset your password.'})
@@ -993,7 +1084,6 @@ class InstructorSignupHandler(webapp.RequestHandler):
 
 		doRender(self, 'courseMenuInstructor.htm',
 			{'firstName':self.session['firstName'],
-			'courseNumbers': self.session['courseNumbers'],
 			'courseNames': self.session['courseNames']})
 
 ###############################################################################
@@ -1052,19 +1142,35 @@ class InstructorLoginHandler(webapp.RequestHandler):
 			self.session['Logged_In']		= True
 		
 
+		# for each course number, run a query, get the term
+
+		terms = []
+		years = []
+		for i in self.session['courseNumbers']:
+			q = db.Query(Course).filter('courseNumber =', i)
+			r = q.get()
+
+			terms.append(r.term)
+			years.append(r.year)
+
 		# this is the ugliest solution, but it works
 		a = ''
 		for i in self.session['courseNames']:
 			a+=i+','
 
-		b = ''
-		for i in self.session['courseNumbers']:
-			b+=str(i)+','
+		t = ''
+		for i in terms:
+			t+=i+','
+
+		y = ''
+		for i in years:
+			y+=i+','
 
 		doRender(self, 'courseMenuInstructor.htm',
 			{'firstName':self.session['firstName'],
-			'courseNumbers': b,
-			'courseNames': a})
+			'courseNames': a,
+			'terms':t,
+			'years':y})
 
 
 class CreateCourseHandler(webapp.RequestHandler):
@@ -1114,6 +1220,7 @@ class CreateCourseHandler(webapp.RequestHandler):
 
 	def post(self):
 		self.session = get_current_session()
+		# FIX THIS: right now it only displays the course you just added when it renders the page from this handler
 
 		logging.info('TEST')
 		# details about the course:
@@ -1137,32 +1244,39 @@ class CreateCourseHandler(webapp.RequestHandler):
 
 			names = []
 			numbers = []
+			terms = []
+			years = []
 
 			for i in results: # This should keep them in order
 				names.append(i.courseName)
-				numbers.append(i.courseNumbers)
+				numbers.append(i.courseNumber)
+				terms.append(i.term)
+				years.append(i.year)
 
 			# save to session (this just makes sure the session is up to date on the datastore)
 			self.session['courseNames'] = names
 			self.session['courseNumbers'] = numbers
 
+
+
 			# this is the ugliest solution, but it works
-			# course names
 			a = ''
-			for i in names:
+			for i in self.session['courseNames']:
 				a+=i+','
 
-			logging.info(a)
+			t = ''
+			for i in terms:
+				t+=i+','
 
-			# course numbers
-			b = ''
-			for i in numbers:
-				b+=str(i)+','
+			y = ''
+			for i in years:
+				y+=i+','
 
 			doRender(self, 'courseMenuInstructor.htm',
 				{'firstName':self.session['firstName'],
-				'courseNumbers': b,
-				'courseNames': a})
+				'courseNames': a,
+				'terms':t,
+				'years':y})
 
 		else:
 			# if it's not already in the datastore, we need to:
@@ -1172,16 +1286,21 @@ class CreateCourseHandler(webapp.RequestHandler):
 			# 3. Write the new course to the datastore under the instructor and course models
 
 			
-			# 1. Get list of existing courses (names and numbers)
+			# 1. Get list of existing courses (names, terms, and numbers)
+			self.session['courseNumbers'] = db.Query(Instructor).filter('email =', self.session['email']).get().courseNumbers
+
 			q = db.Query(Course).filter('courseNumber IN', self.session['courseNumbers'])
 			results = q.fetch(limit = 100) # arbitrary, don't expect to ever hit it
 
 			names = []
 			numbers = []
+			terms = []
+			years = []
 			for i in results: # This should keep them in order
 				names.append(i.courseName)
 				numbers.append(i.courseNumber)
-
+				terms.append(i.term)
+				years.append(i.year)
 			
 			# 2a. append the newest course name/number
 
@@ -1197,24 +1316,33 @@ class CreateCourseHandler(webapp.RequestHandler):
 
 			names.append(courseName) # from above self.request.get() function
 			numbers.append(courseNumber)
+			terms.append(term) # from above self.request.get() function
+			years.append(year) # from above self.request.get() function
 
 			self.session['courseNames'] = names
 			self.session['courseNumbers'] = numbers
 
+
 			# 2b. Prep these arrays to go to the front end.
 			# because of problems with arrays of strings in django, I'm converting each to one long string
+
+
+			# for each course number, run a query, get the term
 
 			# this is the ugliest solution, but it works
 			a = ''
 			for i in self.session['courseNames']:
 				a+=i+','
 
-			b = ''
-			for i in self.session['courseNumbers']:
-				b+=str(i)+','
+			t = ''
+			for i in terms:
+				t+=i+','
 
-			
-			# 3a. Modify the instructor object add course to instructor object
+			y = ''
+			for i in years:
+				y+=i+','
+
+			# 3a. Add course to instructor object
 			que = db.Query(Instructor)
 			que = que.filter('email =', self.session['email'])
 			obj = que.get()
@@ -1265,8 +1393,9 @@ class CreateCourseHandler(webapp.RequestHandler):
 			logging.info('line 1300ish')
 			doRender(self, 'courseMenuInstructor.htm',
 				{'firstName':self.session['firstName'],
-				'courseNumbers': b,
-				'courseNames': a})
+				'courseNames': a,
+				'terms':t,
+				'years':y})
 
 
 class CourseDataHandler(webapp.RequestHandler):
@@ -1274,12 +1403,16 @@ class CourseDataHandler(webapp.RequestHandler):
 		self.session = get_current_session()
 		
 		# This handler should query the datastore to get data from the selected class
-		# for now set term to Spring 2018
-		term = 'Spring'
-		year = '2018'
 
 		# querying STUDENT data, limiting it to the course we care about
-		courseName = self.request.get('courseSelect')
+		courseInfo = self.request.get('courseSelect').split(' -- ')
+
+		# split it up:
+		courseName = courseInfo[0]
+		termYear = courseInfo[1].split(' ')
+		term = termYear[0]
+		year = termYear[1]
+
 		logging.info('Course Name: '+courseName)
 
 		q = db.Query(Course).filter('instructorEmail =', self.session['email'])
@@ -1296,20 +1429,14 @@ class CourseDataHandler(webapp.RequestHandler):
 
 		doRender(self, 'CourseData.htm',
 			{'users':data,
-			'courseName': courseName})
+			'courseName': courseName,
+			'term': term,
+			'year':year})
 
 
-class LogoutHandler(webapp.RequestHandler):
-	
-	def get(self):	
-		self.session = get_current_session()
-		self.session['Logged_In'] = False	
-		
-		# kill all the session stuff that would identify them (username, password, etc)
-		killSession(self)
 
-		# Send them back to the login page
-		doRender(self, 'login.htm')
+
+
 
 
 		
@@ -1318,21 +1445,35 @@ class LogoutHandler(webapp.RequestHandler):
 ###############################################################################
 
 application = webapp.WSGIApplication([
+	# old pages (might not need)
 	('/data', DataHandler),
-	('/EnrollCourse', EnrollCourseHandler),
-	('/CreateCourse', CreateCourseHandler),
-	('/logout', LogoutHandler),
-	('/login', LoginHandler),
-	('/signup', SignupHandler),
+	# ('/signup', SignupHandler),
+	('/MainMenu', MainMenuHandler),
+
+	# module pages
 	('/CarryoverEffects', CarryoverEffectsHandler),
 	('/WithinSubject', WithinSubjectHandler),
 	('/PracticeFatigueEffects', PracticeFatigueEffectsHandler),
 	('/LineGraphTest', LineGraphTestHandler),
-	('/CarryoverEffects', CarryoverEffectsHandler),
-	('/MainMenu', MainMenuHandler),
+	
+	# student pages
+	('/StudentSignup', StudentSignupHandler),
+	('/StudentLogin', StudentLoginHandler),
+	('/StudentCourseMenu', StudentCourseMenuHandler),
+	('/EnrollCourse', EnrollCourseHandler),
+
+
+	# instructor pages
+	('/InstructorSignup', InstructorSignupHandler),
 	('/InstructorLogin', InstructorLoginHandler),
 	('/CourseData', CourseDataHandler),
-	('/InstructorSignup', InstructorSignupHandler),
+	('/CreateCourse', CreateCourseHandler),
+	
+	
+	# combined pages
+	('/login', LoginHandler),
+	('/logout', LogoutHandler),
+
 	('/.*',  LoginHandler)],  #default page
 	debug=True)
 

@@ -12,7 +12,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
-                <p class="navbar-text">Instructor Menu - Select a Course</p> 
+                <p class="navbar-text">Student Menu - Select a Course</p> 
             </div>
         </div>
     </nav>
@@ -26,7 +26,7 @@
 			<div class="row">
 				<div class="col-xs-2"></div>
 				<div class="col-xs-4">
-					<form id="courseSelectForm" method = "get" action = "/CourseData">
+					<form id="courseSelectForm" method = "get" action = "/StudentCourseMenu">
 						<select id="courseSelect" name = "courseSelect">
 							<option selected value="base">Please Select</option>
 						</select>
@@ -38,7 +38,7 @@
 				<div class="col-xs-4"></div>
 			</div>
 			<br>
-			<p>Or <a href="/CreateCourse">add a new course</a></p>
+			<p>Or <a href="/EnrollCourse">add a new course</a></p>
 		</center>
 
 		
@@ -62,8 +62,9 @@ var main = {
 
 	init: function(){
 		main.courses = main.parseStringArray("{{courses}}").map(Number)
-		main.terms = main.parseStringArray('{{terms}}')
-		main.years = main.parseStringArray('{{years}}')
+		// main.terms = main.parseStringArray('{{terms}}')
+		// main.years = main.parseStringArray('{{years}}')
+		main.instructorNames = main.parseStringArray('{{instructorNames}}')
 		main.firstName = "{{firstName}}"
 		main.courseNames = main.parseStringArray("{{courseNames}}")
 		
@@ -113,7 +114,7 @@ var main = {
 		
 		var dropdownValues = []
 		for(var i = 0; i < main.courseNames.length; i++){
-			dropdownValues[i] = main.courseNames[i]+' -- '+ main.terms[i] + ' ' + main.years[i]
+			dropdownValues[i] = main.courseNames[i]+' -- '+ main.instructorNames[i]
 		}
 
 
