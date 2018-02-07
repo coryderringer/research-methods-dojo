@@ -210,18 +210,15 @@ class StudentLoginHandler(webapp.RequestHandler):
 	def post(self):
 		self.session = get_current_session()
 		
+		# 1. make sure user exists
 		email = str(self.request.get('loginEmail'))
 		password = str(self.request.get('loginPassword'))
 
-		logging.info('EMAIL: '+email)
-		
-
-		# Check whether user already exists
 		que = db.Query(Student)
 		que = que.filter('email =', email)
 		results = que.fetch(limit=1)
 
-		# If the user does not already exist in the datastore
+		# If the user does not already exist in the datastore, send back
 		if len(results) == 0:
 			killSession(self)
 			doRender(self, 'StudentLogin.htm',
@@ -229,11 +226,13 @@ class StudentLoginHandler(webapp.RequestHandler):
 			return
 		
 		# user exists if we made it this far
-			
-		# check password
+		
+
+		# 2. make sure password is correct
 		for i in results:
 			p = i.password
 
+		# if incorrect, send them back with error message
 		if password != p:
 			killSession(self)
 			doRender(self, 'StudentLogin.htm',
@@ -241,7 +240,8 @@ class StudentLoginHandler(webapp.RequestHandler):
 			return
 
 		# email/password combo is correct if we made it this far
-		# store these variables in the session, log user in
+
+		# 3. Store session variables
 		for j in results: # even though there's only 1
 			self.session['usernum']    		= j.usernum
 			self.session['firstName']		= j.firstName
@@ -250,37 +250,40 @@ class StudentLoginHandler(webapp.RequestHandler):
 			self.session['courseNumbers']	= j.courseNumbers
 			self.session['courseNames']		= j.courseNames
 			self.session['Logged_In']		= True
-		
 
-		# for each course number, run a query, get the term
 
-		terms = []
-		years = []
+		# 4. get instructor last names for courses
+		instructors = []
 		for i in self.session['courseNumbers']:
-			q = db.Query(Course).filter('courseNumber =', i)
-			r = q.get()
+			instructors.append(db.Query(Course).filter('courseNumber =', i).get().instructor)
+ 	
+		instructors = map(str, instructors)
+		logging.info('Instructors: '+str(instructors))
+		
+		instructorLastNames = []
+		for i in instructors:
+			instructorLastNames.append(i.split(',')[0])
 
-			terms.append(r.term)
-			years.append(r.year)
+		instructorLastNames = map(str, instructorLastNames)
+		self.session['courseNames'] = map(str, self.session['courseNames'])
 
-		# this is the ugliest solution, but it works
+		logging.info('Instructor last names: '+str(instructorLastNames))
+
+		# convert arrays into strings for easier Django
 		a = ''
 		for i in self.session['courseNames']:
 			a+=i+','
 
 		t = ''
-		for i in terms:
+		for i in instructorLastNames:
 			t+=i+','
 
-		y = ''
-		for i in years:
-			y+=i+','
+		# 5. render courseMenuStudent.htm with those courses
 
 		doRender(self, 'courseMenuStudent.htm',
 			{'firstName':self.session['firstName'],
 			'courseNames': a,
-			'terms':t,
-			'years':y})
+			'instructorNames':t})
 
 
 class StudentSignupHandler(webapp.RequestHandler):
@@ -449,13 +452,16 @@ class EnrollCourseHandler(webapp.RequestHandler):
 
 
 	def post(self):
+		# when you refresh after enrolling in a course, it re-enrolls you
+		# also if you're already in a course it lets you add it again. 
+		# fixing the second problem should fix the first
+
 		self.session = get_current_session()
+		thisCourseNumber = int(self.request.get('courseNumberInput'))
 
 		# things this function needs to do:
 
-		# 1. Confirm that the new course exists
-		thisCourseNumber = int(self.request.get('courseNumberInput'))
-		
+		# 1. Confirm that the new course exists, and that student isn't already registered
 		# query database
 		q = db.Query(Course).filter('courseNumber =', thisCourseNumber)
 		c = q.fetch(limit=1)
@@ -473,9 +479,7 @@ class EnrollCourseHandler(webapp.RequestHandler):
 		logging.info('COURSE EXISTS')
 
 
-
-
-		# 2. Get list of the courses the student currently has
+		# 2. Get list of the courses the student currently has, create local array
 		q = db.Query(Student).filter('email =', self.session['email'])
 		student = q.get()
 
@@ -485,13 +489,11 @@ class EnrollCourseHandler(webapp.RequestHandler):
 		newCourseNameArray = map(str, newCourseNameArray)
 		logging.info('OLD courses: '+str(newCourseNameArray))
 
+		# 3. Append new course name to old ones (if they're not in the course already)
+		if thisCourseNumber not in newCourseNumberArray:
 
-
-		# 3. Create local array of course names and numbers, including the old courses and the new one
-		newCourseNameArray.append(thisCourseName)
-		newCourseNumberArray.append(thisCourseNumber)
-
-
+			newCourseNameArray.append(thisCourseName)
+			newCourseNumberArray.append(thisCourseNumber)
 
 		# 4. Save the local array into the datastore and session
 
@@ -1220,7 +1222,6 @@ class CreateCourseHandler(webapp.RequestHandler):
 
 	def post(self):
 		self.session = get_current_session()
-		# FIX THIS: right now it only displays the course you just added when it renders the page from this handler
 
 		logging.info('TEST')
 		# details about the course:
