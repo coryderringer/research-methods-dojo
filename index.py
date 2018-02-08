@@ -491,7 +491,34 @@ class EnrollCourseHandler(webapp.RequestHandler):
 				newSC = StudentCourse(
 					usernum = self.session['usernum'],
 					courseNumber = thisCourseNumber,
-					courseName = thisCourseName)
+					courseName = thisCourseName,
+
+
+					# student/course combination, created when a student adds a course
+					# student linked
+
+					# module properties...
+					Module1 =			'Incomplete',
+					Module2 = 			'Incomplete',
+					Module3 = 			'Incomplete',
+					WSAnswer1 = 		'',
+					WSAnswer2 = 		'',
+					WSAnswer3 = 		'',
+					COEAnswer1 =		'',
+					COEAnswer2 =		'',
+					COEAnswer3 =		0,
+					COEAnswer4 =		0,
+					COEAnswer5 =		0,
+					PFEAnswer1 =		'',
+					PFEAnswer2 =		'',
+					PFEAnswer3 =		0,
+					PFEAnswer4 =		0,
+					# PFEAnswer5 =		0,
+
+					numberOfGuesses = 	0,
+					numberOfSimulations = 0,
+					numberOfSimulations2 = 0,
+					QuizResults = 		[])
 
 				newSC.put()
 
@@ -804,10 +831,17 @@ class PracticeFatigueEffectsHandler(webapp.RequestHandler):
 class WithinSubjectHandler(webapp.RequestHandler):
 	def get(self):
 		self.session = get_current_session()
-		if self.session['M2_Progress'] == 0:
-			doRender(self, "WithinSubjectIntro.htm",
-				{'progress':self.session['M2_Progress'],
-				'introProgress':0})
+		logging.info('TEST')
+		courseObj = db.Query(StudentCourse).filter(
+			'courseNumber =', self.session['activeCourse']).filter(
+			'usernum =', self.session['usernum']).get()
+
+		logging.info('MODULE 2: '+str(self.session['Module2']))
+
+		self.session['M2_Progress'] = 0
+		doRender(self, "WithinSubjectIntro.htm",
+			{'progress':self.session['M2_Progress'],
+			'introProgress':0})
 
 
 	def post(self):
