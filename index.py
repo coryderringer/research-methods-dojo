@@ -839,6 +839,9 @@ class WithinSubjectHandler(webapp.RequestHandler):
 		logging.info('MODULE 2: '+str(self.session['Module2']))
 
 		self.session['M2_Progress'] = 0
+		# progress variables are session-level, not db-level
+		# if they logout and log back in, they'll have to start over
+
 		doRender(self, "WithinSubjectIntro.htm",
 			{'progress':self.session['M2_Progress'],
 			'introProgress':0})
@@ -980,23 +983,21 @@ class WithinSubjectHandler(webapp.RequestHandler):
 			self.session['Module2'] = 'Complete'
 
 			# Query the datastore
-			que = db.Query(User)
-
-			# find the current user
-			que = que.filter('username =', self.session['username'])
-			results = que.fetch(limit=1)
+			course = db.Query(StudentCourse).filter(
+				'usernum =', self.session['usernum']).filter(
+				'courseNumber =', self.session['activeCourse']).get()
 
 			# change the datastore result for module 2
-			for i in results:
-				i.WSAnswer1 = self.session['WSAnswer1']
-				i.WSAnswer2 = self.session['WSAnswer2']
-				i.WSAnswer3 = self.session['WSAnswer3']
-				i.numberOfGuesses = self.session['numberOfGuesses']
-				i.numberOfSimulations = self.session['numberOfSimulations']
-				i.numberOfSimulations2 = self.session['numberOfSimulations2']
-				i.QuizResults = self.session['QuizResults']
-				i.Module2 = self.session['Module2']
-				i.put()
+
+			course.WSAnswer1 = self.session['WSAnswer1']
+			course.WSAnswer2 = self.session['WSAnswer2']
+			course.WSAnswer3 = self.session['WSAnswer3']
+			course.numberOfGuesses = self.session['numberOfGuesses']
+			course.numberOfSimulations = self.session['numberOfSimulations']
+			course.numberOfSimulations2 = self.session['numberOfSimulations2']
+			course.QuizResults = self.session['QuizResults']
+			course.Module2 = self.session['Module2']
+			course.put()
 
 			logging.info('Datastore updated')
 
