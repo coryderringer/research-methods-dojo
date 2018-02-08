@@ -369,17 +369,44 @@ class StudentCourseMenuHandler(webapp.RequestHandler):
 		# query the user db for the course number
 		# we might need a way to remove courses. Maybe not for this version,
 		# but def in the future.
-		courseNumber = db.Query(Student)
+		courseNumber = db.Query(StudentCourse).filter(
+			'courseName =', courseName).get().courseNumber
 
 		self.session['activeCourse'] = courseNumber
 
 		# query the StudentCourse db for student's progress
+		active = db.Query(StudentCourse).filter(
+			'usernum =', self.session['usernum']).filter(
+			'courseNumber =', courseNumber).get()
 
 		# update the session with relevant variables for StudentCourse
 
+		self.session['Module1'] = active.Module1
+		self.session['Module2'] = active.Module2
+		self.session['Module3'] = active.Module3
+		self.session['WSAnswer1'] = active.WSAnswer1
+		self.session['WSAnswer2'] = active.WSAnswer2
+		self.session['WSAnswer3'] = active.WSAnswer3
+		self.session['COEAnswer1'] = active.COEAnswer1
+		self.session['COEAnswer2'] = active.COEAnswer2
+		self.session['COEAnswer3'] = active.COEAnswer3
+		self.session['COEAnswer4'] = active.COEAnswer4
+		self.session['COEAnswer5'] = active.COEAnswer5
+		self.session['PFEAnswer1'] = active.PFEAnswer1
+		self.session['PFEAnswer2'] = active.PFEAnswer2
+		self.session['PFEAnswer3'] = active.PFEAnswer3
+		self.session['PFEAnswer4'] = active.PFEAnswer4
+		# PFEAnswer5 =		db.IntegerProperty()
 
-		# create session variable called "ACTIVE COURSE" (the course number).
-		return
+		self.session['numberOfGuesses'] = active.numberOfGuesses
+		self.session['numberOfSimulations'] = active.numberOfSimulations
+		self.session['numberOfSimulations2'] = active.numberOfSimulations2
+		self.session['QuizResults'] = active.QuizResults
+
+		doRender(self, 'menu.htm',
+		{'firstName':self.session['firstName'],
+		'courseNumber': courseNumber,
+		'courseName': courseName})
 
 
 class EnrollCourseHandler(webapp.RequestHandler):
@@ -409,105 +436,224 @@ class EnrollCourseHandler(webapp.RequestHandler):
 		q = db.Query(Course).filter('courseNumber =', thisCourseNumber)
 		c = q.fetch(limit=1)
 
-		if(len(c) == 0): # if course does not exist
-			doRender(self, 'courseEnroll.htm',
+		# 1 is the dummy course number for testing
+		if thisCourseNumber != 1:
+			if(len(c) == 0):
+				# if course does not exist
+				doRender(self, 'courseEnroll.htm',
+					{'firstName':self.session['firstName'],
+					'errorNumber': 1})
+				return
+
+			thisCourse = q.get()
+			thisCourseName = thisCourse.courseName # for step 3
+
+			# if you're here the course exists
+			logging.info('COURSE EXISTS')
+
+
+			# 2. Get list of courses the student currently has, create local array
+			q = db.Query(Student).filter('email =', self.session['email'])
+			student = q.get()
+
+			newCourseNameArray = student.courseNames
+			newCourseNumberArray = student.courseNumbers
+
+			newCourseNameArray = map(str, newCourseNameArray)
+			logging.info('OLD courses: '+str(newCourseNameArray))
+
+			# 3. Append new course name to old ones (if they're not in the course)
+			if thisCourseNumber not in newCourseNumberArray:
+
+				newCourseNameArray.append(thisCourseName)
+				newCourseNumberArray.append(thisCourseNumber)
+
+			# 4. Save the local array into the datastore and session
+			newCourseNameArray = map(str, newCourseNameArray)
+			logging.info('NEW courses: '+str(newCourseNameArray))
+			student.courseNames = newCourseNameArray
+			student.courseNumbers = newCourseNumberArray
+			student.put()
+
+			self.session['courseNames'] = newCourseNameArray
+			self.session['courseNumbers'] = newCourseNumberArray
+
+
+			# 5. Create a StudentCourse instance for this student/course combination
+			logging.info('new StudentCourse going into the datastore')
+
+			currentSC = db.Query(StudentCourse).filter(
+				'courseNumber =', thisCourseNumber).filter(
+				'usernum =', self.session['usernum']).fetch(limit=1)
+
+			if len(currentSC) == 0: # if this object doesn't exist
+
+				newSC = StudentCourse(
+					usernum = self.session['usernum'],
+					courseNumber = thisCourseNumber,
+					courseName = thisCourseName)
+
+				newSC.put()
+
+			# 6. Feed the local course array into the page with instructor name
+			instructors = []
+			for i in newCourseNumberArray:
+				instructors.append(db.Query(Course).filter('courseNumber =', i)
+				.get().instructor) # started doing this to fit the 80 char limit
+
+
+			instructors = map(str, instructors)
+			logging.info('Instructors: '+str(instructors))
+			# details about the course:
+
+			instructorLastNames = []
+			for i in instructors:
+				instructorLastNames.append(i.split(',')[0])
+
+			instructorLastNames = map(str, instructorLastNames)
+
+			logging.info('Instructor last names: '+str(instructorLastNames))
+
+
+			# this is the ugliest solution, but it works
+			a = ''
+			for i in newCourseNameArray:
+				a+=i+','
+
+			t = ''
+			for i in instructorLastNames:
+				t+=i+','
+
+
+			doRender(self, 'courseMenuStudent.htm',
 				{'firstName':self.session['firstName'],
-				'errorNumber': 1})
-			return
+				'courseNames': a,
+				'instructorNames':t})
 
-		thisCourse = q.get()
-		thisCourseName = thisCourse.courseName # for step 3
-
-		# if you're here the course exists
-		logging.info('COURSE EXISTS')
+		else: # if courseNumber == 1 (testing)
+			logging.info('testing with courseNumber 1')
 
 
-		# 2. Get list of courses the student currently has, create local array
-		q = db.Query(Student).filter('email =', self.session['email'])
-		student = q.get()
-
-		newCourseNameArray = student.courseNames
-		newCourseNumberArray = student.courseNumbers
-
-		newCourseNameArray = map(str, newCourseNameArray)
-		logging.info('OLD courses: '+str(newCourseNameArray))
-
-		# 3. Append new course name to old ones (if they're not in the course)
-		if thisCourseNumber not in newCourseNumberArray:
-
-			newCourseNameArray.append(thisCourseName)
-			newCourseNumberArray.append(thisCourseNumber)
-
-		# 4. Save the local array into the datastore and session
-		newCourseNameArray = map(str, newCourseNameArray)
-		logging.info('NEW courses: '+str(newCourseNameArray))
-		student.courseNames = newCourseNameArray
-		student.courseNumbers = newCourseNumberArray
-		student.put()
-
-		self.session['courseNames'] = newCourseNameArray
-		self.session['courseNumbers'] = newCourseNumberArray
+			# thisCourse = q.get()
+			thisCourseName = 'Dummy Course'
 
 
-		# 5. Create a StudentCourse instance for this student/course combination
-		newSC = StudentCourse(
-			usernum = self.session['usernum'],
-			courseNumber = thisCourseNumber,
-			courseName = thisCourseName);
+			# 2. Get list of courses the student currently has, create local array
+			q = db.Query(Student).filter('email =', self.session['email'])
+			student = q.get()
 
-		newSC.put()
+			newCourseNameArray = student.courseNames
+			newCourseNumberArray = student.courseNumbers
 
+			newCourseNameArray = map(str, newCourseNameArray)
+			logging.info('OLD courses: '+str(newCourseNameArray))
 
-		# 6. Feed the local course array into the page with instructor name
-		instructors = []
-		for i in newCourseNumberArray:
-			instructors.append(db.Query(Course).filter('courseNumber =', i)
-			.get().instructor) # started doing this to fit the 80 char limit
+			# 3. Append new course name to old ones
+			# (if they're not in the course)
+			# This works out nicely for testing, because if they're registered
+			# nothing happens!
+			if thisCourseNumber not in newCourseNumberArray:
 
+				newCourseNameArray.append(thisCourseName)
+				newCourseNumberArray.append(thisCourseNumber)
 
-		instructors = map(str, instructors)
-		logging.info('Instructors: '+str(instructors))
-		# details about the course:
+			# 4. Save the local array into the datastore and session
+			newCourseNameArray = map(str, newCourseNameArray)
+			logging.info('NEW courses: '+str(newCourseNameArray))
+			student.courseNames = newCourseNameArray
+			student.courseNumbers = newCourseNumberArray
+			student.put()
 
-		instructorLastNames = []
-		for i in instructors:
-			instructorLastNames.append(i.split(',')[0])
-
-		instructorLastNames = map(str, instructorLastNames)
-
-		logging.info('Instructor last names: '+str(instructorLastNames))
-
-
-		# this is the ugliest solution, but it works
-		a = ''
-		for i in newCourseNameArray:
-			a+=i+','
-
-		t = ''
-		for i in instructorLastNames:
-			t+=i+','
+			self.session['courseNames'] = newCourseNameArray
+			self.session['courseNumbers'] = newCourseNumberArray
 
 
-		doRender(self, 'courseMenuStudent.htm',
-			{'firstName':self.session['firstName'],
-			'courseNames': a,
-			'instructorNames':t})
+			# 5. Create a StudentCourse instance for this student/course combination
+			logging.info('new StudentCourse going into the datastore')
+
+			currentSC = db.Query(StudentCourse).filter(
+				'courseNumber =', thisCourseNumber).filter(
+				'usernum =', self.session['usernum']).fetch(limit=1)
+
+			if len(currentSC) == 0: # if this object doesn't exist
+
+				newSC = StudentCourse(
+					usernum = self.session['usernum'],
+					courseNumber = thisCourseNumber,
+					courseName = thisCourseName)
+
+				newSC.put()
+
+			# newCourse = Course(
+			# 	term = term,
+			# 	year = year,
+			# 	courseNumber = courseNumber,
+			# 	instructor = instructor,
+			# 	instructorEmail = email,
+			# 	roster = roster,
+			# 	courseName = courseName,
+			# 	moduleList = moduleList)
+            #
+			# newCourse.put()
 
 
-class MainMenuHandler(webapp.RequestHandler):
-	def get(self):
-		self.session = get_current_session()
+			logging.info('It\'s in.')
+			# new StudentCourse object in the datastore
 
 
-		courseNumbers = int(self.request.get('courseNumbersInput'))
+			# 6. Feed the local course array into the page with instructor name
+			instructors = []
+			for i in newCourseNumberArray:
+				if i != 1:
+					instructors.append(db.Query(Course).filter(
+					'courseNumber =', i).get().instructor)
+				else:
+					instructors.append('Dummy, Instructor')
 
-		logging.info('COURSE NUMBER: '+str(courseNumbers))
+
+			instructors = map(str, instructors)
+			logging.info('Instructors: '+str(instructors))
+			# details about the course:
+
+			instructorLastNames = []
+			for i in instructors:
+				instructorLastNames.append(i.split(',')[0])
+
+			instructorLastNames = map(str, instructorLastNames)
+
+			logging.info('Instructor last names: '+str(instructorLastNames))
 
 
-		doRender(self, "menu.htm",
-			{'firstName': self.session['firstName'],
-			'courseNumbers': self.session['courseNumbers'],
-			'courseNumbers': courseNumbers})
+			# this is the ugliest solution, but it works
+			a = ''
+			for i in newCourseNameArray:
+				a+=i+','
+
+			t = ''
+			for i in instructorLastNames:
+				t+=i+','
+
+
+			doRender(self, 'courseMenuStudent.htm',
+				{'firstName':self.session['firstName'],
+				'courseNames': a,
+				'instructorNames':t})
+
+
+# class MainMenuHandler(webapp.RequestHandler):
+# 	def get(self):
+# 		self.session = get_current_session()
+#
+#
+# 		courseNumbers = int(self.request.get('courseNumbersInput'))
+#
+# 		logging.info('COURSE NUMBER: '+str(courseNumbers))
+#
+#
+# 		doRender(self, "menu.htm",
+# 			{'firstName': self.session['firstName'],
+# 			'courseNumbers': self.session['courseNumbers'],
+# 			'courseNumbers': courseNumbers})
 
 ###############################################################################
 ########################### Module Page Handlers ##############################
@@ -1312,7 +1458,7 @@ application = webapp.WSGIApplication([
 	# old pages (might not need)
 	('/data', DataHandler),
 	# ('/signup', SignupHandler),
-	('/MainMenu', MainMenuHandler),
+	# ('/MainMenu', MainMenuHandler),
 
 	# module pages
 	('/CarryoverEffects', CarryoverEffectsHandler),
