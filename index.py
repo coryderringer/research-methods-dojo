@@ -406,7 +406,10 @@ class StudentCourseMenuHandler(webapp.RequestHandler):
 		doRender(self, 'menu.htm',
 		{'firstName':self.session['firstName'],
 		'courseNumber': courseNumber,
-		'courseName': courseName})
+		'courseName': courseName,
+		'Module1': self.session['Module1'],
+		'Module2': self.session['Module2'],
+		'Module3': self.session['Module3'],})
 
 
 class EnrollCourseHandler(webapp.RequestHandler):
@@ -732,22 +735,39 @@ class CarryoverEffectsHandler(webapp.RequestHandler):
 			# Record that user completed the module
 			self.session['Module1'] = 'Complete'
 
-			# Query the datastore
-			que = db.Query(User)
+			# old db code, keeping because I haven't tested new code yet
+			# # Query the datastore
+			# que = db.Query(User)
+            #
+			# # find the current user
+			# que = que.filter('username =', self.session['username'])
+			# results = que.fetch(limit=1)
+            #
+			# # change the datastore result for module 1
+			# for i in results:
+			# 	i.COEAnswer1 = self.session['COEAnswer1']
+			# 	i.COEAnswer2 = self.session['COEAnswer2']
+			# 	i.COEAnswer3 = COEAnswer3
+			# 	i.COEAnswer4 = COEAnswer4
+			# 	i.COEAnswer5 = COEAnswer5
+			# 	i.Module1 = self.session['Module1']
+			# 	i.put()
 
-			# find the current user
-			que = que.filter('username =', self.session['username'])
-			results = que.fetch(limit=1)
+			# new db code
+			course = db.Query(StudentCourse).filter(
+				'usernum =', self.session['usernum']).filter(
+				'courseNumber =', self.session['activeCourse']).get()
 
-			# change the datastore result for module 1
-			for i in results:
-				i.COEAnswer1 = self.session['COEAnswer1']
-				i.COEAnswer2 = self.session['COEAnswer2']
-				i.COEAnswer3 = COEAnswer3
-				i.COEAnswer4 = COEAnswer4
-				i.COEAnswer5 = COEAnswer5
-				i.Module1 = self.session['Module1']
-				i.put()
+			# change the datastore result for this module
+			course.COEAnswer1 = self.session['COEAnswer1']
+			course.COEAnswer2 = self.session['COEAnswer2']
+			course.COEAnswer3 = self.session['COEAnswer3']
+			course.COEAnswer4 = self.session['COEAnswer4']
+			course.COEAnswer5 = self.session['COEAnswer5']
+			course.Module1 = self.session['Module1']
+			course.put()
+			# end new db code
+
 
 			logging.info('Datastore updated')
 
@@ -802,25 +822,41 @@ class PracticeFatigueEffectsHandler(webapp.RequestHandler):
 			# Record that user completed the module
 			self.session['Module3'] = 'Complete'
 
-			# Query the datastore
-			que = db.Query(User)
+			# old db code, keeping because I haven't tested new code yet
+			# # Query the datastore
+			# que = db.Query(User)
+            #
+			# # find the current user
+			# que = que.filter('username =', self.session['username'])
+			# results = que.fetch(limit=1)
+            #
+			# # change the datastore result for module 1
+			# for i in results:
+			# 	i.PFEAnswer1 = self.session['PFEAnswer1']
+			# 	i.PFEAnswer2 = self.session['PFEAnswer2']
+			# 	# i.COEAnswer3 = self.session['COEAnswer3']
+			# 	i.PFEAnswer3 = PFEAnswer3
+			# 	i.PFEAnswer4 = PFEAnswer5
+			# 	# i.PFEAnswer5 = PFEAnswer5
+			# 	i.Module3 = self.session['Module3']
+			# 	i.put()
+            #
+			# logging.info('Datastore updated')
 
-			# find the current user
-			que = que.filter('username =', self.session['username'])
-			results = que.fetch(limit=1)
+			# new db code
+			course = db.Query(StudentCourse).filter(
+				'usernum =', self.session['usernum']).filter(
+				'courseNumber =', self.session['activeCourse']).get()
 
-			# change the datastore result for module 1
-			for i in results:
-				i.PFEAnswer1 = self.session['PFEAnswer1']
-				i.PFEAnswer2 = self.session['PFEAnswer2']
-				# i.COEAnswer3 = self.session['COEAnswer3']
-				i.PFEAnswer3 = PFEAnswer3
-				i.PFEAnswer4 = PFEAnswer5
-				# i.PFEAnswer5 = PFEAnswer5
-				i.Module3 = self.session['Module3']
-				i.put()
-
-			logging.info('Datastore updated')
+			# change the datastore result for this module
+			course.PFEAnswer1 = self.session['PFEAnswer1']
+			course.PFEAnswer2 = self.session['PFEAnswer2']
+			course.PFEAnswer3 = self.session['PFEAnswer3']
+			course.PFEAnswer4 = self.session['PFEAnswer4']
+			course.PFEAnswer5 = self.session['PFEAnswer5']
+			course.Module3 = self.session['Module3']
+			course.put()
+			# end new db code
 
 			self.session['M3_Progress'] = 0
 			doRender(self, "FinishPracticeFatigueEffects.htm")
@@ -1023,6 +1059,7 @@ class LineGraphTestHandler(webapp.RequestHandler):
 			# 'x' : x,
 			# 'y' : y})
 
+	# ASK KEVIN: do we still need this?
 
 	# In this handler, add all the progress/back-end stuff, so that the first
 	# page rendered is the overall experiment description.

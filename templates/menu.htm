@@ -18,21 +18,30 @@ Main menu
 </nav>
 
 <section>
-    <div class="container well">
+    <div class="container well" id="containerDiv" style="display: none">
         <h2>Welcome, {{firstName}}!</h2>
         <p><span id="status_span">Please select a module to begin.</span></p>
 
-        <!-- Modules -->
+        <!-- Modules (I don't know why they're in this order, should consider switching them)-->
         <form id="Module2_Form" method="get" action="/WithinSubject">
-            <button class="btn btn-default" id="Module2_Button">The power of within subject designs</button>
+            <button class="btn btn-default" id="Module2_Button">
+                The power of within subject designs
+                <span style= "display: none" id="repeatSpan2"> (repeat)</span>
+            </button>
         </form>
         <br>
         <form id="Module1_Form" method="get" action="/CarryoverEffects">
-            <button class="btn btn-default" id="Module1_Button" disabled="true">Carryover Effects</button>
+            <button class="btn btn-default" id="Module1_Button">
+                Carryover Effects
+                <span style= "display: none" id="repeatSpan1"> (repeat)</span>
+            </button>
         </form>
         <br>
         <form id="Module3_Form" method="get" action="/PracticeFatigueEffects">
-            <button class="btn btn-default" id="Module3_Button" disabled="true">Practice and Fatigue Effects</button>
+            <button class="btn btn-default" id="Module3_Button">
+                Practice and Fatigue Effects
+                <span style= "display: none" id="repeatSpan3"> (repeat)</span>
+            </button>
         </form>
         <br>
     </div>
@@ -54,7 +63,7 @@ var main = {
         main.moduleNames = ['The power of within subject designs', 'Carryover Effects', 'Practice and Fatigue Effects']
         main.courseNumber = {{courseNumber}}
         main.firstName = '{{firstName}}'
-
+        main.Modules = ['{{Module1}}', '{{Module2}}', '{{Module3}}']
 
         main.cacheDOM()
         main.bindEvents()
@@ -67,6 +76,9 @@ var main = {
         main.$menuDiv = main.$co.find('#menuDiv')
         main.$moduleSelect = main.$co.find('#moduleSelect')
         main.$moduleForm = main.$co.find("#moduleForm")
+        main.$repeatSpans = [main.$co.find('#repeatSpan1'),
+            main.$co.find('#repeatSpan2'),
+            main.$co.find('#repeatSpan3')]
     },
 
     bindEvents: function(){
@@ -80,8 +92,14 @@ var main = {
     },
 
     render: function(){
+        // indicate which modules have been taken already
+        for(var i = 0; i < main.Modules.length; i++){
+            if(main.Modules[i] == 'Complete'){
+                main.$repeatSpans[i].show()
+            }
+        }
 
-        main.$menuDiv.show()
+        main.$co.show()
 
     }
 }
