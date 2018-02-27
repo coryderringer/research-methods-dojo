@@ -12,15 +12,15 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
-                <p class="navbar-text">Student Menu - Select a Course</p> 
+                <p class="navbar-text">Student Menu - Select a Course</p>
             </div>
         </div>
     </nav>
-    
+
     <h2><center>Welcome, {{firstName}}!</center></h2><br>
-    
+
     <div id="selectCourseDiv" style="width:800px" class="container well">
-		
+
 		<center>
 			<p><span id="status_span">Please select an existing course.</span></p>
 			<div class="row">
@@ -30,6 +30,7 @@
 						<select id="courseSelect" name = "courseSelect">
 							<option selected value="base">Please Select</option>
 						</select>
+						<input id="path" name="path" type="hidden" value="courseSelect">
 					</form>
 				</div>
 				<div class="col-xs-2">
@@ -41,9 +42,9 @@
 			<p>Or <a href="/EnrollCourse">add a new course</a></p>
 		</center>
 
-		
 
-		
+
+
 
     </div>
 
@@ -67,14 +68,14 @@ var main = {
 		main.instructorNames = main.parseStringArray('{{instructorNames}}')
 		main.firstName = "{{firstName}}"
 		main.courseNames = main.parseStringArray("{{courseNames}}")
-		
+
 		// main.parsedCourseNumbers = main.parseStringArray(main.courses)
 		main.cacheDOM()
 		main.bindEvents()
 		main.fillCourses()
 		main.render()
 	},
-	
+
 	cacheDOM: function(){
 		main.$selectCourseDiv = $('#selectCourseDiv')
 		main.$courseSelectForm = $('#courseSelectForm')
@@ -105,13 +106,13 @@ var main = {
 			// $('#addCourseDiv').show()
 			// main.$noCourses.show()
 		}else{
-			
+
 			// $('#selectCourseDiv').show()
-		}	
+		}
 	},
 	fillCourses: function(){
 		// right now this is just the names; eventually we need terms as well: Name -- term
-		
+
 		var dropdownValues = []
 		for(var i = 0; i < main.courseNames.length; i++){
 			dropdownValues[i] = main.courseNames[i]+' -- '+ main.instructorNames[i]
@@ -121,7 +122,7 @@ var main = {
 		var $dropdown = $('#courseSelect');
 
 		$dropdown.empty()
-		$dropdown.append('<option>Please Select</option')	
+		$dropdown.append('<option>Please Select</option')
 		$.each(dropdownValues, function(index, value) {
 			$dropdown.append("<option>" + String(value) + "</option>")
 		});
@@ -130,10 +131,10 @@ var main = {
 	submitFunction: function(){
 		console.log('test')
 		main.$courseSelectForm.submit()
-		
-		
+
+
 	}
-	
+
 }
 
 main.init()
@@ -145,4 +146,3 @@ main.init()
 
 
 {% endblock %}
-				

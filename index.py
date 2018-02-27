@@ -358,59 +358,71 @@ class StudentCourseMenuHandler(webapp.RequestHandler):
 	def get(self):
 		self.session = get_current_session()
 
-		# this handler should:
+		# detect if they came from the course selector or the end of a modules
+		whichPath = self.request.get('path')
 
-		# parse the input for the course name and instructor
-		formInput = self.request.get('courseSelect').split(' -- ')
+		if whichPath == 'courseSelect':
 
-		courseName = formInput[0]
-		instructorLastName = formInput[1]
+			# parse the input for the course name and instructor
+			formInput = self.request.get('courseSelect').split(' -- ')
 
-		# query the user db for the course number
-		# we might need a way to remove courses. Maybe not for this version,
-		# but def in the future.
-		courseNumber = db.Query(StudentCourse).filter(
-			'courseName =', courseName).get().courseNumber
+			courseName = formInput[0]
+			instructorLastName = formInput[1]
 
-		self.session['activeCourse'] = courseNumber
+			# query the user db for the course number
+			# we might need a way to remove courses. Maybe not for this version,
+			# but def in the future.
+			courseNumber = db.Query(StudentCourse).filter(
+				'courseName =', courseName).get().courseNumber
 
-		# query the StudentCourse db for student's progress
-		active = db.Query(StudentCourse).filter(
-			'usernum =', self.session['usernum']).filter(
-			'courseNumber =', courseNumber).get()
+			self.session['activeCourse'] = courseNumber
 
-		# update the session with relevant variables for StudentCourse
+			# query the StudentCourse db for student's progress
+			active = db.Query(StudentCourse).filter(
+				'usernum =', self.session['usernum']).filter(
+				'courseNumber =', courseNumber).get()
 
-		self.session['Module1'] = active.Module1
-		self.session['Module2'] = active.Module2
-		self.session['Module3'] = active.Module3
-		self.session['WSAnswer1'] = active.WSAnswer1
-		self.session['WSAnswer2'] = active.WSAnswer2
-		self.session['WSAnswer3'] = active.WSAnswer3
-		self.session['COEAnswer1'] = active.COEAnswer1
-		self.session['COEAnswer2'] = active.COEAnswer2
-		self.session['COEAnswer3'] = active.COEAnswer3
-		self.session['COEAnswer4'] = active.COEAnswer4
-		self.session['COEAnswer5'] = active.COEAnswer5
-		self.session['PFEAnswer1'] = active.PFEAnswer1
-		self.session['PFEAnswer2'] = active.PFEAnswer2
-		self.session['PFEAnswer3'] = active.PFEAnswer3
-		self.session['PFEAnswer4'] = active.PFEAnswer4
-		# PFEAnswer5 =		db.IntegerProperty()
+			# update the session with relevant variables for StudentCourse
 
-		self.session['numberOfGuesses'] = active.numberOfGuesses
-		self.session['numberOfSimulations'] = active.numberOfSimulations
-		self.session['numberOfSimulations2'] = active.numberOfSimulations2
-		self.session['QuizResults'] = active.QuizResults
+			self.session['Module1'] = active.Module1
+			self.session['Module2'] = active.Module2
+			self.session['Module3'] = active.Module3
+			self.session['WSAnswer1'] = active.WSAnswer1
+			self.session['WSAnswer2'] = active.WSAnswer2
+			self.session['WSAnswer3'] = active.WSAnswer3
+			self.session['COEAnswer1'] = active.COEAnswer1
+			self.session['COEAnswer2'] = active.COEAnswer2
+			self.session['COEAnswer3'] = active.COEAnswer3
+			self.session['COEAnswer4'] = active.COEAnswer4
+			self.session['COEAnswer5'] = active.COEAnswer5
+			self.session['PFEAnswer1'] = active.PFEAnswer1
+			self.session['PFEAnswer2'] = active.PFEAnswer2
+			self.session['PFEAnswer3'] = active.PFEAnswer3
+			self.session['PFEAnswer4'] = active.PFEAnswer4
+			# PFEAnswer5 =		db.IntegerProperty()
 
-		doRender(self, 'menu.htm',
-		{'firstName':self.session['firstName'],
-		'courseNumber': courseNumber,
-		'courseName': courseName,
-		'Module1': self.session['Module1'],
-		'Module2': self.session['Module2'],
-		'Module3': self.session['Module3'],})
+			self.session['numberOfGuesses'] = active.numberOfGuesses
+			self.session['numberOfSimulations'] = active.numberOfSimulations
+			self.session['numberOfSimulations2'] = active.numberOfSimulations2
+			self.session['QuizResults'] = active.QuizResults
 
+			doRender(self, 'menu.htm',
+				{'firstName':self.session['firstName'],
+				'courseNumber': courseNumber,
+				'courseName': courseName,
+				'Module1': self.session['Module1'],
+				'Module2': self.session['Module2'],
+				'Module3': self.session['Module3'],})
+		else:
+			courseName = db.Query(Course).filter('courseNumber =', self.session['activeCourse']).get().courseName
+			
+			doRender(self, 'menu.htm',
+				{'firstName':self.session['firstName'],
+				'courseNumber': self.session['activeCourse'],
+				'courseName': courseName,
+				'Module1': self.session['Module1'],
+				'Module2': self.session['Module2'],
+				'Module3': self.session['Module3'],})
 
 class EnrollCourseHandler(webapp.RequestHandler):
 	def get(self):
