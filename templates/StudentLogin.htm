@@ -18,7 +18,6 @@
 		</div>
 	</nav>
 
-
 	<!-- Login -->
 	<section>
 		<div class="container">
@@ -50,20 +49,13 @@
         					<div class="row">
             					<div class="form-group col-md-4">
                 					<label for="loginPassword">Password</label>
-                					<input type="password" class="form-control" id="loginPassword" name = "loginPassword" placeholder="Enter password">
+                					<input type="password" class="form-control" id="loginPassword" name = "loginPassword" placeholder="Enter password" required="true">
             					</div>
         					</div>
-
-							<!-- <p>Email</p> -->
-							<!-- <input id="loginEmail" name="loginEmail"><br> -->
-							<!-- <input type="email" class="form-control" id="loginEmail" name="loginEmail" placeholder="Enter email"> -->
-							<!-- <br> -->
-							<!-- <p>Password</p> -->
-							<!-- <input type="password" id="loginPassword" name = "loginPassword"> -->
-							<!-- <input type="password" class="form-control" id="loginPassword" name = "loginPassword" placeholder="Enter password"> -->
 						</form>
 						<br>
-						<button class="btn btn-primary" id="loginButton">Login</button>
+						<button class="btn btn-primary" type="submit" id="loginButton">Login</button>
+						<br>
 					</div>
 
 					<!-- Create new account -->
@@ -100,50 +92,14 @@
         				</form>
         				<br>
         				<button class="btn btn-primary" id="createButton">Create account</button>
-
-
-						<!-- <p id="errorP2" style="display: none"></p>
-						<p>Create an account:</p>
-						<form id="createAccountForm" method = "post" action = "/StudentSignup">
-							First Name: <input id="firstName" name = "firstName"><br>
-							Last Name: <input id="lastName" name = "lastName"><br>
-							Email: <input id="createEmail" name = "createEmail"><br>
-							Password: <input type="password" id="password1" name = "password1"><br>
-							Repeat Password: <input type="password" id="password2" name = "password2"><br>
-						</form>
-						<button id="createButton">Submit</button> -->
 					</div>
+
+					<br>
+					<p>If you are an instructor, login <a href="/InstructorLogin">here</a> instead.</p>
 
 				</div>
 
 			<br>
-
-			<!-- <div id="createAccountDiv">
-				<p id="errorP2" style="display: none"></p>
-				<p>Create an account:</p>
-				<form id="createAccountForm" method = "post" action = "/StudentSignup">
-					First Name: <input id="firstName" name = "firstName"><br>
-					Last Name: <input id="lastName" name = "lastName"><br>
-					Email: <input id="createEmail" name = "createEmail"><br>
-					Password: <input type="password" id="password1" name = "password1"><br>
-					Repeat Password: <input type="password" id="password2" name = "password2"><br>
-				</form>
-				<button id="createButton">Submit</button>
-			</div> -->
-			<!-- Student login -->
-			<!-- <form id="signin" method="post" action="/login" novalidate>
-				<div class="row form-group col-md-3" id="studentLogin" style="display:none">
-					<label for="username">7-digit student ID:</label>
-					<input type="text" class="form-control" name="username" required><br>
-					<input name="guest" id="guest" type="hidden" value="0">
-					<input type="submit" class="btn btn-primary" value="Log in">
-				</div>
-			</form>
- -->
-			<!-- Guest login -->
-			<!-- <div id="guestLogin" style="display:none">
-				<button class="btn btn-primary" onclick="guest()">Log in</button>
-			</div> -->
 
 		</div>
 	</div>

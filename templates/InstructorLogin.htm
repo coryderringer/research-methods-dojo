@@ -21,50 +21,89 @@
 
 	<!-- Login -->
 	<section>
-		<div class="container well">
-			<h2>Welcome, instructor!</h2>
-			<p id="errorP" style="display:none"></p>
-			<p>Please log in, or create an account</p>
+		
+		<div class="container">
+			<div class="col-md-12">
+				<h2>Welcome, instructor!</h2>
+				<p>Please log in, or create an account</p>
+				<br>
 
-			<!-- Select login type -->
-			<div id="loginDiv">
-				<p>Log in:</p>
-				<form id="loginForm" method="post" action="InstructorLogin">
-					Email: <input id="loginEmail" name="loginEmail"><br>
-					Password: <input type="password" id="loginPassword" name = "loginPassword">
-				</form>
-				<button id="loginButton">Login</button>
-			</div>
-			<br>
+				<!-- Tabs for login -->
+				<ul class="nav nav-tabs">
+					<li class="active"><a data-toggle="tab" href="#loginDiv">Login</a></li>
+					<li><a data-toggle="tab" href="#createAccountDiv">Create account</a></li>
+				</ul>
 
-			<div id="createAccountDiv">
-				<p id="errorP2" style="display: none"></p>
-				<p>Create an account:</p>
-				<form id="createAccountForm" method = "post" action = "/InstructorSignup">
-					First Name: <input id="firstName" name = "firstName"><br>
-					Last Name: <input id="lastName" name = "lastName"><br>
-					Email: <input id="createEmail" name = "createEmail"><br>
-					Password: <input type="password" id="password1" name = "password1"><br>
-					Repeat Password: <input type="password" id="password2" name = "password2"><br>
-				</form>
-				<button id="createButton">Submit</button>
-			</div>
-			<!-- Student login -->
-			<!-- <form id="signin" method="post" action="/login" novalidate>
-				<div class="row form-group col-md-3" id="studentLogin" style="display:none">
-					<label for="username">7-digit student ID:</label>
-					<input type="text" class="form-control" name="username" required><br>
-					<input name="guest" id="guest" type="hidden" value="0">
-					<input type="submit" class="btn btn-primary" value="Log in">
+				<!-- Select login type -->
+				<div class="container tab-content">
+
+					<!-- Login -->
+					<div id="loginDiv" class="tab-pane fade in active">
+						<br>
+						<p id="errorP" class="lead" style="display:none; color:red"></p>
+						<form class="" id="loginForm" method="post" action="/InstructorLogin">
+							<div class="row">
+	           					<div class="form-group col-md-4">
+	               					<label for="loginEmail">Email</label>
+	               					<input type="email" class="form-control" id="loginEmail" name="loginEmail" placeholder="Enter email">
+	           					</div>
+	        				</div>
+	        				<div class="row">
+	           					<div class="form-group col-md-4">
+	               					<label for="loginPassword">Password</label>
+	               					<input type="password" class="form-control" id="loginPassword" name = "loginPassword" placeholder="Enter password" required="true">
+	           					</div>
+	        				</div>
+						</form>
+						<br>
+						<button class="btn btn-primary" type="submit" id="loginButton">Login</button>
+						<br>
+					</div>
+
+					<!-- Create new account -->
+					<div id="createAccountDiv" class="tab-pane fade">
+						<br>
+						<p id="errorP2" class="lead" style="display:none; color:red"></p>
+						<form class="" id="createAccountForm" method = "post" action = "/InstructorSignup">
+							<div class="row">
+	            				<div class="form-group col-md-4">
+	                				<label for="firstName">First name</label>
+	                				<input class="form-control" id="firstName" name="firstName">
+	            				</div>
+	            				<div class="form-group col-md-4">
+	                				<label for="lastName">Last name</label>
+	               					<input class="form-control" id="lastName" name="lastName">
+	            				</div>
+	        				</div>
+	        				<div class="row">
+	            				<div class="form-group col-md-4">
+	                				<label for="createEmail">Email</label>
+	               					<input type="email" class="form-control" id="createEmail" name = "createEmail">
+	            				</div>
+	        				</div>
+	        				<div class="row">
+	            				<div class="form-group col-md-4">
+	                				<label for="loginPassword">Password</label>
+	                				<input type="password" class="form-control" id="password1" name = "password1">
+	               				</div>
+	            				<div class="form-group col-md-4">
+	                				<label for="loginPassword">Repeat password</label>
+	                				<input type="password" class="form-control" id="password2" name = "password2">
+	               				</div>
+	        				</div>
+	        			</form>
+	        			<br>
+	        			<button class="btn btn-primary" id="createButton">Create account</button>
+					</div>
+
+					<br>
+					<p>If you are a student, login <a href="/StudentLogin">here</a> instead.</p>
+
 				</div>
-			</form>
- -->
-			<!-- Guest login -->
-			<!-- <div id="guestLogin" style="display:none">
-				<button class="btn btn-primary" onclick="guest()">Log in</button>
-			</div> -->
 
+			</div>
 		</div>
+
 	</section>
 
 </body>
