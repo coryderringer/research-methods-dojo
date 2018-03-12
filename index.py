@@ -54,6 +54,10 @@ class StudentCourse(db.Model):
 # student/course combination, created when a student adds a course
 	# student linked
 	usernum = 			db.IntegerProperty()
+	term = 				db.StringProperty()
+	year = 				db.IntegerProperty()
+	firstName = 		db.StringProperty()
+	lastName = 			db.StringProperty()
 
 	# course linked
 	courseNumber = 		db.IntegerProperty()
@@ -415,7 +419,7 @@ class StudentCourseMenuHandler(webapp.RequestHandler):
 				'Module3': self.session['Module3'],})
 		else:
 			courseName = db.Query(Course).filter('courseNumber =', self.session['activeCourse']).get().courseName
-			
+
 			doRender(self, 'menu.htm',
 				{'firstName':self.session['firstName'],
 				'courseNumber': self.session['activeCourse'],
@@ -463,6 +467,9 @@ class EnrollCourseHandler(webapp.RequestHandler):
 			thisCourse = q.get()
 			thisCourseName = thisCourse.courseName # for step 3
 
+			term = thisCourse.term
+			year = thisCourse.year
+
 			# if you're here the course exists
 			logging.info('COURSE EXISTS')
 
@@ -508,6 +515,10 @@ class EnrollCourseHandler(webapp.RequestHandler):
 					courseNumber = thisCourseNumber,
 					courseName = thisCourseName,
 
+					term = term,
+					year = int(year),
+					firstName = self.session['firstName'],
+					lastName = self.session['lastName'],
 
 					# student/course combination, created when a student adds a course
 					# student linked
@@ -681,21 +692,6 @@ class EnrollCourseHandler(webapp.RequestHandler):
 				'courseNames': a,
 				'instructorNames':t})
 
-
-# class MainMenuHandler(webapp.RequestHandler):
-# 	def get(self):
-# 		self.session = get_current_session()
-#
-#
-# 		courseNumbers = int(self.request.get('courseNumbersInput'))
-#
-# 		logging.info('COURSE NUMBER: '+str(courseNumbers))
-#
-#
-# 		doRender(self, "menu.htm",
-# 			{'firstName': self.session['firstName'],
-# 			'courseNumbers': self.session['courseNumbers'],
-# 			'courseNumbers': courseNumbers})
 
 ###############################################################################
 ########################### Module Page Handlers ##############################
@@ -1083,28 +1079,28 @@ class LineGraphTestHandler(webapp.RequestHandler):
 ###############################################################################
 
 # this is going to go away since I have the one with CourseData.htm
-class DataHandler(webapp.RequestHandler):
-	def get(self):
-
-		doRender(self, 'datalogin.htm')
-
-
-	def post(self):
-		password=self.request.get('password')
-
-		if password == "Bensei": # just for now
-
-
-			que=db.Query(User)
-			que.order("usernum")
-			users=que.fetch(limit=10000)
-
-			doRender(
-				self,
-				'data.htm',
-				{'users':users})
-		else:
-			doRender(self, 'dataloginfail.htm')
+# class DataHandler(webapp.RequestHandler):
+# 	def get(self):
+#
+# 		doRender(self, 'datalogin.htm')
+#
+#
+# 	def post(self):
+# 		password=self.request.get('password')
+#
+# 		if password == "Bensei": # just for now
+#
+#
+# 			que=db.Query(User)
+# 			que.order("usernum")
+# 			users=que.fetch(limit=10000)
+#
+# 			doRender(
+# 				self,
+# 				'data.htm',
+# 				{'users':users})
+# 		else:
+# 			doRender(self, 'dataloginfail.htm')
 
 
 
@@ -1525,7 +1521,8 @@ class CourseDataHandler(webapp.RequestHandler):
 			{'users':data,
 			'courseName': courseName,
 			'term': term,
-			'year':year})
+			'year':year,
+			'courseNumber':courseNumber})
 
 
 
@@ -1540,7 +1537,7 @@ class CourseDataHandler(webapp.RequestHandler):
 
 application = webapp.WSGIApplication([
 	# old pages (might not need)
-	('/data', DataHandler),
+	# ('/data', DataHandler),
 	# ('/signup', SignupHandler),
 	# ('/MainMenu', MainMenuHandler),
 

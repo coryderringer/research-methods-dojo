@@ -10,18 +10,17 @@
 <body>
 
 <h2>Course Data for {{courseName}}, in {{term}} of {{year}}.</h2>
+<p>(Instruct students to enroll in the course using number {{courseNumber}}.)</p>
 
 <!-- ########## User Data ########## -->
 User:
 <table>
 <!-- Header Row -->
 <tr>
-<th>Instructor</th>
 <th>Term</th>
-<th>usernum</th>
+<th>Year</th>
 <th>First Name</th>
 <th>Last Name</th>
-<th>username</th>
 <!-- <th>password</th> -->
 <th>Within Subjects</th>
 <th>Carryover Effects</th>
@@ -32,12 +31,10 @@ User:
 <!-- Subsequent Rows -->
 {% for i in users %}
 <tr>
-<th>{{ i.instructor }}</th>
 <th>{{ i.term }}</th>
-<th>{{ i.usernum }}</th>
-<th>{{ i.firstname }}</th>
-<th>{{ i.lastname }}</th>
-<th>{{ i.username }}</th>
+<th>{{ i.year }}</th>
+<th>{{ i.firstName }}</th>
+<th>{{ i.lastName }}</th>
 <!-- <th>{{ i.password }}</th> -->
 <th>{{ i.Module2 }}</th>
 <th>{{ i.Module1 }}</th>
@@ -58,10 +55,8 @@ Within Subjects Tutorial
 <table>
 <!-- Header Row -->
 <tr>
-<th>usernum</th>
 <th>First Name</th>
 <th>Last Name</th>
-<th>username</th>
 <th>WSAnswer1</th>
 <th>WSAnswer2</th>
 <th>WSAnswer3</th>
@@ -76,10 +71,8 @@ Within Subjects Tutorial
 <!-- Subsequent Rows -->
 {% for i in users %}
 <tr>
-<th>{{ i.usernum }}</th>
-<th>{{ i.firstname }}</th>
-<th>{{ i.lastname }}</th>
-<th>{{ i.username }}</th>
+<th>{{ i.firstName }}</th>
+<th>{{ i.lastName }}</th>
 <th>{{ i.WSAnswer1 }}</th>
 <th>{{ i.WSAnswer2 }}</th>
 <th>{{ i.WSAnswer3 }}</th>
@@ -104,10 +97,8 @@ Carryover Effects Tutorial
 <table>
 <!-- Header Row -->
 <tr>
-<th>usernum</th>
 <th>First Name</th>
 <th>Last Name</th>
-<th>username</th>
 <th>COEAnswer1</th>
 <th>COEAnswer2</th>
 <th>COEAnswer3</th>
@@ -118,10 +109,8 @@ Carryover Effects Tutorial
 <!-- Subsequent Rows -->
 {% for i in users %}
 <tr>
-<th>{{ i.usernum }}</th>
-<th>{{ i.firstname }}</th>
-<th>{{ i.lastname }}</th>
-<th>{{ i.username }}</th>
+<th>{{ i.firstName }}</th>
+<th>{{ i.lastName }}</th>
 <th>{{ i.COEAnswer1 }}</th>
 <th>{{ i.COEAnswer2 }}</th>
 <th>{{ i.COEAnswer3 }}</th>
@@ -140,10 +129,8 @@ Practice and Fatigue Effects Tutorial
 <table>
 <!-- Header Row -->
 <tr>
-<th>usernum</th>
 <th>First Name</th>
 <th>Last Name</th>
-<th>username</th>
 <th>PFEAnswer1</th>
 <th>PFEAnswer2</th>
 <th>PFEAnswer3</th>
@@ -153,10 +140,8 @@ Practice and Fatigue Effects Tutorial
 <!-- Subsequent Rows -->
 {% for i in users %}
 <tr>
-<th>{{ i.usernum }}</th>
-<th>{{ i.firstname }}</th>
-<th>{{ i.lastname }}</th>
-<th>{{ i.username }}</th>
+<th>{{ i.firstName }}</th>
+<th>{{ i.lastName }}</th>
 <th>{{ i.PFEAnswer1 }}</th>
 <th>{{ i.PFEAnswer2 }}</th>
 <th>{{ i.PFEAnswer3 }}</th>
@@ -170,8 +155,3 @@ Practice and Fatigue Effects Tutorial
 
 </body>
 {% endblock %}
-
-
-
-
-
