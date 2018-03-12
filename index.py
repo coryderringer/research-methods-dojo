@@ -701,9 +701,23 @@ class CarryoverEffectsHandler(webapp.RequestHandler):
 
 	def get(self):
 		self.session = get_current_session()
-		if self.session['M1_Progress'] == 0:
-			doRender(self, "CarryoverEffectsIntro.htm",
-				{'progress':self.session['M1_Progress']})
+
+		self.session['M1_Progress'] = 0
+
+		doRender(self, "CarryoverEffectsIntro.htm",
+			{'progress':self.session['M1_Progress']})
+
+		# KEVIN: this was the previous code for this; there wasn't an
+		# alternative for if the progress var didn't equal 0, and it was
+		# throwing an error if it wasn't in the session. With the redesign
+		# we have to just set it to zero. I think if it's calling the get
+		# handler it will never be more than zero, but let me know if I'm
+		# missing something.
+
+		# previous code:
+		# if self.session['M1_Progress'] == 0:
+		# 	doRender(self, "CarryoverEffectsIntro.htm",
+		# 		{'progress':self.session['M1_Progress']})
 
 	def post(self):
 		logging.info("checkpoint 1")
@@ -790,9 +804,15 @@ class PracticeFatigueEffectsHandler(webapp.RequestHandler):
 
 	def get(self):
 		self.session = get_current_session()
-		if self.session['M3_Progress'] == 0:
-			doRender(self, "PracticeFatigueEffectsIntro.htm",
-				{'progress':self.session['M3_Progress']})
+
+		# KEVIN: see note from carryover effects, same applies here.
+		# please delete these notes to indicate that you're okay with these
+		# changes.
+
+		self.session['M3_Progress'] = 0
+
+		doRender(self, "PracticeFatigueEffectsIntro.htm",
+			{'progress':self.session['M3_Progress']})
 
 	def post(self):
 		logging.info("checkpoint 1")
@@ -823,9 +843,9 @@ class PracticeFatigueEffectsHandler(webapp.RequestHandler):
 		# 		{'progress':self.session['M1_Progress']})
 
 		# elif M1_Progress == 5:
-			PFEAnswer3 = int(self.request.get('Question1'))
+			self.session['PFEAnswer3'] = int(self.request.get('Question1'))
 			# PFEAnswer4 = int(self.request.get('Question2'))
-			PFEAnswer5 = int(self.request.get('Question3'))
+			self.session['PFEAnswer5'] = int(self.request.get('Question3'))
 
 			# Record that user completed the module
 			self.session['Module3'] = 'Complete'
@@ -860,7 +880,7 @@ class PracticeFatigueEffectsHandler(webapp.RequestHandler):
 			course.PFEAnswer1 = self.session['PFEAnswer1']
 			course.PFEAnswer2 = self.session['PFEAnswer2']
 			course.PFEAnswer3 = self.session['PFEAnswer3']
-			course.PFEAnswer4 = self.session['PFEAnswer4']
+			# course.PFEAnswer4 = self.session['PFEAnswer4']
 			course.PFEAnswer5 = self.session['PFEAnswer5']
 			course.Module3 = self.session['Module3']
 			course.put()

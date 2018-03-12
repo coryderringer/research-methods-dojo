@@ -84,14 +84,14 @@ function MySubmit(end) {
 
     <p>Practice effects and fatigue effects are a type of carryover effect.</p>
       &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-      <select id="Q1" style="font-size:14px;" onchange="answered();">
+      <select id="Q1" name = "Q1" style="font-size:14px;" onchange="answered();">
         <option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
         <option value="1">TRUE</option>
         <option value="0">FALSE</option>
       </select><br><br>
 
     <div id="answer1" style="display:show; height:110px; opacity:0; padding-left:20px" align="justify">
-      <b>Correct answer: FALSE. </b>Practice and fatigue effects are when participants change over the course of the experiment due to increasing time - this either results in them getting better over time at the tasks involved in the experiment due to practice, or them getting worse over time at the tasks due to fatigue. Carryover effects occur when a particular condition changes characteristics of the participants, making them respond differently to subsequent conditions in the experiment. Practice and fatigue effects are not determined by the specific conditions - they occur because the participants experience repeated conditions and are tested multiple times. 
+      <b>Correct answer: FALSE. </b>Practice and fatigue effects are when participants change over the course of the experiment due to increasing time - this either results in them getting better over time at the tasks involved in the experiment due to practice, or them getting worse over time at the tasks due to fatigue. Carryover effects occur when a particular condition changes characteristics of the participants, making them respond differently to subsequent conditions in the experiment. Practice and fatigue effects are not determined by the specific conditions - they occur because the participants experience repeated conditions and are tested multiple times.
     </div>
 
     <!-- <p>Fatigue effects can also occur in experiments using between-subjects designs.</p>
@@ -108,7 +108,7 @@ function MySubmit(end) {
 
     <p>We can always tell when practice and fatigue effects are present from the results of our experiment.</p>
       &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-      <select id="Q3" style="font-size:14px;" onchange="answered();">
+      <select id="Q3" name = "Q3" style="font-size:14px;" onchange="answered();">
         <option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
         <option value="1">TRUE</option>
         <option value="0">FALSE</option>
@@ -140,7 +140,7 @@ function MySubmit(end) {
       <input type="radio" name="q1" value="B" id="q1b"><label for="q1b">False</label>
     </div>
   </form><br>
-  
+
   <p>2. <span id="Question2">This is the text from Question 2</span></p>
 
   <form id="Q2Answers">
@@ -158,7 +158,7 @@ function MySubmit(end) {
       <input type="radio" name="q3" value="B" id="q3b"><label for="q3b">False</label>
     </div>
   </form><br>
-  
+
   <button id="SubmitButton" style="width:100px" onclick="MySubmit()">Submit</button>
 </div> -->
 
@@ -204,7 +204,7 @@ function MySubmit(end) {
 // //   Outcomes[0] = $('input[name=q1]:checked', '#Q1Answers').val();
 // //   Outcomes[1] = $('input[name=q2]:checked', '#Q2Answers').val();
 // //   Outcomes[2] = $('input[name=q3]:checked', '#Q3Answers').val();
-  
+
 // //   for(var i = 0; i < Outcomes.length; i++){
 // //     if(Outcomes[i] != 'A' & Outcomes[i] != 'B' & Outcomes[i] != 'C' & Outcomes[i] != 'D'){
 // //       alert('Please answer all of the questions!');
@@ -217,7 +217,7 @@ function MySubmit(end) {
 // //   $('#progressinput').val(String(progress));
 // //   $('#AnswerInput').val(String(Outcomes));
 // //   $('#dataform').submit();
-  
+
 // // // scramble the order of the answers, keep track of which one is correct
 // // }
 

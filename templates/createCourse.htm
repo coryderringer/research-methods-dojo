@@ -12,11 +12,11 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
-                <p class="navbar-text">Instructor Menu - Create a Course</p> 
+                <p class="navbar-text">Instructor Menu - Create a Course</p>
             </div>
         </div>
     </nav>
-    
+
     <h2><center>Welcome, Cory!</center></h2><br>
 
     <div id="addCourseDiv" style="width:800px" class="container well">
@@ -46,15 +46,15 @@
     			</select></p>
 
 
-    		<p>Which modules would you like to make available in the course? Check all that apply.</p>
-    		<ul style="list-style: none"> 
-	    		<li><input id="WithinSubject_Check" name="WithinSubject_Check" type="checkbox">
+    		<p style="display: none">Which modules would you like to make available in the course? Check all that apply.</p>
+    		<ul style="list-style: none; display: none">
+	    		<li><input id="WithinSubject_Check" name="WithinSubject_Check" type="checkbox" checked>
 	    		<label for="WithinSubject_Check">The Power of Within Subjects Designs</label></li>
 
-	    		<li><input id="CarryoverEffects_Check" name="CarryoverEffects_Check" type="checkbox">
+	    		<li><input id="CarryoverEffects_Check" name="CarryoverEffects_Check" type="checkbox" checked>
 	    		<label for="CarryoverEffects_Check">Carryover Effects</label></li>
 
-	    		<li><input id="PracticeFatigueEffects_Check" name="PracticeFatigueEffects_Check" type="checkbox">
+	    		<li><input id="PracticeFatigueEffects_Check" name="PracticeFatigueEffects_Check" type="checkbox" checked>
 	    		<label for="PracticeFatigueEffects_Check">Practice and Fatigue Effects</label></li>
 	    	</ul>
     		<br>
@@ -63,7 +63,7 @@
     		<input id="PFEC" name="PFEC" type="hidden">
     	</form>
     	<button id="createCourseButton">Create Course</button>
-    	
+
     </div>
     <p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
 </body>
@@ -117,12 +117,12 @@ var main = {
 
     checkCourseInput: function(){
         var n = String(main.$courseNameInput.val())
-        
+
         if(main.courseNames.includes(n)){
             // alert('Index: '+String(main.courseNames.indexOf(n)))
             var targetIndex = main.courseNames.indexOf(n)
             var ty = main.$termInput.val().split(' ')
-            
+
             if(ty[0] == main.terms[targetIndex] & ty[1] == main.years[targetIndex]){
                 alert('You already have a course called "'+n+ '" in that semester.')
                 return
