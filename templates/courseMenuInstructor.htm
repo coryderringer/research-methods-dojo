@@ -19,39 +19,42 @@
 
     <h2><center>Welcome, {{firstName}}!</center></h2><br>
 
-    <div id="selectCourseDiv" style="width:800px; style="display:none" class="container well">
+	<div id="containerDiv" style="display: none">
+	    <div id="selectCourseDiv" style="width:800px; display:none" class="container well">
 
-		<center>
-			<p><span id="status_span">Please select an existing course to view data or distribute course number to students.</span></p>
-			<div class="row">
-				<div class="col-xs-2"></div>
-				<div class="col-xs-4">
-					<form id="courseSelectForm" method = "get" action = "/CourseData">
-						<select id="courseSelect" name = "courseSelect">
-							<option selected value="base">Please Select</option>
-						</select>
-					</form>
+			<center>
+				<p><span id="status_span">Please select an existing course to view data or distribute course number to students.</span></p>
+				<div class="row">
+					<div class="col-xs-2"></div>
+					<div class="col-xs-4">
+						<form id="courseSelectForm" method = "get" action = "/CourseData">
+							<select id="courseSelect" name = "courseSelect">
+								<option selected value="base">Please Select</option>
+							</select>
+						</form>
+					</div>
+					<div class="col-xs-2">
+						<button id = "submitButton1">Okay</button>
+					</div>
+					<div class="col-xs-4"></div>
 				</div>
-				<div class="col-xs-2">
-					<button id = "submitButton1">Okay</button>
-				</div>
-				<div class="col-xs-4"></div>
-			</div>
-			<br>
-			<p>Or <a href="/CreateCourse">add a new course</a></p>
-		</center>
+				<br>
+				<p>Or <a href="/CreateCourse">add a new course</a></p>
+			</center>
 
-    </div>
+	    </div>
 
-	<div id="addCourseDiv" class="container well" style="width:800px; style="display:none">
-		<center>
-			<p>Welcome to the Research Methods Dojo! Now that you have created an
-				account, it's time for Step 2: <br><a href = "/CreateCourse">Create
-					a course for your students</a>.</p>
-		</center>
+		<div id="addCourseDiv" class="container well" style="width:800px; display:none">
+			<center>
+				<p>Welcome to the Research Methods Dojo! Now that you have created an
+					account, it's time for Step 2: <br><a href = "/CreateCourse">Create
+						a course for your students</a>.</p>
+			</center>
+		</div>
+		<p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
 	</div>
 
-    <p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
+
 </body>
 
 
@@ -109,10 +112,13 @@ var main = {
 			main.$selectCourseDiv.hide()
 			main.$addCourseDiv.show()
 			// main.$noCourses.show()
+
 		}else{
 			main.$addCourseDiv.hide()
 			main.$selectCourseDiv.show()
+
 		}
+		$('#containerDiv').show()
 	},
 	fillCourses: function(){
 		// right now this is just the names; eventually we need terms as well: Name -- term
