@@ -13,7 +13,7 @@
 	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<p class="navbar-text">Research Methods Dojo</p> 
+				<p class="navbar-text">Research Methods Dojo</p>
 			</div>
 		</div>
 	</nav>
@@ -21,7 +21,7 @@
 
 	<!-- Login -->
 	<section>
-		
+
 		<div class="container">
 			<div class="col-md-12">
 				<h2>Welcome, instructor!</h2>
@@ -63,6 +63,19 @@
 					<!-- Create new account -->
 					<div id="createAccountDiv" class="tab-pane fade">
 						<br>
+						<p>Welcome to the Research Methods Dojo! Training at the
+							Dojo is simple:</p>
+						<p><b>1. Create an Instructor Account.</b> This will let you log
+							in to see your students' progress in the RM Dojo modules.</p>
+						<p><b>2. Create a Course.</b> Once you have created an account,
+							you will be taken to a menu page where you may add a course.
+							Just choose a name for the course and select the term.</p>
+						<p><b>3. Distribute the Course Code.</b> The data page for each
+							course will display a unique identification number for
+							the course. Your students will need this number to
+							register for your course in the Research Methods Dojo.</p>
+						<br>
+						<p>First, let's create your instructor account:</p>
 						<p id="errorP2" class="lead" style="display:none; color:red"></p>
 						<form class="" id="createAccountForm" method = "post" action = "/InstructorSignup">
 							<div class="row">
@@ -192,7 +205,7 @@ var create = {
 		}else if(create.$password1.val() != create.$password2.val()){ // if passwords don't match blank
 			alert('Your passwords don\'t match!')
 		}else{
-			$('#createAccountForm').submit()	
+			$('#createAccountForm').submit()
 		}
 	}
 }

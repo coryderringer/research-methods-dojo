@@ -12,17 +12,17 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
-                <p class="navbar-text">Instructor Menu - Select a Course</p> 
+                <p class="navbar-text">Instructor Menu - Select a Course</p>
             </div>
         </div>
     </nav>
-    
+
     <h2><center>Welcome, {{firstName}}!</center></h2><br>
-    
-    <div id="selectCourseDiv" style="width:800px" class="container well">
-		
+
+    <div id="selectCourseDiv" style="width:800px; style="display:none" class="container well">
+
 		<center>
-			<p><span id="status_span">Please select an existing course.</span></p>
+			<p><span id="status_span">Please select an existing course to view data or distribute course number to students.</span></p>
 			<div class="row">
 				<div class="col-xs-2"></div>
 				<div class="col-xs-4">
@@ -41,11 +41,15 @@
 			<p>Or <a href="/CreateCourse">add a new course</a></p>
 		</center>
 
-		
-
-		
-
     </div>
+
+	<div id="addCourseDiv" class="container well" style="width:800px; style="display:none">
+		<center>
+			<p>Welcome to the Research Methods Dojo! Now that you have created an
+				account, it's time for Step 2: <br><a href = "/CreateCourse">Create
+					a course for your students</a>.</p>
+		</center>
+	</div>
 
     <p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
 </body>
@@ -66,16 +70,17 @@ var main = {
 		main.years = main.parseStringArray('{{years}}')
 		main.firstName = "{{firstName}}"
 		main.courseNames = main.parseStringArray("{{courseNames}}")
-		
+
 		// main.parsedCourseNumbers = main.parseStringArray(main.courses)
 		main.cacheDOM()
 		main.bindEvents()
 		main.fillCourses()
 		main.render()
 	},
-	
+
 	cacheDOM: function(){
 		main.$selectCourseDiv = $('#selectCourseDiv')
+		main.$addCourseDiv = $('#addCourseDiv')
 		main.$courseSelectForm = $('#courseSelectForm')
 		main.$submitButton1 = $('#submitButton1')
 		main.$noCourses = $('#noCourses')
@@ -100,17 +105,18 @@ var main = {
 	},
 
 	render: function(){
-		if(main.courses.length == 0){
-			// $('#addCourseDiv').show()
+		if(main.courseNames.length == 0){
+			main.$selectCourseDiv.hide()
+			main.$addCourseDiv.show()
 			// main.$noCourses.show()
 		}else{
-			
-			// $('#selectCourseDiv').show()
-		}	
+			main.$addCourseDiv.hide()
+			main.$selectCourseDiv.show()
+		}
 	},
 	fillCourses: function(){
 		// right now this is just the names; eventually we need terms as well: Name -- term
-		
+
 		var dropdownValues = []
 		for(var i = 0; i < main.courseNames.length; i++){
 			dropdownValues[i] = main.courseNames[i]+' -- '+ main.terms[i] + ' ' + main.years[i]
@@ -120,7 +126,7 @@ var main = {
 		var $dropdown = $('#courseSelect');
 
 		$dropdown.empty()
-		$dropdown.append('<option>Please Select</option')	
+		$dropdown.append('<option>Please Select</option')
 		$.each(dropdownValues, function(index, value) {
 			$dropdown.append("<option>" + String(value) + "</option>")
 		});
@@ -129,10 +135,10 @@ var main = {
 	submitFunction: function(){
 		console.log('test')
 		main.$courseSelectForm.submit()
-		
-		
+
+
 	}
-	
+
 }
 
 main.init()
@@ -144,4 +150,3 @@ main.init()
 
 
 {% endblock %}
-				
