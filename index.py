@@ -319,13 +319,50 @@ class StudentSignupHandler(webapp.RequestHandler):
 		que = que.filter('email =', email)
 		results = que.fetch(limit=1)
 
-		# If the user already exists in the datastore
-		if len(results) > 0:
-			doRender(self,
-				'signupfail.htm',
-				{'error': 'This account already exists. Please contact \
-				administrator if you need to reset your password.'})
-			return
+		# # If the user already exists in the datastore
+		# if len(results) > 0:
+		# 	doRender(self,
+		# 		'signupfail.htm',
+		# 		{'error': 'This account already exists. Please contact \
+		# 		administrator if you need to reset your password.'})
+		# 	return
+
+		if len(results) > 0: # user already exists in the datastore
+			# you also get this error when refreshing after creating account.
+			# check for refresh using session variables:
+			try:
+				self.session['usernum']
+			except NameError: # usernum not in session; it's not a refresh
+				# prevent duplicate accounts
+				doRender(self,
+					'signupfail.htm',
+					{'error': 'This account already exists. Please contact \
+					administrator if you need to reset your password.'})
+				return
+
+			else:
+				logging.info('refresh')
+				# query the db to get the user info, just in case of incomplete
+				# session info (which should hypothetically not happen anyway)
+				user = db.Query(Student).filter("usernum =", self.session['usernum']).get()
+
+				# store these variables in the session, log user in
+				self.session = get_current_session()
+				self.session['usernum']    	= user.usernum
+				self.session['firstName']	= user.firstName
+				self.session['lastName']	= user.lastName
+				self.session['email']		= user.email
+				self.session['Logged_In']	= True
+				self.session['courseNumbers'] = user.courseNumbers
+				self.session['courseNames'] = user.courseNames
+
+				doRender(self, 'courseMenuStudent.htm',
+					{'firstName':self.session['firstName'],
+					'courseNames': self.session['courseNames']})
+				return
+
+
+
 
 
 		# Create User object in the datastore
