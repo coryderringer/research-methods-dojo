@@ -12,7 +12,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
-                <p class="navbar-text">Instructor Menu - Select a Course</p>
+                <p class="navbar-text">Instructor Menu</p>
             </div>
         </div>
     </nav>
@@ -20,16 +20,32 @@
     <h2><center>Welcome, {{firstName}}!</center></h2><br>
 
 	<div id="containerDiv" style="display: none">
+	    
 	    <div id="selectCourseDiv" style="width:800px; display:none" class="container well">
 
+	    	<p><span id="status_span">Please select an existing course to view data and course number to display.</span></p>
+	    	<!-- Select course -->
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <!-- <label for="termInput" id="status_span">Please select an existing course to view data and course number to display.</label> -->
+                    <form id="courseSelectForm" method = "get" action = "/CourseData">
+	                    <select id="courseSelect" name="courseSelect" class="form-control form-control-sm">
+	                        <option selected value="base">Please select</option>
+	                    </select>
+
+                    </form>
+                </div>
+            </div>
+            <button class="btn btn-default" type="submit" id="submitButton1">Select course</button>
+
 			<center>
-				<p><span id="status_span">Please select an existing course to view data or distribute course number to students.</span></p>
+				<!-- <p><span id="status_span">Please select an existing course to view data and course number to d.</span></p>
 				<div class="row">
 					<div class="col-xs-2"></div>
 					<div class="col-xs-4">
 						<form id="courseSelectForm" method = "get" action = "/CourseData">
 							<select id="courseSelect" name = "courseSelect">
-								<option selected value="base">Please Select</option>
+								<option selected value="base">Please select</option>
 							</select>
 						</form>
 					</div>
@@ -38,17 +54,17 @@
 					</div>
 					<div class="col-xs-4"></div>
 				</div>
-				<br>
-				<p>Or <a href="/CreateCourse">add a new course</a></p>
+				<br> -->
+				<p>Or click here to <a href="/CreateCourse">add a new course</a>.</p>
 			</center>
 
 	    </div>
 
 		<div id="addCourseDiv" class="container well" style="width:800px; display:none">
 			<center>
-				<p>Welcome to the Research Methods Dojo! Now that you have created an
-					account, it's time for Step 2: <br><a href = "/CreateCourse">Create
-						a course for your students</a>.</p>
+				<p>Welcome to the Research Methods Dojo!<br>Now that you have created an
+					account, it's time for Step 2:</p>
+				<p><a href = "/CreateCourse">Create a course for your students</a>.</p>
 			</center>
 		</div>
 		<p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
@@ -132,7 +148,7 @@ var main = {
 		var $dropdown = $('#courseSelect');
 
 		$dropdown.empty()
-		$dropdown.append('<option>Please Select</option')
+		$dropdown.append('<option>Please select</option')
 		$.each(dropdownValues, function(index, value) {
 			$dropdown.append("<option>" + String(value) + "</option>")
 		});

@@ -16,10 +16,29 @@
 	<input id="Submit" onclick="MySubmit()" value="Submit" type="hidden">
 </form>
 
-<h2 id="header2" style="display:none"><center>Within-Subjects Designs</center></h2>
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+    <!-- Navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-text">Within-Subjects Designs</p> 
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="/logout">Click here to Logout</a></li>
+				</ul>
+			</div>
+        </div>
+    </nav>
+
+<!-- <h2 id="header2" style="display:none"><center>Within-Subjects Designs</center></h2> -->
 
 <div id="container" style="display:none">
-	<div class="corypg">
+	<div class="well">
+		<div class="row">
+			
+			
+		</div>
 		<div id="Text1">
 			<p>Imagine you hear about a study being planned at your local university. The researchers are trying to find out which of two interventions is more effective for lowering systolic blood pressure (BP) over a 3-month timespan. We’ll call them the Fruit Condition and the Veggie Condition:</p>
 
@@ -54,7 +73,7 @@
 			</div>
 		</div>
 
-		<div id="Quiz1"style="display:none">
+		<div id="Quiz1" style="display:none">
 			<div>
 				<center>
 					<div class="minipg" style="padding:5px;width:250px;display:inline-block;margin-right:50px">
@@ -96,7 +115,7 @@
 		</div>
 
 
-		<div id="Text2"style="display:none">	
+		<div id="Text2" style="display:none">	
 			
 			<p>The defining feature of within-subjects designs is that they make a comparison within the same group of participants rather than between different groups. Instead of comparing participants in the Fruit and Veggie Conditions separately, we can compare participants with <i>themselves</i>. In other words, instead of having a dedicated control group, <i>each subject is effectively a “control” for him/herself!</i></p>
 			<!-- Will they know what control groups are by this point in the semester? -->
@@ -180,7 +199,7 @@
 		<button id="backButton">Back</button><button id="nextButton">Next</button>
 	</div>
 
-	<div class="sidebar">
+	<div class="sidebar well">
 
 		<u><b><ul>Key Ideas:</ul></b></u>
 		<span id="vocabSpan" style="font-size: 14px"></span>
@@ -191,6 +210,8 @@
 <center>
 	<div id="logout" style="display:none" class="logout"><a href="/logout">Logout</a></div>
 </center>
+
+</body>
 
 <script>
 

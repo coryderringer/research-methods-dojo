@@ -12,7 +12,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
-                <p class="navbar-text">Student Menu - Select a Course</p>
+                <p class="navbar-text">Student Menu</p>
             </div>
         </div>
     </nav>
@@ -21,8 +21,23 @@
 
     <div id="selectCourseDiv" style="width:800px" class="container well">
 
+    	<p><span id="status_span">Please select an existing course.</span></p>
+	    	<!-- Select course -->
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <!-- <label for="termInput" id="status_span">Please select an existing course to view data and course number to display.</label> -->
+                    <form id="courseSelectForm" method = "get" action = "/StudentCourseMenu">
+	                    <select id="courseSelect" name="courseSelect" class="form-control form-control-sm">
+	                        <option selected value="base">Please select</option>
+	                    </select>
+	                    <input id="path" name="path" type="hidden" value="courseSelect">
+                    </form>
+                </div>
+            </div>
+            <button class="btn btn-default" type="submit" id="submitButton1">Select course</button>
+
 		<center>
-			<p><span id="status_span">Please select an existing course.</span></p>
+			<!-- <p><span id="status_span">Please select an existing course.</span></p>
 			<div class="row">
 				<div class="col-xs-2"></div>
 				<div class="col-xs-4">
@@ -38,8 +53,8 @@
 				</div>
 				<div class="col-xs-4"></div>
 			</div>
-			<br>
-			<p>Or <a href="/EnrollCourse">add a new course</a></p>
+			<br> -->
+			<p>Or <a href="/EnrollCourse">add a new course</a>.</p>
 		</center>
 
 
@@ -122,7 +137,7 @@ var main = {
 		var $dropdown = $('#courseSelect');
 
 		$dropdown.empty()
-		$dropdown.append('<option>Please Select</option')
+		$dropdown.append('<option>Please select</option')
 		$.each(dropdownValues, function(index, value) {
 			$dropdown.append("<option>" + String(value) + "</option>")
 		});

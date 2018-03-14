@@ -12,21 +12,29 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
-                <p class="navbar-text">Student Menu - Add a Course</p> 
+                <p class="navbar-text">Student Menu</p> 
             </div>
         </div>
     </nav>
     
-    <h2><center>Welcome, Cory!</center></h2><br>
+    <h2><center>Welcome, {{firstName}}!</center></h2><br>
 
     <div id="addCourseDiv" style="width:800px" class="container well">
         <b><p id="errorP" style="display: none"></p></b>
     	<form id="addCourseForm" method = "post" action = "/EnrollCourse">
-    		<p>Please enter the course number here: 
-    		<input id="courseNumberInput" name="courseNumberInput"></p>
-            <p>(If you do not have a course number, please contact your instructor)</p>
+    		<p>Please enter the course number from your instructor here:</p>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <input class="form-control" id="courseNumberInput" name="courseNumberInput" placeholder="Course number">
+                </div>
+            </div>
 
-    	<button id="addCourseButton">Add Course</button>
+            <button class="btn btn-default" id="addCourseButton">Add Course</button>
+
+            <!-- <input id="courseNumberInput" name="courseNumberInput"></p> -->
+            <br><br><p class="help-block">If you do not have a course number, please contact your instructor.</p>
+
+    	   
     	
     </div>
     <p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
@@ -39,7 +47,7 @@ var main = {
 
     init: function(){
         if({{errorNumber}} == 1){
-            $('#errorP').text('This course does not exist. Please make sure the number is correct.')
+            $('#errorP').text('This course does not exist. Please make sure the course number is correct.')
             $('#errorP').show()
         }
 

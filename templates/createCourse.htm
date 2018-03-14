@@ -12,21 +12,56 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
-                <p class="navbar-text">Instructor Menu - Create a Course</p>
+                <p class="navbar-text">Instructor Menu</p>
             </div>
         </div>
     </nav>
 
-    <h2><center>Welcome, Cory!</center></h2><br>
+    <h2><center>Welcome, {{firstName}}!</center></h2><br>
 
     <div id="addCourseDiv" style="width:800px" class="container well">
     	<p id="noCourses" style="display: none">It looks like you don't have any courses added yet. Let's add a course.</p>
 
     	<form id="createCourseForm" method = "post" action = "/CreateCourse">
-    		<p>What would you like to call the course?
-    		<input id="courseNameInput" name="courseNameInput"></p>
+    		
+            <p>Let's create a new course for your students.</p>
 
-    		<p>When will the course take place?
+            <!-- Course name -->
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="courseNameInput">What would you like to call the course?</label>
+                    <input class="form-control" id="courseNameInput" name = "courseNameInput" placeholder="Course name" required="true">
+                </div>
+            </div>
+
+            <!-- <p>What would you like to call the course?
+    		<input id="courseNameInput" name="courseNameInput"></p> -->
+
+            <!-- Course date -->
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="termInput">When will the course take place?</label>
+                    <select id="termInput" name="termInput" class="form-control form-control-sm">
+                        <option value="Spring 2018">2018 Spring</option>
+                        <option value="Summer 2018">2018 Summer</option>
+                        <option value="Fall 2018">2018 Fall</option>
+
+                        <option value="Spring 2019">2019 Spring</option>
+                        <option value="Summer 2019">2019 Summer</option>
+                        <option value="Fall 2019">2019 Fall</option>
+
+                        <option value="Spring 2020">2020 Spring</option>
+                        <option value="Summer 2020">2020 Summer</option>
+                        <option value="Fall 2020">2020 Fall</option>
+
+                        <option value="Spring 2021">2021 Spring</option>
+                        <option value="Summer 2021">2021 Summer</option>
+                        <option value="Fall 2021">2021 Fall</option>
+                    </select>
+                </div>
+            </div>
+    		
+            <!-- <p>When will the course take place?
     			<select id="termInput" name="termInput">
     				<option value="Spring 2018">Spring 2018</option>
     				<option value="Summer 2018">Summer 2018</option>
@@ -43,7 +78,7 @@
     				<option value="Spring 2021">Spring 2021</option>
     				<option value="Summer 2021">Summer 2021</option>
     				<option value="Fall 2021">Fall 2021</option>
-    			</select></p>
+    			</select></p> -->
 
 
     		<p style="display: none">Which modules would you like to make available in the course? Check all that apply.</p>
@@ -62,7 +97,8 @@
     		<input id="CEC" name="CEC" type="hidden">
     		<input id="PFEC" name="PFEC" type="hidden">
     	</form>
-    	<button id="createCourseButton">Create Course</button>
+    	<button class="btn btn-primary" type="submit" id="createCourseButton">Create course</button>
+        <!-- <button id="createCourseButton">Create Course</button> -->
 
     </div>
     <p><center>You are currently logged in. Would you like to <a href="/logout">log out?</a></center></p>
