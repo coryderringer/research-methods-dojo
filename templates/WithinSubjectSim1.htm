@@ -14,121 +14,164 @@
 	<input id="Submit" onclick="MySubmit()" value="Submit" type="hidden">
 </form>
 
-<h2 id="header2" style="display:none"><center><span id="top">Within-Subjects Designs</span></center></h2>
-
-<div id="container" style="display:none">
-
-	<div class="corypg">
-		<center>
-			<span style="display:inline-block;position:relative;left:45px"><b>Between-Subjects</b></span>
-			<span style="display:inline-block;position:relative;left:160px"><b>Within-Subjects</b></span>
-			<div id="firstrow">
-				<span style="position:relative;top:-100px;display:inline-block;margin-right:25px;visibility:hidden">
-					<b>Greater<br>Individual Differences</b>
-				</span>	
-				<div id="between1" style="display:inline-block">
-					<div id="graph1"></div>
-					<div class="sigTrack" style="display:none;position:relative;top:-55px;left:15px"><font color="green">Significant Results: <span id="sigTrack1"></span></font></div>
-					<div class="pdiv" style="display:none">p = <span id="p1"></span></div>
-					
-					<!-- <div id="ttest1" class="ttest">
-						<span id="tspan1">t=1.00</span><br>
-						<span id="pspan1">p=.50</span><br>
-						<span id="dspan1">power=.8</span><br>
-					</div> -->
-				</div>
-				
-				<div id="within1" style="display:inline-block">
-					<div id="graph2"></div>
-					<div class="sigTrack" style="display:none;position:relative;top:-55px;left:20px"><font color="green">Significant Results: <span id="sigTrack2"></span></font></div>
-					<div class="pdiv" style="display:none">p = <span id="p2"></span></div>
-				</div>
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+    <!-- Navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-text">Within-Subjects Designs</p> 
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="/StudentCourseMenu"><i class="fa fa-home" aria-hidden="true"></i> Return to menu</a></li>
+					<li><a href="/logout"><i class="fa fa-times" aria-hidden="true"></i> Logout</a></li>
+				</ul>
 			</div>
-			
-			
-			<br>
+        </div>
+    </nav>
 
-			<div id="secondrow" style="display:none">
-				<span style="display:inline-block;margin-right:25px;position:relative;top:-100px">
-					<b>Smaller<br>Individual Differences</b>
-				</span>
-				<div id="between2" style="display:inline-block">
-					<div id="graph3"></div>
-					<div class="sigTrack" style="display:none;position:relative;top:-55px;left:20px"><font color="green">Significant Results: <span id="sigTrack3"></span></font></div>
-					<div class="pdiv" style="display:none">p = <span id="p3"></span></div>
-				</div>
-				
-				<div id="within2" style="display:inline-block">
-					<div id="graph4"></div>
-					<div class="sigTrack" style="display:none;position:relative;top:-55px;left:20px"><font color="green">Significant Results: <span id="sigTrack4"></span></font></div>
-					<div class="pdiv" style="display:none">p = <span id="p4"></span></div>
-				</div>
-			</div>
-			
-			
-			<button id="resampleButton" style="width:100px;display:none;float:left" onclick="UpdateData()">Resample</button>
-		</center>			
-		<br>
+<!-- <h2 id="header2" style="display:none"><center><span id="top">Within-Subjects Designs</span></center></h2> -->
 
-		<div id="text1">
-			<p>To expand on this point, and explore some of the advantages of within-subjects designs, let's look at some hypothetical data. Here we two graphs displaying the same data. On the left it is presented as a between-subjects comparison, and on the right as a within-subjects comparison, with participants' BP as our dependent variable.</p>
+<!-- <div id="container" style="display:none"> -->
+	<div id="container" class="" style="display:none; width:950px">
+		<div class="">
+			<div class="row well">
+				<!-- Main body minus sidebar -->
+				<div class="col-xs-9">
+					<!-- Headers -->
+					<div class="row">
+						<div class="col-xs-2"></div>
+						<div class="col-xs-5"><center><h4>Between-Subjects</h4></center></div>
+						<div class="col-xs-5"><center><h4>Within-Subjects</h4></center></div>
+					</div>
 
-			<p>Remember: in a between-subjects design, we want to know <b>if the group averages are different</b> after some treatment. In a within-subjects design, we want to know if <b>one treatment consistently works better than the other for most people.</b></p>
+					<!-- Greater individual differences -->
+					<div class="row" id="firstrow">
+						<div class="col-xs-2">
+							<br><br><span style="visibility:hidden">Greater individual differences</span>
+						</div>
+						<!-- Between-subjects' graph -->
+						<div class="col-xs-5" id="between1">
+							<div id="graph1"></div>
+							<div class="sigTrack" style="display:none;position:relative;top:-55px;left:60px">
+								<font color="green">Significant results: <span id="sigTrack1"></span></font>
+							</div>
+							<div class="pdiv" style="display:none"><center><i>p</i> = <span id="p1"></span></center></div>
+						</div>
+						<!-- Within-subjects' graph -->
+						<div class="col-xs-5" id="within1">
+							<div id="graph2"></div>
+							<div class="sigTrack" style="display:none;position:relative;top:-55px;left:60px">
+								<font color="green">Significant results: <span id="sigTrack2"></span></font>
+							</div>
+							<div class="pdiv" style="display:none"><center><i>p</i> = <span id="p2"></span></center></div>
+						</div>
+					</div>
 
-			<div id="quiz3">
-				<p id="Question3">Intuitively, which chart would you say shows the largest difference between the two conditions?</p>
+					<!-- Smaller individual differences -->
+					<div class="row" id="secondrow" style="display:none">
+						<div class="col-xs-2">
+							<br><br><span>Smaller individual differences</span>
+						</div>
+						<!-- Between-subjects' graph -->
+						<div class="col-xs-5" id="between2">
+							<div id="graph3"></div>
+							<div class="sigTrack" style="display:none;position:relative;top:-55px;left:60px">
+								<font color="green">Significant results: <span id="sigTrack3"></span></font>
+							</div>
+							<div class="pdiv" style="display:none"><center><i>p</i> = <span id="p3"></span></center></div>
+						</div>
+						<!-- Within-subjects' graph -->
+						<div class="col-xs-5" id="within2">
+							<div id="graph4"></div>
+							<div class="sigTrack" style="display:none;position:relative;top:-55px;left:60px">
+								<font color="green">Significant results: <span id="sigTrack4"></span></font>
+							</div>
+							<div class="pdiv" style="display:none"><center><i>p</i> = <span id="p4"></span></center></div>
+						</div>
+					</div>
 
+					<!-- Button -->
+					<center><button id="resampleButton" style="display:none" onclick="UpdateData()" class="btn btn-info">Resample</button></center><br>
 
-				<form id="Q3Answers">
-					<input type="radio" name="q3" value="A" id="q3a"><label for="q3a">The between-subjects design (The group means look pretty far apart).</label><br>
-					<input type="radio" name="q3" value="B" id="q3b"><label for="q3b">The within-subjects design (The difference between the conditions looks consistent for most participants).</label><br>
-				</form><br>
+					<!-- Text 1 -->
+					<div id="text1">
+						<p>To expand on this point, and explore some of the advantages of within-subjects designs, let's look at some hypothetical data. Here we two graphs displaying the same data. On the left it is presented as a between-subjects comparison, and on the right as a within-subjects comparison, with participants' BP as our dependent variable.</p>
+
+						<p>Remember: in a between-subjects design, we want to know <b>if the group averages are different</b> after some treatment. In a within-subjects design, we want to know if <b>one treatment consistently works better than the other for most people.</b></p>
+
+						<!-- Quiz -->
+						<div id="quiz3">
+							<p id="Question3">Intuitively, which graph would you say shows the largest difference between the two conditions?</p>
+							<form id="Q3Answers">
+								<div class="form-check">
+	          						<input class="form-check-input" type="radio" name="q3" id="q3a" value="A">
+	          						<label class="form-check-label radio-inline" for="q3a">The between-subjects design (The group means look pretty far apart).</label>
+	        					</div><br>
+	        					<div class="form-check">
+	          						<input class="form-check-input" type="radio" name="q3" id="q3b" value="B">
+	          						<label class="form-check-label radio-inline" for="q3b">The within-subjects design (The difference between<br>the conditions looks consistent for most participants).</label>
+	        					</div><br>
+							</form><br>
+						</div>
+					</div>
+
+					<!-- Text 2 -->
+					<div id="text2" style="display:none">
+						<span id="Q3Response" style="display:none"></span>
+
+						<p>This example highlights another advantage of within-subjects designs: <i>they're insensitive to individual differences</i>.</p> 
+
+						<p>Think of it this way: imagine that somehow we knew for a fact that there was no difference between the Fruit Condition and the Veggie Condition. If this were true (in other words, if the <i>null hypothesis</i> were true), how much of a coincidence would the graph on the left be? Those group means are pretty close together, and with individual differences this large, it's not unrealistic for groups to be slightly different just by chance. But if we ask the same question about the graph on the right we get a different answer: if there is really no difference between the two interventions, how likely is it that <i>almost all of our participants</i> would have slightly lower BP after the Veggie Condition than after the Fruit Condition? Not likely at all!</p>
+
+						<p>And that's just what our p-values tell us: if the null hypothesis is true (if there's no difference between these conditions), the odds of getting an effect as large or larger than the one on the left are about 1 in 4 (p = .277). <b>But the odds of getting an effect as large or larger as the one on the right are 1 in 1000!</b></p>
+					</div>
+
+					<!-- Text 3 -->
+					<div id="text3" style="display:none">
+						<p>Here we can see that the between-subjects design does much better when individual differences are small (p = .0132 on the bottom left, compared to .277 on the top left). With each group more tightly distributed around its mean, it’s easier to tell that there is a real difference between the group means. It even comes out to be statistically significant (p < .05).</p>
+
+						<p>However, notice that the p value for the within-subjects design is exactly the same regardless of individual differences, because <i>within-subjects designs are not affected by individual differences</i>.</p>
+
+						<p>Take a minute or two to play around with this simulator a bit. See what happens when you generate different datasets using the "Resample" button: how often is the within-subjects design significant when the between-subjects design isn’t? Is that pattern ever reversed?</p>
+					</div>
+
+					<!-- Text 4 -->
+					<div id="text4" style="display:none">
+						<p>If we ran a thousand simulations with these datasets, we would end up with something like this. Notice that the within-subjects designs are significant more than 90% of the time, whereas the between subjects designs are significant at most about 60% of the time.</p>
+
+						<p>This leads us to two important conclusions. First, within-subjects designs are generally <b>more powerful</b> than between-subjects designs (they're more likely to find significant differences). Second, <b>between-subjects designs lose power when individual differences are large, but within-subjects designs do not</b>.</p>
+					</div>
 
 				<!-- <button id="AnswerButton3" onclick="recordQuiz3()" style="width:100px">Next</button> -->
 				<!-- <button id="LearnButton" onclick="LearnVisible()" style="float:right">Learn More</button> -->
 				
 				<!-- <div id="ResponseDiv3" style=""></div> -->
 
+				<br>
+				<button class="btn btn-default" id="backButton">Back</button>
+				<button class="btn btn-default" id="nextButton">Next</button>
+			</div>
+
+				<!-- Sidebar -->
+				<div class="col-xs-3 well white" style="height:100%">
+					<center><u><b>Key ideas:</b></u></center>
+					<br>
+					<span id="vocabSpan">
+						<i>Between-Subjects Designs</i> assign each person to one condition.<hr>
+						<i>Within-Subjects Designs</i> assign each person to every condition.<hr>
+						Within-subjects designs eliminate individual differences as a factor that could influence the dependent variable.<hr>
+						Between-subjects designs examine group means.<hr>
+						Within-subjects designs examine difference scores.
+					</span>	
+				</div>
 			</div>
 		</div>
-
-<!-- 		<div id="AnswerA" style="display:none">
-			<p>Oh no, your intuition wasn't right this time! That's okay.</p>
-		</div>
-		<div id="AnswerB" style="display:none">
-			<p>Right!</p>
-		</div> -->
-		<!-- This isn't the right way to do this... -->
-
-		<div id="text2" style="display:none">
-			<span id="Q3Response" style="display:none"></span>
-
-			<p>This example highlights another advantage of within-subjects designs: <i>they're insensitive to individual differences</i>.</p> 
-
-			<p>Think of it this way: imagine that somehow we knew for a fact that there was no difference between the Fruit Condition and the Veggie Condition. If this were true (in other words, if the <i>null hypothesis</i> were true), how much of a coincidence would the graph on the left be? Those group means are pretty close together, and with individual differences this large, it's not unrealistic for groups to be slightly different just by chance. But if we ask the same question about the graph on the right we get a different answer: if there is really no difference between the two interventions, how likely is it that <i>almost all of our participants</i> would have slightly lower BP after the Veggie Condition than after the Fruit Condition? Not likely at all!</p>
-
-			<p>And that's just what our p-values tell us: if the null hypothesis is true (if there's no difference between these conditions), the odds of getting an effect as large or larger than the one on the left are about 1 in 4 (p = .277). <b>But the odds of getting an effect as large or larger as the one on the right are 1 in 1000!</b></p>
-		</div>
-
-		<div id="text3" style="display:none">
-			<p>Here we can see that the between-subjects design does much better when individual differences are small (p = .0132 on the bottom left, compared to .277 on the top left). With each group more tightly distributed around its mean, it’s easier to tell that there is a real difference between the group means. It even comes out to be statistically significant (p < .05).</p>
-
-			<p>However, notice that the p value for the within-subjects design is exactly the same regardless of individual differences, because <i>within-subjects designs are not affected by individual differences</i>.</p>
-
-			<p>Take a minute or two to play around with this simulator a bit. See what happens when you generate different datasets using the "Resample" button: how often is the within-subjects design significant when the between-subjects design isn’t? Is that pattern ever reversed?</p>
-		</div>
-
-		<div id="text4" style="display:none">
-			<p>If we ran a thousand simulations with these datasets, we would end up with something like this. Notice that the within-subjects designs are significant more than 90% of the time, whereas the between subjects designs are significant at most about 60% of the time.</p>
-
-			<p>This leads us to two important conclusions. First, within-subjects designs are generally <b>more powerful</b> than between-subjects designs (they're more likely to find significant differences). Second, <b>between-subjects designs lose power when individual differences are large, but within-subjects designs do not</b>.</p>
-
-		</div>
-
-		<button id="backButton">Back</button><button id="nextButton">Next</button>
 	</div>
 
-	<div class="sidebar">
+
+
+	<!-- <div class="sidebar">
 		<u><b><ul>Key Ideas:</ul></b></u>
 		<span id="vocabSpan" style="font-size: 14px">
 			<li><i>Between-Subjects Designs</i> assign each person to one condition.</li><br>
@@ -138,14 +181,14 @@
 			<li>Within-subjects designs examine difference scores</li>
 		</span>
 
-	</div>
+	</div> -->
 
 </div>
-
+<!-- 
 <center>
 	<div id="logout" style="display:none" class="logout"><a href="/logout">Logout</a></div>
 </center>
-
+ -->
 <script>
 
 
@@ -186,7 +229,7 @@ var $all = [$('#text1'), $('#text2'), $('#text3'), $('.pdiv'), $('.sigTrack'), $
 
 
 var $vocabSpan = $('#vocabSpan');
-var vocabArray = ['<li><i>Between-Subjects Designs</i> assign each person to one condition.</li><br><li><i>Within-Subjects Designs</i> assign every person to every condition.</li>', '<br><li>Within-subjects designs eliminate individual differences as a factor that could influence the dependent variable</li>','<br><li>Within-subjects designs are insensitive to individual differences</li>', '<br><li>Within-subjects designs are more powerful than between-subjects designs</li>'];
+var vocabArray = ['<i>Between-Subjects Designs</i> assign each person to one condition.<hr><i>Within-Subjects Designs</i> assign every person to every condition.<hr>', 'Within-subjects designs eliminate individual differences as a factor that could influence the dependent variable.','<hr>Within-subjects designs are insensitive to individual differences.', '<hr>Within-subjects designs are more powerful than between-subjects designs.'];
 
 var $nextButton = $('#nextButton');
 var $backButton = $('#backButton');
