@@ -6,26 +6,32 @@
 
 {% block bodycontent %}
 
-<h2><center>Within-Subjects Designs</center></h2>
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+    <!-- Navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-text">Within-Subjects Designs</p> 
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+			</div>
+        </div>
+    </nav>
 
+    <!-- Body -->
+    <div class = "container well">
+    	<h2>Within-Subjects Designs</h2>
+    	<p>Congratulations, you have finished the tutorial!</p>
+    	<p>Please click on the button below to save your progress and return to the main menu.</p>
 
-<div class="pg">
-	<p>Congratulations! You have finished the tutorial!</p>
+    	<form method="get" action="/StudentCourseMenu">
+			<!--  hidden inputs -->
+			<input id="path" name="path" type="hidden" value="finish">
+			<button class="btn btn-primary">Return to Menu</button>
+		</form>
 
-
-	<form method="get" action="/StudentCourseMenu">
-		<!--  hidden inputs -->
-		<input id="path" name="path" type="hidden" value="finish">
-		<button>Return to Menu</button>
-	</form>
-
-	<form method="get" action="/logout">
-		<button>Logout</button>
-	</form>
-</div>
-<center>
-	<div class="logout"><a href="/logout">Logout</a></div>
-</center>
+    </div>
+</body>
 
 
 {% endblock %}

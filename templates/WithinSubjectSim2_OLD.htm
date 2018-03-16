@@ -14,172 +14,136 @@
 	<input id="Submit" onclick="MySubmit()" value="Submit" type="hidden">
 </form>
 
-<body data-spy="scroll" data-target=".navbar" data-offset="120">
-    <!-- Navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <p class="navbar-text">Within-Subjects Designs</p> 
-            </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
-				<ul class="nav navbar-nav navbar-right">
-					<li><a href="/StudentCourseMenu"><i class="fa fa-home" aria-hidden="true"></i> Return to menu</a></li>
-					<li><a href="/logout"><i class="fa fa-times" aria-hidden="true"></i> Logout</a></li>
-				</ul>
-			</div>
-        </div>
-    </nav>
+<h2 id="header2" style="display:none"><center>Within-Subjects Designs</center></h2>
 
-<!-- <h2 id="header2" style="display:none"><center>Within-Subjects Designs</center></h2> -->
-<div class="container">
-	<div id="container" class="well" style="display:none; width:950px">
-		<div class="">
-			<div class="row">
-				<!-- Main body minus sidebar -->
-				<div class="col-xs-9">
-					<!-- Headers -->
-					<div class="row">
-						<div class="col-xs-1"></div>
-						<div class="col-xs-5"><center><span id="span1" style="display:visibility:hidden"><h4>High correlation</h4></span></center></div>
-						<div class="col-xs-5"><center><span id="span2" style="display:visibility:hidden"><h4>Low correlation</h4></span></center></div>
-						<div class="col-xs-1"></div>
-					</div>
-
-					<!-- Graphs -->
-					<div class="row" id="firstrow">
-						<div class="col-xs-1"></div>
-						<div class="col-xs-5" id="within1">
-							<div id="graph1"></div>
-							<div class="sigTrack" style="display:none;position:relative;top:-55px;left:60px">
-								<font color="green">Significant results: <span id="sigTrack1"></span></font>
-							</div><br>
-							<div class="pdiv" style="display:none"><center><i>p</i> = <span id="p1"></span></center></div>
-						</div>
-						<div class="col-xs-5" id="within2">
-							<div id="graph2"></div>
-							<div class="sigTrack" style="display:none;position:relative;top:-55px;left:60px">
-								<font color="green">Significant results: <span id="sigTrack2"></span></font>
-							</div><br>
-							<div class="pdiv" style="display:none"><center><i>p</i> = <span id="p2"></span></center></div>
-						</div>
-						<div class="col-xs-1"></div>
-					</div>
-
-					<!-- Button -->
-					<center><button id="ResampleButton" style="display:none" onclick="UpdateData()" class="btn btn-info">Resample</button></center><br>
-
-					<!-- Quiz -->
-					<div id="Quiz4" style="display:none">
-						<p>Here are two graphs showing data collected using within-subjects designs. Which of these graphs do you think shows a significant difference between the veggie and fruit conditions?</p>
-						<form id="Q4Answers">
-							<div class="form-check">
-	          					<input class="form-check-input" type="radio" name="q4" id="q4a" value="A">
-	          					<label class="form-check-label radio-inline" for="q4a">The graph on the left (because it shows consistent differences, even though they're small).</label>
-	        				</div><br>
-	        				<div class="form-check">
-	          					<input class="form-check-input" type="radio" name="q4" id="q4b" value="B">
-	          					<label class="form-check-label radio-inline" for="q4b">The graph on the right (because some of those lines have a much steeper slope).</label>
-	        				</div><br>
-						</form><br>
-					</div>
-
-					<!-- Text 1 -->
-					<div id="Text1" style="display:none">
-						<span id="responseSpan"></span>
-
-						<p>Within-subjects designs rely on <i>consistent</i> differences between the conditions, and they can detect these differences even if they're relatively small. Remember from before: if almost every person has slightly lower BP in the Veggie Condition than in the Fruit Condition (see the graph on the left), the difference will probably be statistically significant. However, if some participants have much lower BP in the Veggie Condition, it might not be statistically significant if others have much lower BP in the Fruit Condition (see the graph on the right).</p>	
-
-						<p>In a within-subjects experiment, the average BPs for each condition might be very similar, as they are here, but we could still find a statistically significant difference if the two interventions have consistently different effects for each participant. One way to measure the consistency of the difference between the two conditions is using a Pearson correlation, which is why we're showing the correlation coefficients here as well.</p>
-					</div>
+<div id="container" style="display:none">
+	<div class="corypg">
+		<center>
+			<span id="span1" style="display:inline-block;visibility:hidden;position:relative;left:-50px"><b>High Correlation</b></span>
+			<span id="span2" style="display:inline-block;position:relative;left:85px;visibility:hidden"><b>Low Correlation</b></span>
+			
+			<div id="firstrow" style="display:none">
+				<div id="within1" style="display:inline-block">
+					<div id="graph1"></div>
+					<div class="sigTrack" style="visibility:hidden;position:relative;top:-55px;left:10px"><font color="green">Significant Results: <span id="sigTrack1"></span></font></div>
+					<div class="pdiv" style="position:relative;top:0px">p = <span id="p1"></span></div>
 					
-					<!-- Text 2 -->
-					<div id="Text2" style="display:none">
-						<p>Try simulating a few datasets with the "Resample" button. Notice how when the correlation coefficient is higher, the lines tend to be more parallel, and even small differences between the treatments can be statistically significant because they are consistent.</p>
-					</div>
-		
-					<!-- Button -->
-					<br>
-					<button class="btn btn-default" id="backButton">Back</button>
-					<button class="btn btn-default" id="nextButton">Next</button>
-
+					<!-- <div id="ttest1" class="ttest">
+						<span id="tspan1">t=1.00</span><br>
+						<span id="pspan1">p=.50</span><br>
+						<span id="dspan1">power=.8</span><br>
+					</div> -->
 				</div>
-
-				<!-- Sidebar -->
-				<div class="col-xs-3 well white" style="height:100%">
-					<center><u><b>Key ideas:</b></u></center>
-					<br>
-					<span id="vocabSpan">
-						<i>Between-Subjects Designs</i> assign each person to one condition.<hr>
-						<i>Within-Subjects Designs</i> assign each person to every condition.<hr>
-						Within-subjects designs eliminate individual differences as a factor that could influence the dependent variable.<hr>
-						Between-subjects designs examine group means.<hr>
-						Within-subjects designs examine difference scores.<hr>
-						Within-subjects designs are insensitive to individual differences.<hr>
-						Within-subjects designs are more powerful than between-subjects designs.
-					</span>	
+				
+				<div id="within2" style="display:inline-block">
+					<div id="graph2"></div>
+					<div class="sigTrack" style="visibility:hidden;position:relative;top:-55px;left:10px"><font color="green">Significant Results: <span id="sigTrack2"></span></font></div>
+					<div class="pdiv" style="position:relative;top:0px">p = <span id="p2"></span></div>
 				</div>
-
-
 			</div>
-		</div>
-	</div>
+			<br>
 
-	<div id="review" class="well" style="display:none; width:950px">
-		<div class="row">
-			<div class="col-xs-12">
-				<h1>Ready for the Quiz?</h1>
-		<p> Take a moment to review before the quiz. You can mouse over each bullet point to see a visual aid. Click below when you're ready!</p>
-
-		<h3>Review</h3>
-			<li><span id="list0"><i>Between-Subjects Designs</i> assign each person to one condition.</span></li><br>
-			<li><span id="list1"><i>Within-Subjects Designs</i> assign every person to every condition.</span></li><br>
-			<li><span id="list2">Between-subjects designs examine group means</span></li><br>
-			<li><span id="list3">Within-subjects designs examine difference scores</span></li><br>
-			<li><span id="list4">Within-subjects designs are insensitive to individual differences</span></li><br>
-			<li><span id="list5">Within-subjects designs are more powerful than between-subjects designs</span></li><br>
-			<li><span id="list6">Within-subjects designs can detect very small differences as long as they're consistent</span></li>
-		</ul>
-		
-		<!-- Button -->
+			<br>
+		</center>	
 		<br>
-		<button class="btn btn-default" id="backButton" onclick="goBack()">Back</button>
-		<button class="btn btn-default" id="nextButton" onclick="MySubmit()">Next</button>
-		<!-- <button id="backButton" onclick="goBack()">Back</button><button onclick="MySubmit()">Next</button>	 -->
-			</div>
+
+		<button id="ResampleButton" style="width:100px;display:none" onclick="UpdateData()">Resample</button>
+
+		<div id="Quiz4" style="display:none">
+			<p><b>Here are two graphs showing data collected using within-subjects designs. Which of these graphs do you think shows a significant difference between the veggie and fruit conditions?</b></p>
+			<form id="Q4Answers" style="position:relative;left:20px">
+				<input type="radio" name="q4" value="A" id="q4a"><label for="q4a">The graph on the left (because it shows consistent differences, even though they're small).</label><br>
+				<input type="radio" name="q4" value="B" id="q4b"><label for="q4b">The graph on the right (because some of those lines have a much steeper slope).</label><br>
+			</form><br>
+			
+
+		</div>
+
+		<div id="Text1" style="display:none">
+
+			<p><span id="responseSpan"></span></p>
+
+			<p>Within-subjects designs rely on <i>consistent</i> differences between the conditions, and they can detect these differences even if they're relatively small. Remember from before: if almost every person has slightly lower BP in the Veggie Condition than in the Fruit Condition (see the graph on the left), the difference will probably be statistically significant. However, if some participants have much lower BP in the Veggie Condition, it might not be statistically significant if others have much lower BP in the Fruit Condition (see the graph on the right).</p>	
+
+			<p>In a within-subjects experiment, the average BPs for each condition might be very similar, as they are here, but we could still find a statistically significant difference if the two interventions have consistently different effects for each participant. One way to measure the consistency of the difference between the two conditions is using a Pearson correlation, which is why we're showing the correlation coefficients here as well.</p>
+
 		</div>
 		
+		<div id="Text2" style="display:none">
+			<p>Try simulating a few datasets with the "Resample" button. Notice how when the correlation coefficient is higher, the lines tend to be more parallel, and even small differences between the treatments can be statistically significant because they are consistent.</p>
+
+			
+			
+		</div>
+		<button id="backButton">Back</button><button id="nextButton">Next</button>
+		
+		
+		<!-- <center><button id="SubmitButton" style="display:none" onclick="goForward()">Continue to Quiz</button></center> -->
+	</div>
+	<div class="sidebar">
+		<u><b><ul>Key Ideas:</ul></b></u>
+		<span id="vocabSpan" style="font-size: 14px">
+			<li><i>Between-Subjects Designs</i> assign each person to one condition.</li><br>
+			<li><i>Within-Subjects Designs</i> assign each person to every condition.</li><br>
+			<li>Within-subjects designs eliminate individual differences as a factor that could influence the dependent variable</li><br>
+			<li>Between-subjects designs examine group means</li><br>
+			<li>Within-subjects designs examine difference scores</li><br>
+			<li>Within-subjects designs are insensitive to individual differences</li><br>
+			<li>Within-subjects designs are more powerful than between-subjects designs</li>
+		</span>
 	</div>
 </div>
 
+<div class="pg" style="width:1000px;display:none" id="review">
+	<h1>Ready for the Quiz?</h1>
+	<p> Take a moment to review before the quiz. You can mouse over each bullet point to see a visual aid. Click below when you're ready!</p>
+
+	<u><b>Review:</b></u><ul>
+		<li><span id="list0"><i>Between-Subjects Designs</i> assign each person to one condition.</span></li><br>
+		<li><span id="list1"><i>Within-Subjects Designs</i> assign every person to every condition.</span></li><br>
+		<li><span id="list2">Between-subjects designs examine group means</span></li><br>
+		<li><span id="list3">Within-subjects designs examine difference scores</span></li><br>
+		<li><span id="list4">Within-subjects designs are insensitive to individual differences</span></li><br>
+		<li><span id="list5">Within-subjects designs are more powerful than between-subjects designs</span></li><br>
+		<li><span id="list6">Within-subjects designs can detect very small differences as long as they're consistent</span></li>
+	</ul>
+	
+	<button id="backButton" onclick="goBack()">Back</button><button onclick="MySubmit()">Next</button>
+</div>
+
 <center>
-	<div class="well white" id="listDiv0" style="position:relative; top:-310px;left:230px; display:none; height:200px; width:350px">
+	<div id="logout" style="display:none" class="logout"><a href="/logout">Logout</a></div>
+</center>
+
+<center>
+	<div class="review" id="listDiv0" style="top:-310px;left:230px; display:none; height:200px; width:350px">
 		<br><b>Between-Subjects</b>
-		<img src="/static/images/BetweenSubjects.png" style="height:85%"></img>
+		<img src="/static/images/BetweenSubjects.png" style="height:150px"></img>
 	</div>
 
-	<div class="well white" id="listDiv1" style="position:relative; top:-310px;left:230px; display:none; height:200px; width:350px">
+	<div class="review" id="listDiv1" style="top:-310px;left:230px; display:none; height:200px; width:350px">
 		<br><b>Within-Subjects</b>
-		<img src="/static/images/WithinSubjects.png" style="height:85%"></img>
+		<img src="/static/images/WithinSubjects.png" style="height:150px"></img>
 	</div>
 
-	<div class="well white" id="listDiv2" style="position:relative; top:-310px;left:230px; display:none; height:250px; width:350px">
-		<img src="/static/images/BS2.png" style="height:100%"></img>
+	<div class="review" id="listDiv2" style="top:-310px;left:230px; display:none; height:200px; width:350px">
+		<img src="/static/images/BS2.png" style="height:200px"></img>
 	</div>
 
-	<div class="well white" id="listDiv3" style="position:relative; top:-310px;left:230px; display:none; height:250px; width:350px">
-		<img src="/static/images/WS1.png" style="height:100%"></img>
+	<div class="review" id="listDiv3" style="top:-310px;left:230px; display:none; height:200px; width:350px">
+		<img src="/static/images/WS1.png" style="height:200px"></img>
 	</div>
 
-	<div class="well white" id="listDiv4" style="position:relative; top:-325px;left:230px; display:none; height:250px; width:465px">
-		<img src="/static/images/individualDifferences.png" style="width:100%"></img>
+	<div class="review" id="listDiv4" style="top:-325px;left:230px; display:none; height:200px; width:443px">
+		<img src="/static/images/individualDifferences.png" style="height:200px"></img>
 	</div>
 
-	<div class="well white" id="listDiv5" style="position:relative; top:-335px;left:260px; display:none; height:220px; width:443px">
-		<img src="/static/images/Power.png" style="width:100%"></img>
+	<div class="review" id="listDiv5" style="top:-335px;left:260px; display:none; height:190px; width:443px">
+		<img src="/static/images/Power.png" style="height:180px"></img>
 	</div>
 
-	<div class="well white" id="listDiv6" style="position:relative; top:-325px;left:230px; display:none; height:250px; width:465px">
-		<img src="/static/images/Correl.png" style="width:100%"></img>
+	<div class="review" id="listDiv6" style="top:-325px;left:230px; display:none; height:220px; width:443px">
+		<img src="/static/images/Correl.png" style="height:220px"></img>
 	</div>
 </center>
 
@@ -239,10 +203,10 @@ function recordQuiz4(){
 		alert('Please make a selection!');
 		return
 	}else if(Q4Outcome == 'A'){
-		$('#responseSpan').html('<h4><i>Correct!</i></h4>');
+		$('#responseSpan').html('Right!');
 	}else{
 		$('#responseSpan').html(
-			'<h4><i>Actually, it\'s the one on the left. (Check out those p values!)</i></h4>'
+			'Actually it\'s the one on the left. (Check out those p values!)'
 			);
 	}
 	Q4Complete = true;
@@ -307,7 +271,7 @@ function Render(){
 		}
 
 		$vocabSpan.append(
-			'<hr>Within-subjects designs can detect very small differences as long as they\'re consistent.'
+			'<br><li>Within-subjects designs can detect very small differences as long as they\'re consistent</li>'
 			);
 		// maybe this should be an empty span in the html and I should populate it with items in an array in JS
 
@@ -649,8 +613,8 @@ sigList = sigTally[random];
 corList = correlations[random];
 
 
-$pdiv[0].html(pList[0]+',    <i>r</i> = '+corList[0]);
-$pdiv[1].html(pList[1]+',    <i>r</i> = '+corList[1]);
+$pdiv[0].html(pList[0]+',    r = '+corList[0]);
+$pdiv[1].html(pList[1]+',    r = '+corList[1]);
 
 /// Name variables here
 var	yLabel = "Weight",
@@ -915,8 +879,8 @@ function UpdateData(){
 
 	KeepScore();
 
-	$pdiv[0].html(pList[0]+',    <i>r</i> = '+corList[0]);
-	$pdiv[1].html(pList[1]+',    <i>r</i> = '+corList[1]);
+	$pdiv[0].html(pList[0]+',    r = '+corList[0]);
+	$pdiv[1].html(pList[1]+',    r = '+corList[1]);
 
 
 	var chart1 = d3.select("#graph1").append("svg")

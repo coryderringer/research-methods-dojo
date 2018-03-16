@@ -12,47 +12,78 @@
 	<input id="Submit" onclick="MySubmit()" value="Submit" type="hidden">
 </form>
 
-<h2><center>Within-Subjects Quiz</center></h2>
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+    <!-- Navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-text">Within-Subjects Designs</p> 
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="/StudentCourseMenu"><i class="fa fa-home" aria-hidden="true"></i> Return to menu</a></li>
+					<li><a href="/logout"><i class="fa fa-times" aria-hidden="true"></i> Logout</a></li>
+				</ul>
+			</div>
+        </div>
+    </nav>
 
-<div class="pg">
-	<p><b>Please answer if the following statements are TRUE or FALSE</b></p>
+    <!-- Content -->
+    <div class="container well" style="width:950px">
+    	<h2>Quiz</h2>
+    	<h4>Please answer if the following statements are TRUE or FALSE</h4><br>
+    	
+    	<!-- Q1 -->
+    	<p>You are conducting a study to test a new IQ-boosting drug. To use a within-subjects design, each participant should receive the IQ drug at one time and a placebo at another time.</p>	
 
-	<p>You are conducting a study to test a new IQ-boosting drug. To use a within-subjects design, each participant should receive the IQ drug at one time and a placebo at another time.</p>	
+    	<div class="row">
+    		<div class="form-group col-md-3">
+                <select id="Q1" onchange="answered();" class="form-control form-control-sm">
+                	<option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
+					<option value="1">TRUE</option>
+					<option value="0">FALSE</option>
+				</select>
+            </div>
+        </div>
 
-	<select id="Q1" style="font-size:14px;" onchange="answered();">
-		<option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
-		<option value="1">TRUE</option>
-		<option value="0">FALSE</option>
-	</select><br>
-	
-	<p id="answer1" style="opacity:0; padding-left:20px"><b>Correct Answer: TRUE.</b> Between-subjects designs assign one level of the IV to each participant, whereas within-subjects designs require every participant to receive every level of the IV. In this case, because each participant received both the drug and the placebo, it is a within-subjects design.</p><br>
+        <p id="answer1" style="opacity:0; padding-left:20px"><b>Correct Answer: TRUE.</b><br>Between-subjects designs assign one level of the IV to each participant, whereas within-subjects designs require every participant to receive every level of the IV. In this case, because each participant received both the drug and the placebo, it is a within-subjects design.</p><br>
 
-	<p>After collecting your data, you notice that the IQ drug mean and the placebo mean are very similar. There might still be a significant effect, because you used a within-subjects design.</p>
+        <!-- Q2 -->
+        <p>After collecting your data, you notice that the IQ drug mean and the placebo mean are very similar. There might still be a significant effect, because you used a within-subjects design.</p>
 
-	<select id="Q2" style="font-size:14px;" onchange="answered();">
-		<option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
-		<option value="1">TRUE</option>
-		<option value="0">FALSE</option>
-	</select><br>
-	
-	<p id="answer2" style="opacity:0; padding-left:20px"><b>Correct Answer: TRUE.</b> Within-subjects designs examine the magnitude and consistency of difference scores for each individual subject. As we saw earlier, it's possible to have fairly small differences in group means, but still have significant p values, if there is very high consistency in the difference scores.</p><br>
+        <div class="row">
+    		<div class="form-group col-md-3">
+                <select id="Q2" onchange="answered();" class="form-control form-control-sm">
+                	<option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
+					<option value="1">TRUE</option>
+					<option value="0">FALSE</option>
+				</select>
+            </div>
+        </div>
 
-	<p>You also notice that there are pretty large individual differences in the IQ scores of your participants. You should be worried that your result will be affected.</p>
+        <p id="answer2" style="opacity:0; padding-left:20px"><b>Correct Answer: TRUE.</b><br>Within-subjects designs examine the magnitude and consistency of difference scores for each individual subject. As we saw earlier, it's possible to have fairly small differences in group means, but still have significant p values, if there is very high consistency in the difference scores.</p><br>
 
-	<select id="Q3" style="font-size:14px;" onchange="answered();">
-		<option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
-		<option value="1">TRUE</option>
-		<option value="0">FALSE</option>
-	</select><br>
-	
-	<p id="answer3" style="opacity:0; padding-left:20px"><b>Correct Answer: FALSE.</b> You should be cool as a cucumber, because within-subjects designs are insensitive to individual differences!</p><br>
-	
-	<button id="nextButton" disabled="true"><span>Check Answers</span></button>
+        <!-- Q3 -->
+        <p>You also notice that there are pretty large individual differences in the IQ scores of your participants. You should be worried that your result will be affected.</p>
 
-</div>
-<center>
-	<div class="logout"><a href="/logout">Logout</a></div>
-</center>
+        <div class="row">
+    		<div class="form-group col-md-3">
+                <select id="Q3" onchange="answered();" class="form-control form-control-sm">
+                	<option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
+					<option value="1">TRUE</option>
+					<option value="0">FALSE</option>
+				</select>
+            </div>
+        </div>
+
+        <p id="answer3" style="opacity:0; padding-left:20px"><b>Correct Answer: FALSE.</b><br>You should be cool as a cucumber, because within-subjects designs are insensitive to individual differences!</p><br>
+
+        <!-- Button -->
+        <button class="btn btn-info" id="nextButton" disabled="true"><span>Check answers</span></button>
+
+    </div>
+
+</body>
 
 <script>
 
@@ -85,7 +116,7 @@ function showAnswers(){
 	$('#Q3').attr('disabled', true);
 
 	$('#nextButton').unbind().on('click', MySubmit)
-		.find('span').html('Finish');
+		.attr('class', 'btn btn-primary').find('span').html('Finish');
 }
 
 function MySubmit(){
