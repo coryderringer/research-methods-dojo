@@ -783,9 +783,12 @@ class CarryoverEffectsHandler(webapp.RequestHandler):
 			# change the datastore result for this module
 			course.COEAnswer1 = self.session['COEAnswer1']
 			course.COEAnswer2 = self.session['COEAnswer2']
-			course.COEAnswer3 = self.session['COEAnswer3']
-			course.COEAnswer4 = self.session['COEAnswer4']
-			course.COEAnswer5 = self.session['COEAnswer5']
+			# course.COEAnswer3 = self.session['COEAnswer3']
+			# course.COEAnswer4 = self.session['COEAnswer4']
+			# course.COEAnswer5 = self.session['COEAnswer5']
+			course.COEAnswer3 = COEAnswer3
+			course.COEAnswer4 = COEAnswer4
+			course.COEAnswer5 = COEAnswer5
 			course.Module1 = self.session['Module1']
 			course.put()
 			# end new db code
@@ -845,7 +848,7 @@ class PracticeFatigueEffectsHandler(webapp.RequestHandler):
 		# elif M1_Progress == 5:
 			self.session['PFEAnswer3'] = int(self.request.get('Question1'))
 			# PFEAnswer4 = int(self.request.get('Question2'))
-			self.session['PFEAnswer5'] = int(self.request.get('Question3'))
+			self.session['PFEAnswer4'] = int(self.request.get('Question3'))
 
 			# Record that user completed the module
 			self.session['Module3'] = 'Complete'
@@ -881,7 +884,7 @@ class PracticeFatigueEffectsHandler(webapp.RequestHandler):
 			course.PFEAnswer2 = self.session['PFEAnswer2']
 			course.PFEAnswer3 = self.session['PFEAnswer3']
 			# course.PFEAnswer4 = self.session['PFEAnswer4']
-			course.PFEAnswer5 = self.session['PFEAnswer5']
+			course.PFEAnswer4 = self.session['PFEAnswer4']
 			course.Module3 = self.session['Module3']
 			course.put()
 			# end new db code
