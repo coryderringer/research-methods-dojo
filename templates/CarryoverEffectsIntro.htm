@@ -5,52 +5,73 @@
 
 
 {% block bodycontent %}
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+    <!-- Navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-text">Carryover Effects</p> 
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="/StudentCourseMenu"><i class="fa fa-home" aria-hidden="true"></i> Return to menu</a></li>
+					<li><a href="/logout"><i class="fa fa-times" aria-hidden="true"></i> Logout</a></li>
+				</ul>
+			</div>
+        </div>
+    </nav>
 
-<div class="logout"><a href="/logout.htm">Logout</a></div>
+    <!-- Body -->
+    <div class="container well" style="width:950px">
+    	<h2>Carryover effects</h2><br>
 
-<div class="pg">
-<h2><center>Carryover effects</center></h2>
+    	<!-- Text -->
+    	<div id="test">
+    		<p><i>There are several threats to internal validity we need to watch out for when using within-subject designs – the same subjects experience multiple conditions and get measured for the DV each time. Order effects are when exposure to one condition changes participants’ responses to a later condition. We will look at one specific type of order effect here – <u>carryover effects</u>.</i></p>
 
-<div id="test" align="justify">
+			<p>Imagine you are interested in studying the effects of an intense exercise regimen on one’s cognitive ability in a spatial reasoning task. According to our theory, increased arousal should improve one’s spatial reasoning ability, resulting in increased accuracy in the task.</p>
 
-	<p><i>There are several threats to internal validity we need to watch out for when using within-subject designs – the same subjects experience multiple conditions and get measured for the DV each time. Order effects are when exposure to one condition changes participants’ responses to a later condition. We will look at one specific type of order effect here - <u>carryover effects</u>.</i></p>
+			<p>To test this, you recruit a group of participants and make them go through the experimental condition – an intense exercise regimen for 15 minutes. You then administer the spatial reasoning task. For comparison, you then ask them to complete a control task – reading a short story while sitting down – before completing the spatial reasoning task again. This task shouldn’t lead to much arousal and therefore shouldn’t lead to improvements in people’s spatial reasoning ability.</p>
 
-	<p>Imagine you are interested in studying the effects of an intense exercise regimen on one’s cognitive ability in a spatial reasoning task. According to our theory, increased arousal should improve one’s spatial reasoning ability, resulting in increased accuracy in the task.</p>
+			<p>You hypothesize that participants’ accuracy in the spatial reasoning task will be higher in the intense exercise regimen condition than in the control condition.</p>
 
-	<p>To test this, you recruit a group of participants and make them go through the experimental condition – an intense exercise regimen for 15 minutes. You then administer the spatial reasoning task. For comparison, you then ask them to complete a control task – reading a short story while sitting down – before completing the spatial reasoning task again. This task shouldn’t lead to much arousal and therefore shouldn’t lead to improvements in people’s spatial reasoning ability.</p>
+			<button id="continue" onclick="showQuiz()" class="btn btn-default">Continue</button>
+    	</div>
 
-	<p>You hypothesize that participants’ accuracy in the spatial reasoning task will be higher in the intense exercise regimen condition than in the control condition.</p>
+    	<!-- Quiz -->
+    	<div id="quiz" style="display:none">
 
-	<center><button id="continue" onclick="showQuiz()">Continue</button></center>
+			<p>What design does this study use?</p>
 
-</div>
+			<form id="Quiz1">
+				<div class="form-check">
+          			<input class="form-check-input" type="radio" name="q1" id="q1a" value="A">
+        			<label class="form-check-label radio-inline" for="q1a"><span id="optionA">Between-subjects posttest only design</span></label>
+        		</div>
+       			<div class="form-check">
+          			<input class="form-check-input" type="radio" name="q1" id="q1b" value="B">
+          			<label class="form-check-label radio-inline" for="q1b"><span id="optionB">Between-subjects pretest-posttest design</span></label>
+       			</div>
+       			<div class="form-check">
+          			<input class="form-check-input" type="radio" name="q1" id="q1c" value="C">
+          			<label class="form-check-label radio-inline" for="q1c">Within-subjects design</label>
+       			</div>
+			</form><br>
 
-<div id="quiz" style="display:none">
+			<button class="btn btn-info" id="answer" onclick="answerQuiz1()">Check answer</button>
 
-	<p><b>What design does this study use?</b></p>
+			<div id="A1" style="display:none"></div><br>
 
-	<form id="Quiz1" style="position:relative;left:20px">
-		<input type="radio" value="A" name="q1" id="q1a"><label for="q1a"><span id="optionA">&nbspBetween-subjects posttest only design</span></label><br>
-		<input type="radio" value="B" name="q1" id="q1b"><label for="q1b"><span id="optionB">&nbspBetween-subjects pretest-posttest design</span></label><br>
-		<input type="radio" value="C" name="q1" id="q1c"><label for="q1c">&nbspWithin-subjects design</label><br>
-	</form><br>
+			<form id="myForm" method="post" action="/CarryoverEffects">
+				<input type="submit" class="btn btn-primary" id="submit" onclick="MySubmit()" value="Continue" style="display:none"/>
+				<input type="hidden" id="Q1" name="Q1" value="">
+				<input type="hidden" id="progressinput" name="progressinput" value="">
+			</form>
+		</div>
 
-	<center><button id="answer" onclick="answerQuiz1()">Check answer</button></center>
+	</div>
 
-		<div id="A1" style="display:none"></div>
-
-</div>
-
-<center>
-	<form id="myForm" method="post" action="/CarryoverEffects">
-		<input type="submit" id="submit" onclick="MySubmit()" value="Continue" style="display:none"/>
-		<input type="hidden" id="Q1" name="Q1" value="">
-		<input type="hidden" id="progressinput" name="progressinput" value="">
-	</form>
-</center>
-
-</div>
-
+</body>
 
 <script type="text/javascript">
 
@@ -72,10 +93,10 @@ function answerQuiz1() {
 	$('#submit').show();
 
 	if (Q1Outcome=='C') { 
-		$('#A1').html('<b>Correct!</b><br>This study uses a within-subjects design because the same group experiences both conditions – the exercise regimen and the control task – and gets measured on the dependent variable (spatial reasoning ability) after completing each condition.');
+		$('#A1').html('<i><h4>Correct!</h4></i><p>This study uses a within-subjects design because the same group experiences both conditions – the exercise regimen and the control task – and gets measured on the dependent variable (spatial reasoning ability) after completing each condition.</p>');
 	}
 	else {
-		$('#A1').html('<b>Sorry, that is incorrect!</b><br>This study uses a within-subjects design because the same group experiences both conditions – the exercise regimen and the control task – and gets measured on the dependent variable (spatial reasoning ability) after completing each condition.');
+		$('#A1').html('<h4><i>Sorry, that is incorrect!</i></h4><p>This study uses a within-subjects design because the same group experiences both conditions – the exercise regimen and the control task – and gets measured on the dependent variable (spatial reasoning ability) after completing each condition.</p>');
 	}
 }
 
