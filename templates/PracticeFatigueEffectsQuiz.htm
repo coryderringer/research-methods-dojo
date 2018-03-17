@@ -14,152 +14,157 @@ var end = 0;
 
 // Function to check if all questions have been answered
 function answered() {
-  responses = new Array();
-  responses.push(Number(Q1.value))
-  // responses.push(Number(Q2.value))
-  responses.push(Number(Q3.value))
+	responses = new Array();
+	responses.push(Number(Q1.value))
+	// responses.push(Number(Q2.value))
+	responses.push(Number(Q3.value))
 
-  if (Math.min.apply(Math, responses)>(-1)) {
-    $('#answer').attr('disabled', false)
-  }
+	if (Math.min.apply(Math, responses)>(-1)) {
+		$('#answer').attr('disabled', false)
+	}
 }
 
 // Function to show answers
 function MySubmit(end) {
-  if (end==0){
-    $('#answer1').fadeTo('fast', 1);
-    // $('#answer2').fadeTo('fast', 1);
-    $('#answer3').fadeTo('fast', 1);
+	if (end==0){
+		$('#answer1').fadeTo('fast', 1);
+		// $('#answer2').fadeTo('fast', 1);
+		$('#answer3').fadeTo('fast', 1);
 
-    $('#Q1').attr('disabled', true);
-    // $('#Q2').attr('disabled', true);
-    $('#Q3').attr('disabled', true);
+		$('#Q1').attr('disabled', true);
+		// $('#Q2').attr('disabled', true);
+		$('#Q3').attr('disabled', true);
 
-    $('#buttontext').text("Continue");
-  }
-  else if (end==1){
-    progress += 1;
-    $('#progressinput').val(progress);
-    document.getElementById("Question1").value = document.getElementById("Q1").value;
-    // document.getElementById("Question2").value = document.getElementById("Q2").value;
-    document.getElementById("Question3").value = document.getElementById("Q3").value;
-    document.getElementById("myForm").submit();
-  }
+		$('#answer').unbind().on('click', MySubmit)
+			.attr('class', 'btn btn-primary').find('span').html('Continue');
+		// $('#buttontext').text("Continue");
+	}
+	else if (end==1){
+		progress += 1;
+		$('#progressinput').val(progress);
+		document.getElementById("Question1").value = document.getElementById("Q1").value;
+		// document.getElementById("Question2").value = document.getElementById("Q2").value;
+		document.getElementById("Question3").value = document.getElementById("Q3").value;
+		document.getElementById("myForm").submit();
+	}
 }
 
 </script>
 
 
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+	<!-- Navbar -->
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<p class="navbar-text">Practice and Fatigue Effects</p> 
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="/StudentCourseMenu"><i class="fa fa-home" aria-hidden="true"></i> Return to menu</a></li>
+					<li><a href="/logout"><i class="fa fa-times" aria-hidden="true"></i> Logout</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Body -->
+	<div class="container well" style="width:950px">
+		<h2>Quiz</h2>
+    	<h4>Please answer if the following statements are TRUE or FALSE</h4><br>
+
+    	<!-- Q1 -->
+    	<p>Practice effects and fatigue effects are a type of carryover effect.</p>
+    	<div class="row">
+    		<div class="form-group col-md-3">
+                <select id="Q1" onchange="answered();" class="form-control form-control-sm">
+                	<option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
+					<option value="1">TRUE</option>
+					<option value="0">FALSE</option>
+				</select>
+            </div>
+        </div>
+        <p id="answer1" style="opacity:0; padding-left:20px"><b>Correct answer: FALSE.</b><br>Practice and fatigue effects are when participants change over the course of the experiment due to increasing time - this either results in them getting better over time at the tasks involved in the experiment due to practice, or them getting worse over time at the tasks due to fatigue. Carryover effects occur when a particular condition changes characteristics of the participants, making them respond differently to subsequent conditions in the experiment. Practice and fatigue effects are not determined by the specific conditions - they occur because the participants experience repeated conditions and are tested multiple times.</p><br>
+
+        <!-- Q2 -->
+        <!-- <p>As long as you let enough time elapse between all the conditions in your study (e.g. a whole day), carryover effects will not be a problem.</p>
+        <div class="row">
+    		<div class="form-group col-md-3">
+                <select id="Q2" onchange="answered();" class="form-control form-control-sm">
+                	<option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
+					<option value="1">TRUE</option>
+					<option value="0">FALSE</option>
+				</select>
+            </div>
+        </div>
+        <p id="answer2" style="opacity:0; padding-left:20px"><b>Correct answer: FALSE.</b><br>It is often impossible to know and measure every important characteristic in participants, and we usually do not know how long it takes for then return to their baseline states. In addition, some characteristics may never return to baseline. For example, if one of your testing conditions requires subjects to have no prior knowledge of a particular stimulus, then exposing them to that stimulus on an earlier condition will forever contaminate them and lead to a carryover effect.</p><br> -->
+
+        <!-- Q3 -->
+        <p>We can always tell when practice and fatigue effects are present from the results of our experiment.</p>
+        <div class="row">
+    		<div class="form-group col-md-3">
+                <select id="Q3" onchange="answered();" class="form-control form-control-sm">
+                	<option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
+					<option value="1">TRUE</option>
+					<option value="0">FALSE</option>
+				</select>
+            </div>
+        </div>
+        <p id="answer3" style="opacity:0; padding-left:20px"><b>Correct answer: FALSE.</b><br>While unexpected results can give us some clues about the possible problems with our experimental procedures, we usually cannot conclude from the results alone that there were practice or fatigue effects. In our demonstrations, we used <font color='red'>red</font> and <font color='grey'>gray</font> lines to represent important participant characteristics that were prone to these effects. However, it is unlikely we have independent measures of such characteristics in a real experiment. Usually, a mixture of past research and common sense will tell you if such effects are likely explanations for unexpected results. Finally, it is also entirely possible that your unexpected results are accurate, and that your theory made inaccurate predictions to begin with.</p><br>
+
+        <!-- Button -->
+        <button class="btn btn-info" type="button" id="answer" onclick="MySubmit(end); end++" disabled="true"><span id="buttontext">Check answers</span></button>
+
+        <!-- Form -->
+        <form id="myForm" method="post" action="/PracticeFatigueEffects">
+			<input type="hidden" id="Question1" name="Question1" value="">
+			<!-- <input type="hidden" id="Question2" name="Question2" value=""> -->
+			<input type="hidden" id="Question3" name="Question3" value="">
+			<input type="hidden" id="progressinput" name="progressinput" value="">
+		</form>
+
+	</div>
+</body>
+
+
+
 
 
 <!-- <form id="dataform" method="post" action="/OrderEffects">
-  <input id="AnswerInput" name="AnswerInput" type="hidden">
-  <input id="progressinput" name="progressinput" type="hidden">
-  <input id="Submit" onclick="MySubmit()" value="Submit" type="hidden">
+	<input id="AnswerInput" name="AnswerInput" type="hidden">
+	<input id="progressinput" name="progressinput" type="hidden">
+	<input id="Submit" onclick="MySubmit()" value="Submit" type="hidden">
 </form>
 -->
 
-<div class="logout"><a href="/logout.htm">Logout</a></div>
+	<!-- <ol type="1"><li>This is the text from Question 1</li></ol>
 
-<div class="pg">
+	<form id="Q1Answers">
+		<div class="answer">
+			<input type="radio" name="q1" value="A" id="q1a"><label for="q1a">True</label>&nbsp&nbsp&nbsp&nbsp&nbsp
+			<input type="radio" name="q1" value="B" id="q1b"><label for="q1b">False</label>
+		</div>
+	</form><br>
 
-  <h2><center>Practice and fatigue effects quiz</center></h2>
+	<p>2. <span id="Question2">This is the text from Question 2</span></p>
 
-  <form id="myForm" method="post" action="/PracticeFatigueEffects">
+	<form id="Q2Answers">
+		<div class="answer">
+			<input type="radio" name="q2" value="A" id="q2a"><label for="q2a">True</label>&nbsp&nbsp&nbsp&nbsp&nbsp
+			<input type="radio" name="q2" value="B" id="q2b"><label for="q2b">False</label>
+		</div>
+	</form><br>
 
-    <br>
-    <b>Please answer if the following statements are TRUE or FALSE.</b>
+	<p>3. <span id="Question3">This is the text from Question 3</span></p>
 
-    <!-- <p>Testing effects and practice effects are equivalent.</p>
-      &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-      <select id="Q1" style="font-size:14px;" onchange="answered();">
-        <option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
-        <option value="1">TRUE</option>
-        <option value="0">FALSE</option>
-      </select><br><br>
+	<form id="Q3Answers">
+		<div class="answer">
+			<input type="radio" name="q3" value="A" id="q3a"><label for="q3a">True</label>&nbsp&nbsp&nbsp&nbsp&nbsp
+			<input type="radio" name="q3" value="B" id="q3b"><label for="q3b">False</label>
+		</div>
+	</form><br>
 
-    <div id="answer1" style="display:show; height:110px; opacity:0; padding-left:20px" align="justify">
-      <b>Correct answer: FALSE. </b>A testing effect is a specific<i>type</i> of practice effect. Practice effects occur when increasing time and experience in an experiment lead people to do better on later tasks. If this experience or practice they gain can be attributed to their exposure to the test being used as a measure, then it can be called a testing effect.
-    </div> -->
-
-    <p>Practice effects and fatigue effects are a type of carryover effect.</p>
-      &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-      <select id="Q1" name = "Q1" style="font-size:14px;" onchange="answered();">
-        <option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
-        <option value="1">TRUE</option>
-        <option value="0">FALSE</option>
-      </select><br><br>
-
-    <div id="answer1" style="display:show; height:110px; opacity:0; padding-left:20px" align="justify">
-      <b>Correct answer: FALSE. </b>Practice and fatigue effects are when participants change over the course of the experiment due to increasing time - this either results in them getting better over time at the tasks involved in the experiment due to practice, or them getting worse over time at the tasks due to fatigue. Carryover effects occur when a particular condition changes characteristics of the participants, making them respond differently to subsequent conditions in the experiment. Practice and fatigue effects are not determined by the specific conditions - they occur because the participants experience repeated conditions and are tested multiple times.
-    </div>
-
-    <!-- <p>Fatigue effects can also occur in experiments using between-subjects designs.</p>
-      &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-      <select id="Q2" style="font-size:14px;" onchange="answered();">
-        <option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
-        <option value="1">TRUE</option>
-        <option value="0">FALSE</option>
-      </select><br><br>
-
-    <div id="answer2" style="display:show; height:110px; opacity:0; padding-left:20px" align="justify">
-      <b>Correct answer: TRUE. </b>Fatigue effects occur when increasing time spent in an experiment decreases a participant's performance due to them becoming fatigued (having their resources depleted). This is <i>likelier</i> to occur in within-subject designs because participants have to experience more conditions, but is also possible in a between-subjects design. If participants have to experience a condition involving long/tiring/mundane procedures, they are likely to become fatigued by the end of the experiment, which could affect their scores on the dependent variable measure.
-    </div> -->
-
-    <p>We can always tell when practice and fatigue effects are present from the results of our experiment.</p>
-      &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-      <select id="Q3" name = "Q3" style="font-size:14px;" onchange="answered();">
-        <option selected="selected" disabled="true" value="-1">Select TRUE or FALSE</option>
-        <option value="1">TRUE</option>
-        <option value="0">FALSE</option>
-      </select><br><br>
-
-    <div id="answer3" style="display:show; height:100px; opacity:0; padding-left:20px" align="justify">
-      <b>Correct answer: FALSE. </b>While unexpected results can give us some clues about the possible problems with our experimental procedures, we usually cannot conclude from the results alone that there were practice or fatigue effects. In our demonstrations, we used <font color='red'>red</font> and <font color='grey'>gray</font> lines to represent important participant characteristics that were prone to these effects. However, it is unlikely we have independent measures of such characteristics in a real experiment. Usually, a mixture of past research and common sense will tell you if such effects are likely explanations for unexpected results. Finally, it is also entirely possible that your unexpected results are accurate, and that your theory made inaccurate predictions to begin with.
-    </div>
-
-    <br><br><br><br>
-
-    <center>
-      <button type="button" id="answer" onclick="MySubmit(end); end++" disabled="true"><span id="buttontext">Check answers</span></button>
-    </center>
-
-    <input type="hidden" id="Question1" name="Question1" value="">
-    <!-- <input type="hidden" id="Question2" name="Question2" value=""> -->
-    <input type="hidden" id="Question3" name="Question3" value="">
-    <input type="hidden" id="progressinput" name="progressinput" value="">
-
-  </form>
-
-</div>
-  <!-- <ol type="1"><li>This is the text from Question 1</li></ol>
-
-  <form id="Q1Answers">
-    <div class="answer">
-      <input type="radio" name="q1" value="A" id="q1a"><label for="q1a">True</label>&nbsp&nbsp&nbsp&nbsp&nbsp
-      <input type="radio" name="q1" value="B" id="q1b"><label for="q1b">False</label>
-    </div>
-  </form><br>
-
-  <p>2. <span id="Question2">This is the text from Question 2</span></p>
-
-  <form id="Q2Answers">
-    <div class="answer">
-      <input type="radio" name="q2" value="A" id="q2a"><label for="q2a">True</label>&nbsp&nbsp&nbsp&nbsp&nbsp
-      <input type="radio" name="q2" value="B" id="q2b"><label for="q2b">False</label>
-    </div>
-  </form><br>
-
-  <p>3. <span id="Question3">This is the text from Question 3</span></p>
-
-  <form id="Q3Answers">
-    <div class="answer">
-      <input type="radio" name="q3" value="A" id="q3a"><label for="q3a">True</label>&nbsp&nbsp&nbsp&nbsp&nbsp
-      <input type="radio" name="q3" value="B" id="q3b"><label for="q3b">False</label>
-    </div>
-  </form><br>
-
-  <button id="SubmitButton" style="width:100px" onclick="MySubmit()">Submit</button>
+	<button id="SubmitButton" style="width:100px" onclick="MySubmit()">Submit</button>
 </div> -->
 
 

@@ -1,26 +1,36 @@
 {% extends "_base.htm" %}
 {% block title %}
-	Practice and fatigue effects
+	Practice and Fatigue Effects
 {% endblock%}
 
 
 {% block bodycontent %}
-<div class="logout"><a href="/logout.htm">Logout</a></div>
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+    <!-- Navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-text">Practice and Fatigue Effects</p> 
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+			</div>
+        </div>
+    </nav>
 
-<h2><center>Practice and fatigue effects</center></h2>
+    <!-- Body -->
+    <div class = "container well">
+    	<h2>Practice and Fatigue Effects</h2>
+    	<p>Congratulations, you have finished the tutorial!</p>
+    	<p>Please click on the button below to save your progress and return to the main menu.</p>
 
-<br>
+    	<form method="get" action="/StudentCourseMenu">
+			<!--  hidden inputs -->
+			<input id="path" name="path" type="hidden" value="finish">
+			<button class="btn btn-primary">Return to Menu</button>
+		</form>
 
-<div class="pg">
-	<p>Congratulations! You have finished the tutorial!</p>
-
-
-	<form method="get" action="/StudentCourseMenu">
-		<input id="path" name="path" type="hidden" value="finish">
-		<button>Return to Menu</button>
-	</form>
-
-</div>
+    </div>
+</body>
 
 
 {% endblock %}

@@ -6,7 +6,34 @@
 
 {% block bodycontent %}
 
-<h2><center>Carryover Effects</center></h2>
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+    <!-- Navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-text">Carryover Effects</p> 
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+			</div>
+        </div>
+    </nav>
+
+    <!-- Body -->
+    <div class = "container well">
+    	<h2>Carryover Effects</h2>
+    	<p>Congratulations, you have finished the tutorial!</p>
+    	<p>Please click on the button below to save your progress and return to the main menu.</p>
+
+    	<form method="get" action="/StudentCourseMenu">
+			<!--  hidden inputs -->
+			<input id="path" name="path" type="hidden" value="finish">
+			<button class="btn btn-primary">Return to Menu</button>
+		</form>
+
+    </div>
+</body>
+
+<!-- <h2><center>Carryover Effects</center></h2>
 
 <div class="logout"><a href="/logout.htm">Logout</a></div>
 
@@ -19,7 +46,7 @@
 		<button>Return to Menu</button>
 	</form>
 
-</div>
+</div> -->
 
 
 {% endblock %}
