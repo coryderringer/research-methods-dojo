@@ -198,7 +198,7 @@ class LoginHandler(webapp.RequestHandler):
 
 		try:
 			self.session['usernum']
-		except NameError:
+		except:
 			# if not logged in, render login
 			doRender(self, 'login.htm')
 			return
