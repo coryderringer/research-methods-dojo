@@ -174,7 +174,7 @@ def killSession(self):
 	# kill all the session stuff (username, password, etc)
 	sessionlist = ['Logged_In', 'email', 'firstName', 'usernum', 'username',
 	'Module1', 'Module2', 'Module3', 'Logged_In', 'M1_Progress', 'M2_Progress',
-	'M3_Progress']
+	'M3_Progress', 'activeCourse']
 
 	for i in sessionlist:
 		if i in self.session:
