@@ -417,7 +417,8 @@ class StudentCourseMenuHandler(webapp.RequestHandler):
 			# currently getting the wrong course number, trying this instead.
 			# SOLUTION ASSUMES THE STUDENT ONLY HAS ONE COURSE BY THIS NAME, won't work otherwise
 			active = db.Query(StudentCourse).filter(
-				'courseName =', courseName).filter('usernum =', self.session['usernum']).get()
+				'courseName =', courseName).filter(
+				'usernum =', self.session['usernum']).get()
 
 			courseNumber = active.courseNumber
 			logging.info('trying to get this course number: '+str(courseNumber))
@@ -671,7 +672,38 @@ class EnrollCourseHandler(webapp.RequestHandler):
 				newSC = StudentCourse(
 					usernum = self.session['usernum'],
 					courseNumber = thisCourseNumber,
-					courseName = thisCourseName)
+					courseName = thisCourseName,
+
+					term = term,
+					year = int(year),
+					firstName = self.session['firstName'],
+					lastName = self.session['lastName'],
+
+					# student/course combination, created when a student adds a course
+					# student linked
+
+					# module properties...
+					Module1 =			'Incomplete',
+					Module2 = 			'Incomplete',
+					Module3 = 			'Incomplete',
+					WSAnswer1 = 		'',
+					WSAnswer2 = 		'',
+					WSAnswer3 = 		'',
+					COEAnswer1 =		'',
+					COEAnswer2 =		'',
+					COEAnswer3 =		0,
+					COEAnswer4 =		0,
+					COEAnswer5 =		0,
+					PFEAnswer1 =		'',
+					PFEAnswer2 =		'',
+					PFEAnswer3 =		0,
+					PFEAnswer4 =		0,
+					# PFEAnswer5 =		0,
+
+					numberOfGuesses = 	0,
+					numberOfSimulations = 0,
+					numberOfSimulations2 = 0,
+					QuizResults = 		[])
 
 				newSC.put()
 
