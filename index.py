@@ -891,31 +891,28 @@ class PracticeFatigueEffectsHandler(webapp.RequestHandler):
 		logging.info("checkpoint 1")
 		self.session = get_current_session()
 
-		M1_Progress = int(self.request.get('progressinput'))
-		self.session['M3_Progress'] = M1_Progress
-		logging.info("Progress: "+str(M1_Progress))
+		M3_Progress = int(self.request.get('progressinput'))
+		self.session['M3_Progress'] = M3_Progress
+		logging.info("Progress: "+str(M3_Progress))
 
-		if M1_Progress == 1:
+		if M3_Progress == 1:
 			self.session['PFEAnswer1'] = self.request.get('Q1')
 
 			doRender(self, "PracticeFatigueEffects1.htm",
 				{'progress':self.session['M3_Progress']})
 
-		elif M1_Progress == 2:
+		elif M3_Progress == 2:
 			self.session['PFEAnswer2'] = self.request.get('Q2')
 
 			doRender(self, "PracticeFatigueEffects2.htm",
 				{'progress':self.session['M3_Progress']})
 
-		elif M1_Progress == 3:
+		elif M3_Progress == 3:
 			doRender(self, "PracticeFatigueEffectsQuiz.htm",
 				{'progress':self.session['M3_Progress']})
 
-		elif M1_Progress == 4:
-		# 	doRender(self, "CarryoverEffectsQuiz.htm",
-		# 		{'progress':self.session['M1_Progress']})
+		elif M3_Progress == 4:
 
-		# elif M1_Progress == 5:
 			self.session['PFEAnswer3'] = int(self.request.get('Question1'))
 			# PFEAnswer4 = int(self.request.get('Question2'))
 			self.session['PFEAnswer4'] = int(self.request.get('Question3'))
