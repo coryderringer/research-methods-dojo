@@ -413,15 +413,16 @@ class StudentCourseMenuHandler(webapp.RequestHandler):
 			# query the user db for the course number
 			# we might need a way to remove courses. Maybe not for this version,
 			# but def in the future.
-			courseNumber = db.Query(StudentCourse).filter(
-				'courseName =', courseName).get().courseNumber
+
+			# currently getting the wrong course number, trying this instead.
+			# SOLUTION ASSUMES THE STUDENT ONLY HAS ONE COURSE BY THIS NAME, won't work otherwise
+			active = db.Query(StudentCourse).filter(
+				'courseName =', courseName).filter('usernum =', self.session['usernum']).get()
+
+			courseNumber = active.courseNumber
+			logging.info('trying to get this course number: '+str(courseNumber))
 
 			self.session['activeCourse'] = courseNumber
-
-			# query the StudentCourse db for student's progress
-			active = db.Query(StudentCourse).filter(
-				'usernum =', self.session['usernum']).filter(
-				'courseNumber =', courseNumber).get()
 
 			# update the session with relevant variables for StudentCourse
 
