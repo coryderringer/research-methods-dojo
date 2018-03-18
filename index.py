@@ -196,8 +196,116 @@ class LoginHandler(webapp.RequestHandler):
 	def get(self):
 		self.session = get_current_session()
 
-		doRender(self, 'login.htm')
+		try:
+			self.session['usernum']
+		except NameError:
+			# if not logged in, render login
+			doRender(self, 'login.htm')
+			return
 
+		# if you're here, they're already logged in
+		# want to render the instructor menu (if instructor) or student menu (if student)
+		# query for students:
+		s = db.Query(Student).filter('usernum =', self.session['usernum']).fetch(limit = 1)
+		i = db.Query(Instructor).filter('usernum =', self.session['usernum']).fetch(limit = 1)
+		if len(s) == 0: # not a student
+			if len(i) > 0: # they're an instructor
+				# email/password combo is correct if we made it this far
+				# store these variables in the session, log user in
+				for j in i: # even though there's only 1
+					self.session['usernum']    		= j.usernum
+					self.session['firstName']		= j.firstName
+					self.session['lastName']		= j.lastName
+					self.session['email']			= j.email
+					self.session['courseNumbers']	= j.courseNumbers
+					self.session['courseNames']		= j.courseNames
+					self.session['Logged_In']		= True
+
+
+				# for each course number, run a query, get the term
+
+				terms = []
+				years = []
+				for i in self.session['courseNumbers']:
+					q = db.Query(Course).filter('courseNumber =', i)
+					r = q.get()
+
+					terms.append(r.term)
+					years.append(r.year)
+
+				# this is the ugliest solution, but it works
+				a = ''
+				for i in self.session['courseNames']:
+					a+=i+','
+
+				t = ''
+				for i in terms:
+					t+=i+','
+
+				y = ''
+				for i in years:
+					y+=i+','
+
+				doRender(self, 'courseMenuInstructor.htm',
+					{'firstName':self.session['firstName'],
+					'courseNames': a,
+					'terms':t,
+					'years':y})
+			else:
+				# not a student, not an instructor
+				self.session['Logged_In'] = False
+
+				# kill all the session stuff (username, password, etc)
+				killSession(self)
+
+				# Send them back to the login page
+				doRender(self, 'login.htm')
+		else: # they're a student
+
+			# 3. Store session variables
+			for j in s: # even though there's only 1
+				self.session['usernum']    		= j.usernum
+				self.session['firstName']		= j.firstName
+				self.session['lastName']		= j.lastName
+				self.session['email']			= j.email
+				self.session['courseNumbers']	= j.courseNumbers
+				self.session['courseNames']		= j.courseNames
+				self.session['Logged_In']		= True
+
+
+			# 4. get instructor last names for courses
+			instructors = []
+			for i in self.session['courseNumbers']:
+				instructors.append(db.Query(Course).filter('courseNumber =', i)
+				.get().instructor)
+
+			instructors = map(str, instructors)
+			logging.info('Instructors: '+str(instructors))
+
+			instructorLastNames = []
+			for i in instructors:
+				instructorLastNames.append(i.split(',')[0])
+
+			instructorLastNames = map(str, instructorLastNames)
+			self.session['courseNames'] = map(str, self.session['courseNames'])
+
+			logging.info('Instructor last names: '+str(instructorLastNames))
+
+			# convert arrays into strings for easier Django
+			a = ''
+			for i in self.session['courseNames']:
+				a+=i+','
+
+			t = ''
+			for i in instructorLastNames:
+				t+=i+','
+
+			# 5. render courseMenuStudent.htm with those courses
+
+			doRender(self, 'courseMenuStudent.htm',
+				{'firstName':self.session['firstName'],
+				'courseNames': a,
+				'instructorNames':t})
 
 class LogoutHandler(webapp.RequestHandler):
 
@@ -1486,6 +1594,7 @@ class CreateCourseHandler(webapp.RequestHandler):
 
 
 			# 1. Get list of existing courses (names, terms, and numbers)
+			logging.info('EMAIL: '+self.session['email'])
 			self.session['courseNumbers'] = db.Query(Instructor).filter(
 				'email =', self.session['email']).get().courseNumbers
 
@@ -1619,13 +1728,10 @@ class CourseDataHandler(webapp.RequestHandler):
 		logging.info('Course Name: '+courseName)
 
 		q = db.Query(Course).filter('instructorEmail =', self.session['email'])
-		q.filter('courseName =', courseName).filter(
-			'year =', year).filter('term =', term)
+		result = q.filter('courseName =', courseName).filter(
+			'year =', year).filter('term =', term).get()
 
-		results = q.fetch(limit=1)
-
-		for i in results:
-			courseNumber = i.courseNumber
+		courseNumber = result.courseNumber
 
 		# Each time a student registers for a class, new StudentCourse instance.
 		# Modify it as they complete the course.
