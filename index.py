@@ -516,54 +516,59 @@ class StudentCourseMenuHandler(webapp.RequestHandler):
 			formInput = self.request.get('courseSelect').split(' -- ')
 
 			courseName = formInput[0]
-			instructorLastName = formInput[1]
 
-			# query the user db for the course number
-			# we might need a way to remove courses. Maybe not for this version,
-			# but def in the future.
+			try:
+				instructorLastName = formInput[1]
+			except IndexError:
+				logging.info("ERROR WITH FORM INPUT: "+str(formInput))
 
-			# currently getting the wrong course number, trying this instead.
-			# SOLUTION ASSUMES THE STUDENT ONLY HAS ONE COURSE BY THIS NAME, won't work otherwise
-			active = db.Query(StudentCourse).filter(
-				'courseName =', courseName).filter(
-				'usernum =', self.session['usernum']).get()
+			else:
+				# query the user db for the course number
+				# we might need a way to remove courses. Maybe not for this version,
+				# but def in the future.
 
-			courseNumber = active.courseNumber
-			logging.info('trying to get this course number: '+str(courseNumber))
+				# currently getting the wrong course number, trying this instead.
+				# SOLUTION ASSUMES THE STUDENT ONLY HAS ONE COURSE BY THIS NAME, won't work otherwise
+				active = db.Query(StudentCourse).filter(
+					'courseName =', courseName).filter(
+					'usernum =', self.session['usernum']).get()
 
-			self.session['activeCourse'] = courseNumber
+				courseNumber = active.courseNumber
+				logging.info('trying to get this course number: '+str(courseNumber))
 
-			# update the session with relevant variables for StudentCourse
+				self.session['activeCourse'] = courseNumber
 
-			self.session['Module1'] = active.Module1
-			self.session['Module2'] = active.Module2
-			self.session['Module3'] = active.Module3
-			self.session['WSAnswer1'] = active.WSAnswer1
-			self.session['WSAnswer2'] = active.WSAnswer2
-			self.session['WSAnswer3'] = active.WSAnswer3
-			self.session['COEAnswer1'] = active.COEAnswer1
-			self.session['COEAnswer2'] = active.COEAnswer2
-			self.session['COEAnswer3'] = active.COEAnswer3
-			self.session['COEAnswer4'] = active.COEAnswer4
-			self.session['COEAnswer5'] = active.COEAnswer5
-			self.session['PFEAnswer1'] = active.PFEAnswer1
-			self.session['PFEAnswer2'] = active.PFEAnswer2
-			self.session['PFEAnswer3'] = active.PFEAnswer3
-			self.session['PFEAnswer4'] = active.PFEAnswer4
-			# PFEAnswer5 =		db.IntegerProperty()
+				# update the session with relevant variables for StudentCourse
 
-			self.session['numberOfGuesses'] = active.numberOfGuesses
-			self.session['numberOfSimulations'] = active.numberOfSimulations
-			self.session['numberOfSimulations2'] = active.numberOfSimulations2
-			self.session['QuizResults'] = active.QuizResults
+				self.session['Module1'] = active.Module1
+				self.session['Module2'] = active.Module2
+				self.session['Module3'] = active.Module3
+				self.session['WSAnswer1'] = active.WSAnswer1
+				self.session['WSAnswer2'] = active.WSAnswer2
+				self.session['WSAnswer3'] = active.WSAnswer3
+				self.session['COEAnswer1'] = active.COEAnswer1
+				self.session['COEAnswer2'] = active.COEAnswer2
+				self.session['COEAnswer3'] = active.COEAnswer3
+				self.session['COEAnswer4'] = active.COEAnswer4
+				self.session['COEAnswer5'] = active.COEAnswer5
+				self.session['PFEAnswer1'] = active.PFEAnswer1
+				self.session['PFEAnswer2'] = active.PFEAnswer2
+				self.session['PFEAnswer3'] = active.PFEAnswer3
+				self.session['PFEAnswer4'] = active.PFEAnswer4
+				# PFEAnswer5 =		db.IntegerProperty()
 
-			doRender(self, 'menu.htm',
-				{'firstName':self.session['firstName'],
-				'courseNumber': courseNumber,
-				'courseName': courseName,
-				'Module1': self.session['Module1'],
-				'Module2': self.session['Module2'],
-				'Module3': self.session['Module3'],})
+				self.session['numberOfGuesses'] = active.numberOfGuesses
+				self.session['numberOfSimulations'] = active.numberOfSimulations
+				self.session['numberOfSimulations2'] = active.numberOfSimulations2
+				self.session['QuizResults'] = active.QuizResults
+
+				doRender(self, 'menu.htm',
+					{'firstName':self.session['firstName'],
+					'courseNumber': courseNumber,
+					'courseName': courseName,
+					'Module1': self.session['Module1'],
+					'Module2': self.session['Module2'],
+					'Module3': self.session['Module3'],})
 		else:
 			courseName = db.Query(Course).filter('courseNumber =', self.session['activeCourse']).get().courseName
 
