@@ -1,5 +1,5 @@
 import os, logging, wsgiref.handlers, datetime, random, math, string, urllib
-import csv, json
+import csv, json, hashlib
 
 from google.appengine.ext import webapp, db
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -21,7 +21,7 @@ class Instructor(db.Model):
 	firstName = 		db.StringProperty()
 	lastName = 			db.StringProperty()
 	email = 			db.StringProperty()
-	password = 			db.StringProperty()
+	password = 			db.StringProperty() # update for Spring 2019: all passwords now stored as hash values
 	usernum = 			db.IntegerProperty()
 	courseNames =		db.ListProperty(str)
 	courseNumbers = 	db.ListProperty(int) # to allow for multiple courses
@@ -336,6 +336,8 @@ class StudentLoginHandler(webapp.RequestHandler):
 		email = str(self.request.get('loginEmail'))
 		password = str(self.request.get('loginPassword'))
 
+		hashpass = str(hashlib.sha1(password).hexdigest()) # hash code rather than plain text
+
 		que = db.Query(Student)
 		que = que.filter('email =', email)
 		results = que.fetch(limit=1)
@@ -355,7 +357,7 @@ class StudentLoginHandler(webapp.RequestHandler):
 			p = i.password
 
 		# if incorrect, send them back with error message
-		if password != p:
+		if hashpass != p:
 			killSession(self)
 			doRender(self, 'StudentLogin.htm',
 				{'errorNumber':2})
@@ -417,6 +419,7 @@ class StudentSignupHandler(webapp.RequestHandler):
 		lastName = self.request.get('lastName')
 		email = self.request.get('createEmail')
 		password = self.request.get('password1')
+		hashpass = str(hashlib.sha1(password).hexdigest())
 		courseNumbers = []
 		courseNames = []
 
@@ -481,7 +484,7 @@ class StudentSignupHandler(webapp.RequestHandler):
 			email = email,
 			courseNumbers = courseNumbers,
 			courseNames = courseNames,
-			password=password);
+			password=hashpass);
 
 		userkey = newuser.put()
 
@@ -1322,6 +1325,7 @@ class InstructorSignupHandler(webapp.RequestHandler):
 		lastName = self.request.get('lastName')
 		email = self.request.get('createEmail')
 		password = self.request.get('password1')
+		hashpass = str(hashlib.sha1(password).hexdigest())
 		courseNumbers = []
 		courseNames = []
 
@@ -1374,7 +1378,7 @@ class InstructorSignupHandler(webapp.RequestHandler):
 			email = email,
 			courseNumbers = courseNumbers,
 			courseNames = courseNames,
-			password=password);
+			password=hashpass);
 
 		userkey = newuser.put()
 
@@ -1410,6 +1414,7 @@ class InstructorLoginHandler(webapp.RequestHandler):
 
 		email = str(self.request.get('loginEmail'))
 		password = str(self.request.get('loginPassword'))
+		hashpass = str(hashlib.sha1(password).hexdigest())
 
 		logging.info('EMAIL: '+email)
 
@@ -1433,7 +1438,7 @@ class InstructorLoginHandler(webapp.RequestHandler):
 		for i in results:
 			p = i.password
 
-		if password != p:
+		if hashpass != p:
 			killSession(self)
 			doRender(self, 'InstructorLogin.htm',
 				{'errorNumber':2})
