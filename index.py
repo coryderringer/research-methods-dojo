@@ -524,7 +524,7 @@ class StudentCourseMenuHandler(webapp.RequestHandler):
 
 			try:
 				instructorLastName = formInput[1]
-			except IndexError:
+			except:
 				logging.info("ERROR WITH FORM INPUT: "+str(formInput))
 
 			else:
@@ -1316,7 +1316,7 @@ class InstructorSignupHandler(webapp.RequestHandler):
 			# check for refresh using session variables:
 			try:
 				self.session['usernum']
-			except NameError: # usernum not in session; it's not a refresh
+			except: # usernum not in session; it's not a refresh
 				# prevent duplicate accounts
 				doRender(self,
 					'signupfail.htm',
