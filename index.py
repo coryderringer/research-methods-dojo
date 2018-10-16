@@ -357,7 +357,8 @@ class StudentLoginHandler(webapp.RequestHandler):
 			p = i.password
 
 		# if incorrect, send them back with error message
-		if hashpass != p:
+		# if hashpass != p:
+		if password != p:
 			killSession(self)
 			doRender(self, 'StudentLogin.htm',
 				{'errorNumber':2})
@@ -443,7 +444,7 @@ class StudentSignupHandler(webapp.RequestHandler):
 			# check for refresh using session variables:
 			try:
 				self.session['usernum']
-			except NameError: # usernum not in session; it's not a refresh
+			except: # usernum not in session; it's not a refresh
 				# prevent duplicate accounts
 				doRender(self,
 					'signupfail.htm',
@@ -484,7 +485,8 @@ class StudentSignupHandler(webapp.RequestHandler):
 			email = email,
 			courseNumbers = courseNumbers,
 			courseNames = courseNames,
-			password=hashpass);
+			#password=hashpass
+			password=password);
 
 		userkey = newuser.put()
 
@@ -1280,34 +1282,6 @@ class LineGraphTestHandler(webapp.RequestHandler):
 	# It should then cycle through the pages to the parts with graphs and stuff.
 
 
-###############################################################################
-######################### Data Display Page Handler ###########################
-###############################################################################
-
-# this is going to go away since I have the one with CourseData.htm
-# class DataHandler(webapp.RequestHandler):
-# 	def get(self):
-#
-# 		doRender(self, 'datalogin.htm')
-#
-#
-# 	def post(self):
-# 		password=self.request.get('password')
-#
-# 		if password == "Bensei": # just for now
-#
-#
-# 			que=db.Query(User)
-# 			que.order("usernum")
-# 			users=que.fetch(limit=10000)
-#
-# 			doRender(
-# 				self,
-# 				'data.htm',
-# 				{'users':users})
-# 		else:
-# 			doRender(self, 'dataloginfail.htm')
-
 
 
 ###############################################################################
@@ -1378,7 +1352,8 @@ class InstructorSignupHandler(webapp.RequestHandler):
 			email = email,
 			courseNumbers = courseNumbers,
 			courseNames = courseNames,
-			password=hashpass);
+			# password=hashpass
+			password=password);
 
 		userkey = newuser.put()
 
@@ -1438,7 +1413,8 @@ class InstructorLoginHandler(webapp.RequestHandler):
 		for i in results:
 			p = i.password
 
-		if hashpass != p:
+		# if hashpass != p:
+		if password != p:
 			killSession(self)
 			doRender(self, 'InstructorLogin.htm',
 				{'errorNumber':2})
