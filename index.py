@@ -302,10 +302,52 @@ class LoginHandler(webapp.RequestHandler):
 
 			# 5. render courseMenuStudent.htm with those courses
 
-			doRender(self, 'courseMenuStudent.htm',
-				{'firstName':self.session['firstName'],
-				'courseNames': a,
-				'instructorNames':t})
+			# if guest account, just take them to the sample course page
+			if self.session['email'] == 'student@rmdojo.com':
+
+				self.session['firstName'] = 'Guest'
+				self.session['activeCourse'] = '58882295'
+				courseName = 'Example Course'
+				self.session['Module1'] = 'Incomplete'
+				self.session['Module2'] = 'Incomplete'
+				self.session['Module3'] = 'Incomplete'
+
+				self.session['WSAnswer1'] = ''
+				self.session['WSAnswer2'] = ''
+				self.session['WSAnswer3'] = ''
+
+				self.session['COEAnswer1'] = ''
+				self.session['COEAnswer2'] = ''
+				self.session['COEAnswer3'] = 99
+				self.session['COEAnswer4'] = 99
+				self.session['COEAnswer5'] = 99
+
+
+				self.session['PFEAnswer1'] = ''
+				self.session['PFEAnswer2'] = ''
+				self.session['PFEAnswer3'] = 99
+				self.session['PFEAnswer4'] = 99
+				self.session['PFEAnswer5'] = 0
+
+				self.session['numberOfGuesses'] = 0
+				self.session['numberOfSimulations'] = 0
+				self.session['numberOfSimulations2'] = 0
+				self.session['QuizResults'] = []
+
+
+
+				doRender(self, 'menu.htm',
+					{'firstName':self.session['firstName'],
+					'courseNumber': self.session['activeCourse'],
+					'courseName': courseName,
+					'Module1': self.session['Module1'],
+					'Module2': self.session['Module2'],
+					'Module3': self.session['Module3'],})
+			else:
+				doRender(self, 'courseMenuStudent.htm',
+					{'firstName':self.session['firstName'],
+					'courseNames': a,
+					'instructorNames':t})
 
 class LogoutHandler(webapp.RequestHandler):
 
@@ -404,12 +446,51 @@ class StudentLoginHandler(webapp.RequestHandler):
 		for i in instructorLastNames:
 			t+=i+','
 
-		# 5. render courseMenuStudent.htm with those courses
+		# 5. render courseMenuStudent.htm with those courses,
+			# (if guest account, just take them to the sample course page)
+		if self.session['email'] == 'student@rmdojo.com':
 
-		doRender(self, 'courseMenuStudent.htm',
-			{'firstName':self.session['firstName'],
-			'courseNames': a,
-			'instructorNames':t})
+			self.session['firstName'] = 'Guest'
+			self.session['activeCourse'] = '58882295'
+			courseName = 'Example Course'
+			self.session['Module1'] = 'Incomplete'
+			self.session['Module2'] = 'Incomplete'
+			self.session['Module3'] = 'Incomplete'
+
+			self.session['WSAnswer1'] = ''
+			self.session['WSAnswer2'] = ''
+			self.session['WSAnswer3'] = ''
+
+			self.session['COEAnswer1'] = ''
+			self.session['COEAnswer2'] = ''
+			self.session['COEAnswer3'] = 99
+			self.session['COEAnswer4'] = 99
+			self.session['COEAnswer5'] = 99
+
+
+			self.session['PFEAnswer1'] = ''
+			self.session['PFEAnswer2'] = ''
+			self.session['PFEAnswer3'] = 99
+			self.session['PFEAnswer4'] = 99
+			self.session['PFEAnswer5'] = 0
+
+			self.session['numberOfGuesses'] = 0
+			self.session['numberOfSimulations'] = 0
+			self.session['numberOfSimulations2'] = 0
+			self.session['QuizResults'] = []
+
+			doRender(self, 'menu.htm',
+				{'firstName':self.session['firstName'],
+				'courseNumber': self.session['activeCourse'],
+				'courseName': courseName,
+				'Module1': self.session['Module1'],
+				'Module2': self.session['Module2'],
+				'Module3': self.session['Module3'],})
+		else:
+			doRender(self, 'courseMenuStudent.htm',
+				{'firstName':self.session['firstName'],
+				'courseNames': a,
+				'instructorNames':t})
 
 
 class StudentSignupHandler(webapp.RequestHandler):
@@ -575,7 +656,10 @@ class StudentCourseMenuHandler(webapp.RequestHandler):
 					'Module2': self.session['Module2'],
 					'Module3': self.session['Module3'],})
 		else:
-			courseName = db.Query(Course).filter('courseNumber =', self.session['activeCourse']).get().courseName
+			if self.session['email'] == 'student@rmdojo.com':
+				courseName = 'Example Course'
+			else:
+				courseName = db.Query(Course).filter('courseNumber =', self.session['activeCourse']).get().courseName
 
 			doRender(self, 'menu.htm',
 				{'firstName':self.session['firstName'],
@@ -963,23 +1047,24 @@ class CarryoverEffectsHandler(webapp.RequestHandler):
 			# 	i.Module1 = self.session['Module1']
 			# 	i.put()
 
-			# new db code
-			course = db.Query(StudentCourse).filter(
-				'usernum =', self.session['usernum']).filter(
-				'courseNumber =', self.session['activeCourse']).get()
+			if self.session['email'] != 'student@rmdojo.com':
+				# new db code
+				course = db.Query(StudentCourse).filter(
+					'usernum =', self.session['usernum']).filter(
+					'courseNumber =', self.session['activeCourse']).get()
 
-			# change the datastore result for this module
-			course.COEAnswer1 = self.session['COEAnswer1']
-			course.COEAnswer2 = self.session['COEAnswer2']
-			# course.COEAnswer3 = self.session['COEAnswer3']
-			# course.COEAnswer4 = self.session['COEAnswer4']
-			# course.COEAnswer5 = self.session['COEAnswer5']
-			course.COEAnswer3 = COEAnswer3
-			course.COEAnswer4 = COEAnswer4
-			course.COEAnswer5 = COEAnswer5
-			course.Module1 = self.session['Module1']
-			course.put()
-			# end new db code
+				# change the datastore result for this module
+				course.COEAnswer1 = self.session['COEAnswer1']
+				course.COEAnswer2 = self.session['COEAnswer2']
+				# course.COEAnswer3 = self.session['COEAnswer3']
+				# course.COEAnswer4 = self.session['COEAnswer4']
+				# course.COEAnswer5 = self.session['COEAnswer5']
+				course.COEAnswer3 = COEAnswer3
+				course.COEAnswer4 = COEAnswer4
+				course.COEAnswer5 = COEAnswer5
+				course.Module1 = self.session['Module1']
+				course.put()
+				# end new db code
 
 
 			logging.info('Datastore updated')
@@ -1059,20 +1144,22 @@ class PracticeFatigueEffectsHandler(webapp.RequestHandler):
             #
 			# logging.info('Datastore updated')
 
-			# new db code
-			course = db.Query(StudentCourse).filter(
-				'usernum =', self.session['usernum']).filter(
-				'courseNumber =', self.session['activeCourse']).get()
+			if self.session['email'] != 'student@rmdojo.com':
 
-			# change the datastore result for this module
-			course.PFEAnswer1 = self.session['PFEAnswer1']
-			course.PFEAnswer2 = self.session['PFEAnswer2']
-			course.PFEAnswer3 = self.session['PFEAnswer3']
-			# course.PFEAnswer4 = self.session['PFEAnswer4']
-			course.PFEAnswer4 = self.session['PFEAnswer4']
-			course.Module3 = self.session['Module3']
-			course.put()
-			# end new db code
+				# new db code
+				course = db.Query(StudentCourse).filter(
+					'usernum =', self.session['usernum']).filter(
+					'courseNumber =', self.session['activeCourse']).get()
+
+				# change the datastore result for this module
+				course.PFEAnswer1 = self.session['PFEAnswer1']
+				course.PFEAnswer2 = self.session['PFEAnswer2']
+				course.PFEAnswer3 = self.session['PFEAnswer3']
+				# course.PFEAnswer4 = self.session['PFEAnswer4']
+				course.PFEAnswer4 = self.session['PFEAnswer4']
+				course.Module3 = self.session['Module3']
+				course.put()
+				# end new db code
 
 			self.session['M3_Progress'] = 0
 			doRender(self, "FinishPracticeFatigueEffects.htm")
@@ -1225,6 +1312,7 @@ class WithinSubjectHandler(webapp.RequestHandler):
 				{'progress':self.session['M2_Progress']})
 
 		elif M2_Progress == 4:
+			
 			# Record results of final quiz
 			QuizResults = self.request.get('AnswerInput')
 			QuizResults = map(str,QuizResults.split(","))
@@ -1234,22 +1322,23 @@ class WithinSubjectHandler(webapp.RequestHandler):
 			# Record that user completed the module
 			self.session['Module2'] = 'Complete'
 
-			# Query the datastore
-			course = db.Query(StudentCourse).filter(
-				'usernum =', self.session['usernum']).filter(
-				'courseNumber =', self.session['activeCourse']).get()
+			if self.session['email'] != 'student@rmdojo.com':
+				# Query the datastore
+				course = db.Query(StudentCourse).filter(
+					'usernum =', self.session['usernum']).filter(
+					'courseNumber =', self.session['activeCourse']).get()
 
-			# change the datastore result for module 2
+				# change the datastore result for module 2
 
-			course.WSAnswer1 = self.session['WSAnswer1']
-			course.WSAnswer2 = self.session['WSAnswer2']
-			course.WSAnswer3 = self.session['WSAnswer3']
-			course.numberOfGuesses = self.session['numberOfGuesses']
-			course.numberOfSimulations = self.session['numberOfSimulations']
-			course.numberOfSimulations2 = self.session['numberOfSimulations2']
-			course.QuizResults = self.session['QuizResults']
-			course.Module2 = self.session['Module2']
-			course.put()
+				course.WSAnswer1 = self.session['WSAnswer1']
+				course.WSAnswer2 = self.session['WSAnswer2']
+				course.WSAnswer3 = self.session['WSAnswer3']
+				course.numberOfGuesses = self.session['numberOfGuesses']
+				course.numberOfSimulations = self.session['numberOfSimulations']
+				course.numberOfSimulations2 = self.session['numberOfSimulations2']
+				course.QuizResults = self.session['QuizResults']
+				course.Module2 = self.session['Module2']
+				course.put()
 
 			logging.info('Datastore updated')
 

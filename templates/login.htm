@@ -27,6 +27,7 @@
 			
 			<p><a class="btn btn-default" href="/StudentLogin">Student</a></p>
 			<p><a class="btn btn-default" href="/InstructorLogin">Instructor</a></p>
+			<p><a class="btn btn-default" id="guestButton" style="display:none">Guest</a></p>
 			
 			<!-- Select login type -->
 			<!-- <div class="row">
@@ -57,27 +58,40 @@
 			</div> -->
 
 		</div>
+
+		<form class="" id="loginForm" method="post" action="/StudentLogin" style="display: none">
+			<input id="loginEmail" name="loginEmail">
+			<input type="password" class="form-control" id="loginPassword" name = "loginPassword" placeholder="Enter password" required="true">
+		</form>
 	</section>
 
 </body>
 
 <script type="text/javascript">
 
-	function loginOption(type) {
-		if (type=="g") {
-			$('#guestLogin').show()
-			$('#studentLogin').hide()
-		}
-		else if (type=="s") {
-			$('#studentLogin').show()
-			$('#guestLogin').hide()
-		}
-	}
+	$('#guestButton').unbind().on('click', function(){
+		$('#loginEmail').val('student@rmdojo.com')
+		$('#loginPassword').val('dojo')
+		$('#loginForm').submit()
+	})
 
-	function guest() {
-		$('#guest').val(1);
-		$('#signin').submit();
-	}
+
+
+	// function loginOption(type) {
+	// 	if (type=="g") {
+	// 		$('#guestLogin').show()
+	// 		$('#studentLogin').hide()
+	// 	}
+	// 	else if (type=="s") {
+	// 		$('#studentLogin').show()
+	// 		$('#guestLogin').hide()
+	// 	}
+	// }
+
+	// function guest() {
+	// 	$('#guest').val(1);
+	// 	$('#signin').submit();
+	// }
 
 
 </script>
