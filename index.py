@@ -22,6 +22,7 @@ class Instructor(db.Model):
 	lastName = 			db.StringProperty()
 	email = 			db.StringProperty()
 	password = 			db.StringProperty() # update for Spring 2019: all passwords now stored as hash values
+	salt = 				db.StringProperty() # appended to unhashed password before encryption
 	usernum = 			db.IntegerProperty()
 	courseNames =		db.ListProperty(str)
 	courseNumbers = 	db.ListProperty(int) # to allow for multiple courses
@@ -32,6 +33,7 @@ class Student(db.Model):
 	lastName = 			db.StringProperty()
 	email = 			db.StringProperty()
 	password =			db.StringProperty()
+	salt =				db.StringProperty()
 	usernum = 			db.IntegerProperty()
 	courseNumbers = 	db.ListProperty(int) # to allow for multiple courses
 	courseNames = 		db.ListProperty(str)
@@ -181,6 +183,7 @@ def killSession(self):
 			self.session.__delitem__(i)
 
 
+
 ###############################################################################
 ###############################################################################
 ################################## Handlers! ##################################
@@ -219,7 +222,7 @@ class LoginHandler(webapp.RequestHandler):
 					self.session['email']			= j.email
 					self.session['courseNumbers']	= j.courseNumbers
 					self.session['courseNames']		= j.courseNames
-					self.session['Logged_In']		= True
+					self.session['Logged_In']		= True # this is probably not ideal way to do this
 
 
 				# for each course number, run a query, get the term
@@ -376,10 +379,7 @@ class StudentLoginHandler(webapp.RequestHandler):
 
 		# 1. make sure user exists
 		email = str(self.request.get('loginEmail'))
-		password = str(self.request.get('loginPassword'))
-
-		hashpass = str(hashlib.sha1(password).hexdigest()) # hash code rather than plain text
-
+		
 		que = db.Query(Student)
 		que = que.filter('email =', email)
 		results = que.fetch(limit=1)
@@ -397,10 +397,14 @@ class StudentLoginHandler(webapp.RequestHandler):
 		# 2. make sure password is correct
 		for i in results:
 			p = i.password
+			db_salt = i.salt
 
+		try_password = str(self.request.get('loginPassword'))+db_salt # append salt to value they entered
+		
+		hashpass = str(hashlib.sha1(try_password).hexdigest()) # hash code rather than plain text
+		
 		# if incorrect, send them back with error message
-		# if hashpass != p:
-		if password != p:
+		if hashpass != p:
 			killSession(self)
 			doRender(self, 'StudentLogin.htm',
 				{'errorNumber':2})
@@ -501,7 +505,7 @@ class StudentSignupHandler(webapp.RequestHandler):
 		lastName = self.request.get('lastName')
 		email = self.request.get('createEmail')
 		password = self.request.get('password1')
-		hashpass = str(hashlib.sha1(password).hexdigest())
+		
 		courseNumbers = []
 		courseNames = []
 
@@ -555,8 +559,10 @@ class StudentSignupHandler(webapp.RequestHandler):
 				return
 
 
+		# password salt
+		salt = ''.join(random.choice(string.ascii_uppercase + string.digits) for i in range(128))
 
-
+		password = str(hashlib.sha1(password+salt).hexdigest())
 
 		# Create User object in the datastore
 		usernum = create_or_increment_NumOfUsers()
@@ -567,7 +573,8 @@ class StudentSignupHandler(webapp.RequestHandler):
 			courseNumbers = courseNumbers,
 			courseNames = courseNames,
 			#password=hashpass
-			password=password);
+			password=password,
+			salt=salt);
 
 		userkey = newuser.put()
 
@@ -1388,7 +1395,7 @@ class InstructorSignupHandler(webapp.RequestHandler):
 		lastName = self.request.get('lastName')
 		email = self.request.get('createEmail')
 		password = self.request.get('password1')
-		hashpass = str(hashlib.sha1(password).hexdigest())
+		
 		courseNumbers = []
 		courseNames = []
 
@@ -1435,13 +1442,19 @@ class InstructorSignupHandler(webapp.RequestHandler):
 				return
 		# Create User object in the datastore
 		usernum = create_or_increment_NumOfUsers()
+
+		# password salt
+		salt = ''.join(random.choice(string.ascii_uppercase + string.digits) for i in range(128))
+
+		password = str(hashlib.sha1(password+salt).hexdigest())
+
 		newuser = Instructor(usernum=usernum,
 			firstName=firstName,
 			lastName=lastName,
 			email = email,
 			courseNumbers = courseNumbers,
 			courseNames = courseNames,
-			# password=hashpass
+			salt=salt,
 			password=password);
 
 		userkey = newuser.put()
@@ -1477,9 +1490,6 @@ class InstructorLoginHandler(webapp.RequestHandler):
 		self.session = get_current_session()
 
 		email = str(self.request.get('loginEmail'))
-		password = str(self.request.get('loginPassword'))
-		hashpass = str(hashlib.sha1(password).hexdigest())
-
 		logging.info('EMAIL: '+email)
 
 
@@ -1501,9 +1511,14 @@ class InstructorLoginHandler(webapp.RequestHandler):
 		# check password
 		for i in results:
 			p = i.password
+			db_salt = str(i.salt)
 
-		# if hashpass != p:
-		if password != p:
+		try_password = str(self.request.get('loginPassword'))
+		# try_password = str(self.request.get('loginPassword'))+db_salt # append salt to value they entered
+		
+		hashpass = str(hashlib.sha1(try_password+db_salt).hexdigest()) # hash code rather than plain text
+
+		if hashpass != p:
 			killSession(self)
 			doRender(self, 'InstructorLogin.htm',
 				{'errorNumber':2})
